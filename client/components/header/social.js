@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
-import gql from 'graphql-tag'
 
 
 export default class Social extends Component {
     render() {
         return (
-            <div class="social">
+            <div className="social">
             <a href="www.facebook.com">
                 <i className="fa fa-facebook" aria-hidden="true"></i>
             </a>
