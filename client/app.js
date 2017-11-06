@@ -1,4 +1,3 @@
-import { gql, graphql } from 'react-apollo';
 // import './test.scss'
 import 'milligram/src/milligram.sass'
 import 'font-awesome/scss/font-awesome.scss'
@@ -21,9 +20,9 @@ class App extends React.Component {
   render() {
     return <div>
         <div className="app-container">
-          <Header/>
           <Router>
             <div>
+              <Header/>
               <ul>
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/about">About</Link></li>
