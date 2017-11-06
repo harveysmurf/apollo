@@ -39,16 +39,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.post('/login', (req, res, next) => {
-  if(req.user)
-    res.status(400).json({
+  if(req.user) {
+    return res.status(400).json({
       message: 'Already signed in'
     })
-  next()
+  }
+  else
+    next()
   },
   passport.authenticate('local',{failWithError:true}), 
   function(req, res, next) {
-    res.json({message: 'success'})
-    next()
+    return res.json({message: 'success'})
   },
   function(err, req, res, next) {
     return res.status(401).send({success: false, message: err})
@@ -67,7 +68,6 @@ app.use('/graphql', expressGraphQL({
 }))
 
 app.use('/', (req, res) => {
-  console.log(req.user)
   res.sendFile(path.join(__dirname,'client','index.html'))
 })
 
