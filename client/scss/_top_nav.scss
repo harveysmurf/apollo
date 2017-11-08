@@ -18,11 +18,38 @@
         }
     }
     .search {
-        input {
-            color:white;
+        .input-control-addon {
+            position:relative;
+            input {
+                width: 100%;
+                margin-bottom: 0;
+                margin-top: 0;
+                border-radius: 4rem 0 0 4rem;
+                border-right: none;
+                margin-right:0;
+                margin-left: 0;
+                padding-right: 0;
+                color: black;
+            }
+            button {
+                position: absolute;
+                top: 0;
+                right: 0;
+                margin: 0;
+            }
         }
     }
     .user-top {
+        a.user-link {
+            margin-right: 10px;
+            & i {
+                margin-right: 3px;
+            }
+        }
+        a:last-child {
+            margin-right:0;
+        }
+
         a {
             color:white;
             margin-right: 4px;

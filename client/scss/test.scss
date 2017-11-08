@@ -3,19 +3,29 @@ body {
     padding: 0;
 }
 
-.input-control-addon {
-    position:relative;
-    input {
-        width: 98%;
-        margin-bottom: 0;
-        border-radius: 4rem 0 0 4rem;
-        border-right: none;
-    }
-    button {
-        position: absolute;
-        top: 0;
-        right: 0;
-        margin-bottom:0;
-    }
+.row-center {
+    align-items: center;
+    justify-content: center
 }
+
+.text-right {
+    text-align: right;
+}
+
+.dropdown-toggle {
+    display: inline-block;
+    position: relative;
+}
+
+.dropdown {
+    display: none;
+}
+.dropdown.open {
+    display: block;
+    white-space: nowrap;
+    position: absolute;
+    background-color: white;
+    color:black;
+}
+
 @import '_top_nav' 
