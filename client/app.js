@@ -1,5 +1,5 @@
 // import './test.scss'
-import 'milligram/src/milligram.sass'
+import 'mini.css/src/flavors/mini-default.scss'
 import 'font-awesome/scss/font-awesome.scss'
 import './scss/test.scss'
 import React from 'react'

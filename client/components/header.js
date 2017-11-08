@@ -14,13 +14,13 @@ const TopHeader = ({data: {loggedInUser, loading}}) => {
     <div className="top-nav">
         <div className="container">
             <div className="row row-center">
-                <div className="column column-20">
+                <div className="col-md-3 col-lg-2 col-sm-12">
                     <Social/>
                 </div>
-                <div className="column column-40">
+                <div className="col-md-4 col-lg-6 col-sm-12">
                     <TopSearch/>
                 </div>
-                <div className="column column-40 user-top">
+                <div className="col-md-5 col-lg-4 col-sm-12 user-top text-right">
                     <UserTop/>
                 </div>
             </div>
