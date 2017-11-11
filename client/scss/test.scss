@@ -1,15 +1,14 @@
+@import 'node_modules/mini.css/src/flavors/mini-default.scss';
 body {
     margin: 0;
     padding: 0;
 }
 
-.row-center {
-    align-items: center;
-    justify-content: center
+ul {
+    list-style: none;
 }
-
-.text-right {
-    text-align: right;
+a {
+    text-decoration: none;
 }
 
 .dropdown-toggle {
@@ -28,4 +27,6 @@ body {
     color:black;
 }
 
-@import '_top_nav' 
+@import 'helpers';
+@import 'top_nav' ;
+@import 'footer';

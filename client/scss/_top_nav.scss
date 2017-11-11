@@ -1,7 +1,18 @@
 .top-nav {
     background-color: black;
     padding: 5px 0 5px 0;
+    & .row > div:not(:last-child) {
+        margin-bottom: 5px;
+
+        @media (min-width: $grid-medium-breakpoint) {
+            margin-bottom: 0;
+        }
+    }
     .social {
+        text-align: center;
+        @media (min-width: $grid-medium-breakpoint) {
+            text-align: left;
+        }
         a {
             width:30px;
             text-align: center;
@@ -44,6 +55,13 @@
             margin-right: 10px;
             & i {
                 margin-right: 3px;
+            }
+
+            & .dropdown > div {
+                background-color: black;
+                color: white;
+                padding: 10px;
+
             }
         }
         a:last-child {

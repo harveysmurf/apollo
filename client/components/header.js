@@ -6,10 +6,7 @@ import TopSearch from './header/search'
 import UserTop from './header/user_top'
 
 
-const TopHeader = ({data: {loggedInUser, loading}}) => {
-  if(loading)
-    return <div>Loading</div>
-  else
+const TopHeader = () => {
     return (
     <div className="top-nav">
         <div className="container">
@@ -28,14 +25,6 @@ const TopHeader = ({data: {loggedInUser, loading}}) => {
     </div>
     )
 }
-console.log
 
-const MyQuery = gql`query {
-  loggedInUser
-  {
-    name
-  }
-}`;
-
-export default graphql(MyQuery)(TopHeader);
+export default TopHeader
 

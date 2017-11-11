@@ -12,6 +12,9 @@ const withLoggedInUserData = graphql(gql`query { loggedInUser { name } }`);
 
 class UserTop extends Component {
     render() {
+        if(this.props.loading)
+            return (<div>Loading...</div>)
+
         const user = this.props.data.loggedInUser
             return (
                 <div>
@@ -32,12 +35,12 @@ class UserTop extends Component {
                     />
                     {!user &&
                         <Link to="/register" className="user-link" >
-                        <i class="fa fa-user-plus" aria-hidden="true"></i>
+                        <i className="fa fa-user-plus" aria-hidden="true"></i>
                         Регистрация
                         </Link>
                     }
                     {user &&
-                    <a href="#" className="dropdown" className="user-link" >
+                    <a href="#" className="user-link" >
                         <i className="fa fa-user" aria-hidden="true"></i>
                         <span >
                         Профил
@@ -46,12 +49,12 @@ class UserTop extends Component {
                     }
 
                     {user && 
-                    <a href="#" className="favorites" className="user-link">
+                    <a href="#"  className="favorites user-link">
                         <i className="fa fa-heart" aria-hidden="true" ></i>
                         Любими
                     </a>
                     }
-                    <a href="#" className="top-cart">
+                    <a href="#" className="top-cart user-link">
                         <i className="fa fa-shopping-cart" aria-hidden="true" ></i>
                         Количка
                     </a>
