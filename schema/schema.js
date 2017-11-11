@@ -2,6 +2,7 @@ const graphql = require('graphql')
 const axios = require('axios')
 const mongoose = require('mongoose')
 const UserModel = require('../models/users')
+const ProductModel = require('../models/product')
 const CategoryModel = require('../models/category')
 
 function getProjection (fieldASTs) {
@@ -65,6 +66,14 @@ const CategoryType = new GraphQLObjectType({
     meta_title: {type: GraphQLString},
     meta_description: {type: GraphQLString},
     parent_id: {type: GraphQLString},
+    products: {
+      type: new GraphQLList(ProductType),
+      resolve(parentValue, args) {
+        return ProductModel.find({
+          categories: ['59d4f71df36d285c5da667d5']
+        }).exec()
+      }
+    },
     subcategories: {
       type: new GraphQLList(CategoryType),
       resolve(parentValue, args) {
@@ -211,6 +220,16 @@ const RootQuery = new GraphQLObjectType({
       resolve(parentValue, args, context) {
         console.log(context.user)
         return CategoryModel.find({}).exec()
+      }
+    },
+    getCategory: {
+      type: CategoryType,
+      args: {slug: {type: GraphQLString}},
+      resolve(parentValue, args, context) {
+        console.log(args.slug)
+        return CategoryModel.findOne({
+          slug: args.slug
+        }).exec()
       }
     }
   }

@@ -8,7 +8,8 @@ const categorySchema = new Schema({
     description: String,
     meta_title: String,
     meta_description: String,
-    picture: String
+    picture: String,
+    slug: String
 })
 
 module.exports = mongoose.model('categories', categorySchema)

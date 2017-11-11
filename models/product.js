@@ -13,6 +13,7 @@ const productSchema = new Schema({
     colors: [Schema.Types.Mixed],
     material: String,
     origin: String,
+    weight: Number,
     discount: {type: Number, min: 10, max:80},
     updated: { type: Date, default: Date.now },
     tags: [String]
