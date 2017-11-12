@@ -39,6 +39,12 @@ class UserTop extends Component {
                         Регистрация
                         </Link>
                     }
+                    {!user &&
+                        <Link to="/login" className="user-link" >
+                        <i className="fa fa-sign-in" aria-hidden="true"></i>
+                        Вход
+                        </Link>
+                    }
                     {user &&
                     <a href="#" className="user-link" >
                         <i className="fa fa-user" aria-hidden="true"></i>

@@ -1,5 +1,9 @@
 .footer {
     margin-top: 10px;
+    padding-bottom: 20px;
+    @media (min-width: $grid-large-breakpoint) {
+        padding-bottom: 0;
+    }
     fieldset {
         border: none;
     }
@@ -21,11 +25,15 @@
     }
 
     .footer-nav {
-        background-color: black;
-        padding: 10px 0 10px 0;
-        color: white;
-        a {
+        display: none;
+        @media (min-width: $grid-large-breakpoint) {
+            display: block;
+            background-color: black;
+            padding: 10px 0 10px 0;
             color: white;
+            a {
+                color: white;
+            }
         }
     }
 

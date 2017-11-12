@@ -15,27 +15,64 @@ import LoginComponent from './components/auth/login'
 import Header from './components/header'
 import Footer from './components/footer'
 import CategoryComponent from './components/category/category_container'
+import MobileNav from './components/header/mobile_nav'
+
+const screenSize = {
+  md : 768,
+  lg : 1280
+}
 
 class App extends React.Component {
+  constructor(props) {
+    super(props)
+
+    let body = document.getElementsByTagName("body")[0];
+
+    this.onScreenSizeChange = this.onScreenSizeChange.bind(this)
+    body.onresize = this.onScreenSizeChange
+    this.state = {
+      screen : this.getScreenSize()
+    }
+  }
+
+  onScreenSizeChange() {
+    let screenSize = this.getScreenSize()
+    if(this.state != screenSize)
+      this.setState({
+        screen: screenSize
+      })
+  }
+
+  getScreenSize() {
+    let width = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
+    if(width > 768 && width < 1280)
+      return 'm'
+    else if(width > 1280)
+      return 'l'
+    else
+      return 's'
+  }
   render() {
+    let size = this.state.screen
     return <div>
         <div className="app-container">
           <Router>
             <div>
-              <Header/>
-              <ul>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/damski-chanti">Home</Link></li>
-                <li><Link to="/about">About</Link></li>
-                <li><Link to="/login">About</Link></li>
-              </ul>
-              <hr/>
+              {size != 's' && 
+              <Header size={size}/>
+              }
+              <div className="container main-container">
               <Route exact path="/" component={HomeComponent}/>
               <Route path="/about" component={AboutComponent}/>
               <Route path="/damski-chanti" component={CategoryComponent}/>
               <Route path="/login" component={LoginComponent}/>
-
+              </div>
               <Footer/>
+              {size == 's' && 
+              <MobileNav size={size}/>
+              }
             </div>
           </Router>
         </div>
