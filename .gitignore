@@ -1,2 +1,4 @@
-dist/*
+dist/index_bundle.js
+dist/styles.css
+dist/fonts
 node_modules

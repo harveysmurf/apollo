@@ -22,7 +22,6 @@ mongoose.connect(mongo_uri, {
 });
 
 var corsOptions = {
-  origin: 'http://localhost:4000',
   credentials: true // <-- REQUIRED backend setting
 };
 app.use(cors(corsOptions));

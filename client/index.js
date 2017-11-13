@@ -13,7 +13,6 @@ import {ApolloProvider} from 'react-apollo';
 import App from './app'
 
 let link = new HttpLink({ 
-  uri: 'http://localhost:4000/graphql',
   credentials: 'same-origin'
  })
 
