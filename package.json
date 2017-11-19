@@ -13,8 +13,11 @@
   "dependencies": {
     "apollo-cache-inmemory": "^1.0.0",
     "apollo-client": "^2.0.1",
+    "apollo-fetch": "^0.6.0",
     "apollo-link": "^1.0.0",
+    "apollo-link-batch-http": "^1.0.1",
     "apollo-link-http": "^1.1.0",
+    "apollo-server-express": "^1.2.0",
     "axios": "^0.16.2",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
@@ -34,6 +37,7 @@
     "react": "^16.0.0",
     "react-apollo": "^1.4.16",
     "react-dom": "^16.0.0",
+    "react-responsive-carousel": "^3.1.28",
     "react-router-dom": "^4.2.2",
     "webpack": "^3.8.1"
   },

@@ -29,9 +29,9 @@ const CategoryContainer = ({data}) => {
 }
 
 export default graphql(query, {
-    options:({location}) => ({
+    options:(props) => ({
         variables: {
-            slug: location.pathname.substr(1)
+            slug: props.slug
         }
     })
 })(CategoryContainer)

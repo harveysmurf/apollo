@@ -13,7 +13,7 @@ export default class MainNav extends Component {
                 </div>
                 <div className="col-lg-2">
                     <div className="logo text-center" >
-                        <img src="images/log.gif" />
+                        <img src="/images/log.gif" />
                     </div>
                 </div>
                 <div className="col-lg-5 text-left">

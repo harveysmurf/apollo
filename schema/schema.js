@@ -22,6 +22,16 @@ const {
   GraphQLFloat
 } = graphql
 
+const ColorType = new GraphQLObjectType({
+  name: "Color",
+  fields: {
+    name: {type: GraphQLString},
+    images: {
+      type: new GraphQLList(GraphQLString)
+    },
+    quantity: {type: GraphQLInt}
+  }
+})
 const CompanyType = new GraphQLObjectType({
   name: "Company",
   fields: () => ({
@@ -112,11 +122,14 @@ const ProductType = new GraphQLObjectType({
   name: 'Product',
   fields: {
     name: {type: GraphQLString},
+    model: {type: GraphQLInt},
+    description_short: {type: GraphQLString},
     description: {type: GraphQLString},
     meta_title: {type: GraphQLString},
     meta_description: {type: GraphQLString},
     slug: {type: GraphQLString},
     price: {type: GraphQLFloat},
+    colors: {type: new GraphQLList(ColorType)}
   }
 })
 
@@ -230,6 +243,31 @@ const RootQuery = new GraphQLObjectType({
         return CategoryModel.findOne({
           slug: args.slug
         }).exec()
+      }
+    },
+    getProduct: {
+      type: ProductType,
+      args: {slug: {type: GraphQLString}},
+      resolve(parentValue, args, context) {
+        return ProductModel.findOne({
+          slug: args.slug
+        }).exec()
+      }
+    },
+    getRouteType: {
+      type: GraphQLString,
+      args: {slug: {type: GraphQLString}},
+      resolve(parentValue, args, context) {
+        let category = CategoryModel.findOne({slug: args.slug}).select('slug').exec()
+        let product = ProductModel.findOne({slug: args.slug}).select('slug').exec()
+        return Promise.all([category, product]).then((res) => {
+          if(res[0])
+            return  'category'
+          else if(res[1])
+            return 'product'
+          else
+            return null
+        })
       }
     }
   }

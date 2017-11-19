@@ -9,6 +9,9 @@ const bodyParser = require("body-parser")
 const cors = require('cors')
 let passport = require('./passport')
 
+const gqlExpress =  require('apollo-server-express')
+
+
 
 const app = express()
 const mongo_uri = 'mongodb://harvey:monio110605@ds159024.mlab.com:59024/damski'
@@ -61,10 +64,8 @@ app.get('/logout', function(req, res){
 });
 
 
-app.use('/graphql', expressGraphQL({
-    schema,
-    graphiql: true
-}))
+app.use('/graphql', bodyParser.json(), gqlExpress.graphqlExpress({schema}))
+app.get('/graphiql', gqlExpress.graphiqlExpress({ endpointURL: '/graphql' }));
 
 app.use('/', (req, res) => {
   res.sendFile(path.join(__dirname,'client','index.html'))

@@ -6,7 +6,8 @@ import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
-  Link
+  Link,
+  Switch
 } from 'react-router-dom'
 
 import HomeComponent from './components/home'
@@ -16,6 +17,7 @@ import Header from './components/header'
 import Footer from './components/footer'
 import CategoryComponent from './components/category/category_container'
 import MobileNav from './components/header/mobile_nav'
+import RouteResolver from './components/routeresolver'
 
 const screenSize = {
   md : 768,
@@ -64,10 +66,14 @@ class App extends React.Component {
               <Header size={size}/>
               }
               <div className="container main-container">
+              <Switch>
               <Route exact path="/" component={HomeComponent}/>
               <Route path="/about" component={AboutComponent}/>
-              <Route path="/damski-chanti" component={CategoryComponent}/>
               <Route path="/login" component={LoginComponent}/>
+              <Route path="/:param*" component={RouteResolver}/>
+              </Switch>
+              {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}
+              
               </div>
               <Footer/>
               {size == 's' && 

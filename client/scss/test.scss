@@ -4,6 +4,10 @@ body {
     padding: 0;
 }
 
+.main-container {
+    background-color:white;
+}
+
 ul {
     list-style: none;
 }
@@ -32,3 +36,4 @@ a {
 @import 'main_nav';
 @import 'mobile_nav';
 @import 'footer';
+@import 'product_page';
