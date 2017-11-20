@@ -121,6 +121,31 @@ class ProductContainer extends Component {
                         }
                         </div>
                     </div>
+                    <div className="row product-buttons">
+                        <button className="tertiary add-to-cart">
+                            <i className="fa fa-cart-plus" aria-hidden="true"></i>
+                            Добави в количката
+                        </button>
+                        <button className="">
+                            <i className="fa fa-exchange" aria-hidden="true"></i>
+                        </button>
+                        <button>
+                            <i className="fa fa-heart" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <hr/>
+                    <div className="row delivery text-left">
+                        <i className="fa fa-truck" aria-hidden="true"></i>
+                        <span className="delivery">
+                            Безплатна доставка за поръчки над 90 лв
+                        </span>
+                    </div>
+                    <hr/>
+                    <div className="row product-views row-center">
+                        700 човека разгледаха продукта
+                    </div>
+                    <div className="product-social">
+                    </div>
                 </div>
             </div>
             {data.getProduct.name}

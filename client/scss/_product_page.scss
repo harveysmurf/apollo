@@ -46,6 +46,35 @@ div.product {
             color: red;
             font-weight: bold;
         }
+
+        .product-buttons {
+            button {
+                i {
+                    font-size: 1.3rem;
+                }
+                &.add-to-cart {
+                    margin-left: 0;
+                    i {
+                        margin-right: 0.4rem;
+                    }
+                }
+            }
+        }
+
+        .delivery {
+            color: darkslategray;
+            i {
+                font-size: 1.8rem; 
+                margin-right: 1rem; 
+            } 
+            span {
+                font-size: 1.2rem;
+            }
+        }
+
+        .product-views {
+            color: darkgray;
+        }
     }
 }
 
