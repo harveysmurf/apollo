@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {graphql } from 'react-apollo';
 import gql from 'graphql-tag'
 import { Carousel } from 'react-responsive-carousel'
+import InformationTabs from './information_tabs'
 import 'react-responsive-carousel/lib/styles/carousel.css'
 import _ from 'lodash'
 
@@ -144,11 +145,38 @@ class ProductContainer extends Component {
                     <div className="row product-views row-center">
                         700 човека разгледаха продукта
                     </div>
-                    <div className="product-social">
+                    <br/>
+                    <div className="row">
+                        <div className="col-sm-6 col-md-5 product-social">
+                            <i className="fa fa-facebook-official" aria-hidden="true"></i>
+                            <i className="fa fa-instagram" aria-hidden="true"></i>
+                            <i className="fa fa-twitter" aria-hidden="true"></i>
+                        </div>
+                        <div className="notify-me col-sm-6 col-md-7">
+                            <div>
+                            <i className="fa fa-bell-o" aria-hidden="true"></i>
+                            <span><b>Информирай ме</b></span>
+                            </div>
+                            <div>
+                                <p>
+                                    Ако искате да получите имейл когато този продукт не е наличен, моля 
+                                    въведете имейла си по-долу:
+                                </p>
+                            </div>
+                            <div>
+                                <input type="text" placeholder="имейл"/>
+                                <button className="btn">Уведоми ме</button>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
-            {data.getProduct.name}
+            <div className="col-sm-12 col-md-6 information-tabs">
+                <InformationTabs/>
+            </div>
+            <div className="col-md-6">
+            </div>
         </div>
         )
     }
