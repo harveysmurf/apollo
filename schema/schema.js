@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const UserModel = require('../models/users')
 const ProductModel = require('../models/product')
 const CategoryModel = require('../models/category')
+const _ = require('lodash')
 
 function getProjection (fieldASTs) {
   return fieldASTs.fieldNodes[0].selectionSet.selections.reduce((projections, selection) => {
@@ -120,7 +121,8 @@ const OptionType = new GraphQLObjectType({
 
 const ProductType = new GraphQLObjectType({
   name: 'Product',
-  fields: {
+  fields: () => ({
+    _id: {type: GraphQLString},
     name: {type: GraphQLString},
     model: {type: GraphQLInt},
     description_short: {type: GraphQLString},
@@ -129,8 +131,28 @@ const ProductType = new GraphQLObjectType({
     meta_description: {type: GraphQLString},
     slug: {type: GraphQLString},
     price: {type: GraphQLFloat},
-    colors: {type: new GraphQLList(ColorType)}
-  }
+    colors: {type: new GraphQLList(ColorType)},
+    similar: {type: new GraphQLList(GraphQLString)},
+    similarProducts: {
+      type: new GraphQLList(ProductType),
+      resolve(parentValue, args) {
+
+        let isSimilarTo = ProductModel.find({
+          similar: parentValue._id
+        }).exec()
+
+        let similars =  ProductModel.find({
+          _id: parentValue.similar
+        }).exec()
+
+        return Promise.all([isSimilarTo, similars]).then((res) => {
+          let concated = res[0].concat(res[1])
+          return _.uniqBy(concated, '_id')
+        })
+      }
+
+    }
+  })
 })
 
 const OrderItemType = new GraphQLObjectType({

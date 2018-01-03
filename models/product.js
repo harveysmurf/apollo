@@ -19,7 +19,8 @@ const productSchema = new Schema({
     weight: Number,
     discount: {type: Number, min: 10, max:80},
     updated: { type: Date, default: Date.now },
-    tags: [String]
+    tags: [String],
+    similar: [String]
 })
 
 module.exports = mongoose.model('products', productSchema)
