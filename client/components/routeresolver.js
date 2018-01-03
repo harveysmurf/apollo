@@ -13,10 +13,10 @@ query getRouteType($slug: String) {
 const RouteResolver = (props) => {
     let type = false
     let slug = props.match.params.param.split('/').pop()
-    if(props.data != 'loading')
-        type = props.data.getRouteType
-    else
+    if(props.data.loading)
         return <div>Loading</div>
+    else
+        type = props.data.getRouteType
 
     if(!type)
         return <div>Page not found</div>
