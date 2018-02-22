@@ -9,10 +9,25 @@ query getRouteType($slug: String) {
     getRouteType(slug: $slug)
 }
 `
+const filters = [
+    'colors','material', 'price'
+]
+
+function parseFilters(params) {
+    let result = {}
+    filters.map((f) => {
+        result[f] = params.get(f) ? params.get(f).split(',') : []
+    })
+    return result
+}
 
 const RouteResolver = (props) => {
     let type = false
-    let slug = props.match.params.param.split('/').pop()
+    // Parse query params
+    const search = props.location.search; // could be '?foo=bar'
+    const params = new URLSearchParams(search);
+    const filters = parseFilters(params)
+
     if(props.data.loading)
         return <div>Loading</div>
     else
@@ -21,22 +36,15 @@ const RouteResolver = (props) => {
     if(!type)
         return <div>Page not found</div>
     else if(type == 'category')
-        return <Category slug={slug}/>
+        return <Category filters={filters} slug={props.data.variables.slug} url={props.match.url}/>
     else 
-        return <Product slug={slug}/>
-
-
-
-
-    return <div>Middleware test</div>
+        return <Product slug={props.data.variables.slug}/>
 }
 
 export default graphql(query, {
-    options:({match:{params:{param:path}}}) => {
-        return ({
+    options:({match:{params:{param:path}}}) => ({
             variables: {
                 slug: path.split('/').pop()
             }
-        })
-    }
+    })
 })(RouteResolver)

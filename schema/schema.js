@@ -20,13 +20,16 @@ const {
   GraphQLSchema,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLFloat
+  GraphQLFloat,
+  GraphQLBoolean
 } = graphql
 
 const ColorType = new GraphQLObjectType({
   name: "Color",
   fields: {
+    group: {type : GraphQLString},
     name: {type: GraphQLString},
+    idx: {type: GraphQLInt},
     images: {
       type: new GraphQLList(GraphQLString)
     },
@@ -77,18 +80,100 @@ const CategoryType = new GraphQLObjectType({
     meta_title: {type: GraphQLString},
     meta_description: {type: GraphQLString},
     parent_id: {type: GraphQLString},
+    slug: {type: GraphQLString},
+    productFeed: {
+      type: ProductFeed,
+      args: {
+        cursor: {type: GraphQLString},
+        material: {type: GraphQLString},
+        colors: {type: new GraphQLList(GraphQLString)}
+      },
+      resolve: async function(parentValue, args) {
+        let cursor = args.cursor
+        let find = {}
+        let cursorPromise
+        let hasMore = true
+
+        find.categories = parentValue.id
+
+        if(Array.isArray(args.colors) && args.colors.length > 0)
+          find['colors.group'] = { $all: args.colors}
+        if(args.material)
+          find.material = args.material
+        if(! cursor)
+          cursorPromise = ProductModel.findOne(find).sort({createdAt: -1, _id: -1}).exec()
+        else
+          cursorPromise = ProductModel.findOne(Object.assign({},find,{createdAt: {$lte: cursor}})).sort({createdAt: -1, _id: -1}).exec()
+        
+        let cursorItem = await cursorPromise
+        if(!cursorItem)
+          return {
+            cursor,
+            products: [],
+            hasMore: false
+          }
+        
+        let lastItem = await ProductModel.findOne(find).sort({createdAt: 1, _id: 1}).exec()
+        let res = await ProductModel.find(Object.assign({},find,{createdAt: {$lte: cursorItem.createdAt}})).sort({createdAt: -1, _id: -1}).limit(15).exec()
+
+        products = res.map((s) => {
+          let obj =  s.toObject()
+          obj.createdAt = s.createdAt.toISOString()
+          return obj
+        })
+
+        if(!products) {
+          return {
+          cursor: cursorItem.createdAt,
+          products: [],
+          hasMore: false
+          }
+        }
+
+        if(products[products.length - 1]._id == lastItem.id)
+          hasMore = false
+
+        return {
+          cursor: res[res.length -1].createdAt.toISOString(),
+          products,
+          hasMore
+        }
+
+          
+
+
+        // console.log(getCursor(args.cursor))
+        // return {cursor: 'mihes'}
+        // let find = {}
+        // find.categories = parentValue.id
+        // if(cursor)
+        //   find.created_at = cursor
+        
+
+        // if(Array.isArray(args.colors) && args.colors.length > 0)
+        //   find['colors.group'] = { $all: args.colors}
+
+        
+        // return ProductModel.find(find).exec()
+      }
+    },
     products: {
       type: new GraphQLList(ProductType),
+      args: {
+        colors: {type: new GraphQLList(GraphQLString)}
+      },
       resolve(parentValue, args) {
-        return ProductModel.find({
-          categories: ['59d4f71df36d285c5da667d5']
-        }).exec()
+        let find = {}
+        find.categories = parentValue.id
+        if(Array.isArray(args.colors) && args.colors.length > 0)
+          find['colors.group'] = { $all: args.colors}
+        return ProductModel.find(find).exec()
       }
     },
     subcategories: {
       type: new GraphQLList(CategoryType),
       resolve(parentValue, args) {
-        return CategoryModel.find({_id: parentValue._id}).exec()
+        return CategoryModel.find({parent_id: parentValue.id}).exec()
       }
     },
     parent: {
@@ -124,13 +209,16 @@ const ProductType = new GraphQLObjectType({
   fields: () => ({
     _id: {type: GraphQLString},
     name: {type: GraphQLString},
+    available: {type: GraphQLBoolean},
     model: {type: GraphQLInt},
+    main_img: {type: GraphQLString},
     description_short: {type: GraphQLString},
     description: {type: GraphQLString},
     meta_title: {type: GraphQLString},
     meta_description: {type: GraphQLString},
     slug: {type: GraphQLString},
     price: {type: GraphQLFloat},
+    createdAt: {type: GraphQLString},
     colors: {type: new GraphQLList(ColorType)},
     similar: {type: new GraphQLList(GraphQLString)},
     similarProducts: {
@@ -153,6 +241,15 @@ const ProductType = new GraphQLObjectType({
 
     }
   })
+})
+
+const ProductFeed = new GraphQLObjectType({
+  name: 'ProductFeed',
+  fields: {
+    cursor: {type: GraphQLString},
+    products: {type: new GraphQLList(ProductType)},
+    hasMore: {type: GraphQLBoolean}
+  }
 })
 
 const OrderItemType = new GraphQLObjectType({
@@ -253,15 +350,15 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(CategoryType),
       args: {first: {type: GraphQLInt}},
       resolve(parentValue, args, context) {
-        console.log(context.user)
         return CategoryModel.find({}).exec()
       }
     },
     getCategory: {
       type: CategoryType,
-      args: {slug: {type: GraphQLString}},
+      args: {
+        slug: {type: GraphQLString}
+      },
       resolve(parentValue, args, context) {
-        console.log(args.slug)
         return CategoryModel.findOne({
           slug: args.slug
         }).exec()

@@ -1,0 +1,40 @@
+.sidebar {
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    ul {
+        background-color: white;
+        border-bottom: 1px solid lightgray;
+        li {
+            margin-left: 10px;
+        }
+    }
+    .slider {
+        margin: 0.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        background-color: white;
+        height: 100px;
+
+        .input-range {
+            margin-top:15px;
+        }
+
+        .input-range__track {
+            background-color: gray;
+        }
+    }
+    .color-filter {
+        li {
+            margin-bottom: 10px;
+        }
+        i {
+            visibility: hidden;
+        }
+        .active {
+            font-weight: bold;
+            i {
+                visibility: visible;
+            }
+        }
+    }
+}

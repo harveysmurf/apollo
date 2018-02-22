@@ -1,4 +1,5 @@
 @import 'node_modules/mini.css/src/flavors/mini-default.scss';
+@import 'node_modules/react-input-range/src/scss/input-range/input-range.scss';
 body {
     margin: 0;
     padding: 0;
@@ -31,9 +32,11 @@ a {
     color:black;
 }
 
+
 @import 'helpers';
 @import 'top_nav' ;
 @import 'main_nav';
 @import 'mobile_nav';
 @import 'footer';
 @import 'product_page';
+@import 'sidebar';

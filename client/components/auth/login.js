@@ -1,10 +1,20 @@
 import React, {Component} from 'react'
 import axios from 'axios'
+import {graphql } from 'react-apollo';
+import gql from 'graphql-tag'
 
-export default class Login extends Component {
+const query = gql`
+query getFilters($slug: String) {
+    filters@client {
+        materials
+    }
+}
+`
+
+class Login extends Component {
     constructor(props) {
         super(props)
-
+        console.log(props)
         this.state = {
             email: '',
             password: '',
@@ -45,6 +55,7 @@ export default class Login extends Component {
 
     render() {
         let error = this.state.error
+        console.log(this.props)
         return (
             <div>
                 {error &&
@@ -74,3 +85,20 @@ export default class Login extends Component {
         )
     }
 }
+
+export default graphql(query, {
+    props: ({data: {loading, error, filters}}) => {
+        if (loading) {
+        return { loading };
+        }
+
+        if (error) {
+        return { error };
+        }
+
+        return {
+        loading: false,
+        filters
+        };
+    }
+})(Login)

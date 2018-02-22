@@ -3,8 +3,11 @@ import {graphql } from 'react-apollo';
 import gql from 'graphql-tag'
 import { Carousel } from 'react-responsive-carousel'
 import InformationTabs from './information_tabs'
+import ProductSlideshow from './products_slideshow'
 import 'react-responsive-carousel/lib/styles/carousel.css'
 import _ from 'lodash'
+import {similarProducts, lastViewed } from '../../../data/fixtures'
+import { log } from 'util';
 
 
 
@@ -21,11 +24,15 @@ query getProduct($slug: String) {
     getProduct(slug: $slug) {
         name,
         price,
+        available,
         description_short,
         colors {
             name,
             images,
             quantity
+        }
+        similarProducts {
+            name
         }
     }
 }
@@ -42,6 +49,34 @@ class ProductContainer extends Component {
             selectedColor: false
         }
         this.colorClick = this.colorClick.bind(this)
+    }
+
+    notifyMe() {
+        console.log(this.props.data.getProduct.available);
+        console.log(this.props.data.getProduct)
+        
+        if( !this.props.data.getProduct.available ||
+            (this.state.selectedColor && this.state.selectedColor.quantity < 1)
+        )
+        return (
+            <div className="notify-me col-sm-6 col-md-7">
+                <div>
+                <i className="fa fa-bell-o" aria-hidden="true"></i>
+                <span><b>Информирай ме</b></span>
+                </div>
+                <div>
+                    <p>
+                        Ако искате да получите имейл когато този продукт е наличен, моля 
+                        въведете имейла си по-долу:
+                    </p>
+                </div>
+                <div>
+                    <input type="text" placeholder="имейл"/>
+                    <button className="btn">Уведоми ме</button>
+                </div>
+
+            </div>
+        )
     }
 
     colorClick(index, color) {
@@ -152,30 +187,18 @@ class ProductContainer extends Component {
                             <i className="fa fa-instagram" aria-hidden="true"></i>
                             <i className="fa fa-twitter" aria-hidden="true"></i>
                         </div>
-                        <div className="notify-me col-sm-6 col-md-7">
-                            <div>
-                            <i className="fa fa-bell-o" aria-hidden="true"></i>
-                            <span><b>Информирай ме</b></span>
-                            </div>
-                            <div>
-                                <p>
-                                    Ако искате да получите имейл когато този продукт не е наличен, моля 
-                                    въведете имейла си по-долу:
-                                </p>
-                            </div>
-                            <div>
-                                <input type="text" placeholder="имейл"/>
-                                <button className="btn">Уведоми ме</button>
-                            </div>
-
-                        </div>
+                        {this.notifyMe()}
                     </div>
                 </div>
             </div>
-            <div className="col-sm-12 col-md-6 information-tabs">
+            <div className="col-sm-12 information-tabs">
                 <InformationTabs/>
             </div>
-            <div className="col-md-6">
+            <div className="col-sm-12 similar">
+                <ProductSlideshow products={similarProducts} title="Подобни продукти"/>
+            </div>
+            <div className="col-sm-12 last-viewed">
+                <ProductSlideshow products={lastViewed} title="Последно разгледани"/>
             </div>
         </div>
         )

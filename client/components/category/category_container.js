@@ -1,38 +1,35 @@
 import React, {Component} from 'react'
+import Sidebar from './sidebar'
+import ProductThumb from '../product/product_thumb'
 import {graphql } from 'react-apollo';
 import gql from 'graphql-tag'
+import ProductListContainer from './product_list_container'
 
-const query = gql`
-query getCategoryQuery($slug: String) {
-    getCategory(slug: $slug) {
-        name,
-        products {
-            name
-        }
+import { lastViewed, similarProducts } from '../../../data/fixtures'
+const ar = [...lastViewed, ...similarProducts]
 
+const filtersQuery = gql`
+query getFiltersQuery{
+    filters @client {
+        material
     }
 }
 `
 
-const CategoryContainer = ({data}) => {
-    if(data.loading)
-        return (<div>Loading</div>)
-    else
+let CategoryContainer = (props) =>  {
+        const {url, filters, testerino, slug} = props
         return (
-        <div className="category">
-            <h3>Category</h3>
-            {data.getCategory.products.map((product) => {
-                return <span>{product.name}</span>
-            })}
-        </div>
+            <ProductListContainer url={url} slug={slug} filters={{...filters,...testerino}} testerino={testerino}/>
         )
-}
+} 
 
-export default graphql(query, {
-    options:(props) => ({
-        variables: {
-            slug: props.slug
-        }
-    })
-})(CategoryContainer)
+let withFilters = graphql(filtersQuery, {
+    props: ({data}) => {
+    if (data.loading || data.error) return { testerino: {} };
+    return {
+        testerino: data.filters
+    }
+    }
+})
+export default withFilters(CategoryContainer)
 
