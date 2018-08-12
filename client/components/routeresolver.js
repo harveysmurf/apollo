@@ -26,7 +26,7 @@ const RouteResolver = (props) => {
     // Parse query params
     const search = props.location.search; // could be '?foo=bar'
     const params = new URLSearchParams(search);
-    const filters = parseFilters(params)
+    // const filters = parseFilters(params)
 
     if(props.data.loading)
         return <div>Loading</div>
@@ -36,7 +36,7 @@ const RouteResolver = (props) => {
     if(!type)
         return <div>Page not found</div>
     else if(type == 'category')
-        return <Category filters={filters} slug={props.data.variables.slug} url={props.match.url}/>
+        return <Category slug={props.data.variables.slug} url={props.match.url}/>
     else 
         return <Product slug={props.data.variables.slug}/>
 }

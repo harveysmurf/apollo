@@ -18,8 +18,9 @@ import App from './app'
 const defaultState = {
   filters: {
     __typename: 'Filters',
-    material: false,
-    styles: []
+    material: '',
+    styles: [],
+    colors: ['cheren']
   }
 }
 
@@ -40,7 +41,25 @@ const cache = new InMemoryCache();
 
 const stateLink = withClientState({
   cache,
-  defaults: defaultState
+  defaults: defaultState,
+  resolvers: {
+    Mutation: {
+      updateFilters: (_, args, { cache } ) => {
+        const filters = {
+        }
+        const data = {
+          data: {
+            filters: {
+              __typename: "Filters",
+              ...args.filters
+            }
+          }
+        }
+        cache.writeData(data)
+        return null
+      }
+    }
+  }
 })
 
 

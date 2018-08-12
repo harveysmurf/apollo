@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import urijs from 'urijs'
-import queryString from 'query-string'
-import PropTypes from 'prop-types'
-import { withRouter } from 'react-router'
+import { Mutation } from "react-apollo";
+import gql from "graphql-tag";
+
+
+const UpdateFilters = gql`
+    mutation updateFilters($filters: FilterInput) {
+        updateFilters(filters: $filters) @client
+    }
+`
 
 const colors = [
     {slug: 'sin', name:'Сини', hex: '#0000ff'},
@@ -18,12 +22,10 @@ const colors = [
 
 
 class ColorFilter extends Component {
-    setUrl(value, query) {
-        query.colors = value
-        return this.props.location.pathname + '?' + queryString.stringify(query)
-
+    selectColor() {
+        console.log('select color')
     }
-    renderLink(color, query, i) {
+    renderLink(color, i) {
         let active = false
         let check_color = 'white'
         switch(color.slug) {
@@ -48,38 +50,37 @@ class ColorFilter extends Component {
                 borderRadius: 50
             }}
             >
-            <Link 
+            <a 
+                onClick={(e)=> this.selectColor}
+                href="#"
                 style={{
                     display: 'block',
                     height: '100%',
                     textAlign: 'center',
                 }}
                 className={active?'active':''} 
-                to={this.setUrl(color.slug, query)}>
+                >
                     <i style={{
                         color: check_color,
                         verticalAlign: 'middle'
                     }} className="fa fa-check" aria-hidden="true"></i>
-                </Link>
+                </a>
             </li>
         )
     }
 
-    clearFilter(query) {
-        delete query.colors
-        if(_.isEmpty(query)) 
-            this.props.history.push(this.props.location.pathname)
-        else {
-            let url =  this.props.location.pathname + '?' + queryString(query)
-            this.props.history.push(url)
-        }
+    clearFilter() {
+        this.props.updateFilters({
+            variables: {
+                filters: {
+                    material: '',
+                    colors: [],
+                    styles: []
+                }
+            }
+        })
     }
     render() {
-        const uri = urijs(window.location)
-        const  query = queryString.parse((this.props.location.search))
-
-        // console.log(this.props)
-        // console.log(urijs(window.location))
         return (
         <ul className="color-filter">
             <div className="row">
@@ -87,17 +88,22 @@ class ColorFilter extends Component {
                     <b>Цвят</b>
                 </div>
                 <div className="col-sm-6 text-right">
-                    <span onClick={(e)=>this.clearFilter(Object.assign({},query))}>Изчисти</span>
+                    <span onClick={ e => this.clearFilter()}>Изчисти</span>
                 </div>
             </div>
-            {colors.map((color,i) => this.renderLink(color, Object.assign({},query), i))}
+            {colors.map((color,i) => this.renderLink(color, i))}
         </ul>
         )
     }
 }
-ColorFilter.propTypes = {
-        match: PropTypes.object.isRequired,
-        location: PropTypes.object.isRequired,
-        history: PropTypes.object.isRequired
+
+let withColorMutation = function(WrappedComponent) {
+    return ({selected}) => (
+        <Mutation mutation={UpdateFilters} >
+            {(updateFilters, { data }) => (
+                <WrappedComponent updateFilters={updateFilters} selected={selected}/>
+            )}
+        </Mutation>
+    )
 }
-export default withRouter(ColorFilter)
+export default withColorMutation(ColorFilter)
