@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {graphql } from 'react-apollo';
 import gql from 'graphql-tag'
-import Category from './category/category_container'
-import Product from './product/product_container'
+import CategoryContainer from './category/category_container'
+import ProductContainer from './product/product_container'
 
 const query = gql`
 query getRouteType($slug: String) {
@@ -13,20 +13,9 @@ const filters = [
     'colors','material', 'price'
 ]
 
-function parseFilters(params) {
-    let result = {}
-    filters.map((f) => {
-        result[f] = params.get(f) ? params.get(f).split(',') : []
-    })
-    return result
-}
-
 const RouteResolver = (props) => {
     let type = false
-    // Parse query params
-    const search = props.location.search; // could be '?foo=bar'
-    const params = new URLSearchParams(search);
-    // const filters = parseFilters(params)
+    const params = new URLSearchParams(props.location.search);
 
     if(props.data.loading)
         return <div>Loading</div>
@@ -36,9 +25,9 @@ const RouteResolver = (props) => {
     if(!type)
         return <div>Page not found</div>
     else if(type == 'category')
-        return <Category slug={props.data.variables.slug} url={props.match.url}/>
+        return <CategoryContainer slug={props.data.variables.slug} url={props.match.url}/>
     else 
-        return <Product slug={props.data.variables.slug}/>
+        return <ProductContainer slug={props.data.variables.slug}/>
 }
 
 export default graphql(query, {
