@@ -31,12 +31,13 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.jsx$/,
-        use: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env','@babel/preset-react'],
+            plugins: ['@babel/plugin-proposal-object-rest-spread']
+          }
+        },
         exclude: /node_modules/
       },
       {

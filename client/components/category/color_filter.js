@@ -1,13 +1,8 @@
 import React, { Component } from 'react'
 import { Mutation } from "react-apollo";
+import { UpdateFilters } from '../../mutations/local'
 import gql from "graphql-tag";
 
-
-const UpdateFilters = gql`
-    mutation updateFilters($filters: FilterInput) {
-        updateFilters(filters: $filters) @client
-    }
-`
 
 const colors = [
     {slug: 'sin', name:'Сини', hex: '#0000ff'},
@@ -41,6 +36,7 @@ class ColorFilter extends Component {
         return (
             <li 
             key={i}
+            onClick={this.selectColor}
             style={{
                 display: 'inline-block',
                 border: '1px solid black',
@@ -51,7 +47,7 @@ class ColorFilter extends Component {
             }}
             >
             <a 
-                onClick={(e)=> this.selectColor}
+                onClick={(e)=> console.log('clicked1')}
                 href="#"
                 style={{
                     display: 'block',
@@ -73,9 +69,7 @@ class ColorFilter extends Component {
         this.props.updateFilters({
             variables: {
                 filters: {
-                    material: '',
-                    colors: [],
-                    styles: []
+                    colors: []
                 }
             }
         })

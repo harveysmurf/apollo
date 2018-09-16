@@ -7,6 +7,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import {ApolloProvider} from 'react-apollo';
 import { withClientState } from 'apollo-link-state';
 import { ApolloLink } from 'apollo-link'
+import { filtersQuery } from './queries/local'
 import {
   BrowserRouter as Router,
   Route,
@@ -45,13 +46,13 @@ const stateLink = withClientState({
   resolvers: {
     Mutation: {
       updateFilters: (_, args, { cache } ) => {
-        const filters = {
-        }
+        const currentFilters = cache.readQuery({query: filtersQuery})
+        const filters = {...currentFilters, ...args.filters}
         const data = {
           data: {
             filters: {
               __typename: "Filters",
-              ...args.filters
+              ...filters
             }
           }
         }
