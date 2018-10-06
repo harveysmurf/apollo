@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom'
 import React from 'react'
+import _ from 'lodash'
 import  ApolloClient  from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { BatchHttpLink } from "apollo-link-batch-http";
@@ -18,10 +19,19 @@ import App from './app'
 
 const defaultState = {
   filters: {
-    __typename: 'Filters',
     material: '',
     styles: [],
-    colors: ['cheren']
+    colors: ['cheren', 'byal'],
+    price: {
+      min: 16,
+      max: 55
+    }
+  }
+}
+
+function customizer(objValue, srcValue) {
+  if (_.isArray(objValue)) {
+    return srcValue
   }
 }
 
@@ -38,20 +48,21 @@ const batchlink = new BatchHttpLink({
   uri: "/graphql" ,
   credentials: 'same-origin'
 });
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  addTypename: false
+});
 
 const stateLink = withClientState({
   cache,
   defaults: defaultState,
   resolvers: {
     Mutation: {
-      updateFilters: (_, args, { cache } ) => {
-        const currentFilters = cache.readQuery({query: filtersQuery})
-        const filters = {...currentFilters, ...args.filters}
+      updateFilters: (obj, args, { cache } ) => {
+        const currentFilters = cache.readQuery({query: filtersQuery}).filters
+        const filters = _.mergeWith(currentFilters,args.filters, customizer)
         const data = {
           data: {
             filters: {
-              __typename: "Filters",
               ...filters
             }
           }

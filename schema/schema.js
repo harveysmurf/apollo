@@ -89,14 +89,13 @@ const CategoryType = new GraphQLObjectType({
         colors: {type: new GraphQLList(GraphQLString)}
       },
       resolve: async function(parentValue, args) {
-        console.log('beeee')
         let cursor = args.cursor
         let find = {}
         let cursorPromise
         let hasMore = true
         find.categories = parentValue.id
         if(Array.isArray(args.colors) && args.colors.length > 0)
-          find['colors.group'] = { $all: args.colors}
+          find['colors.group'] = { $in: args.colors}
         if(args.material)
           find.material = args.material
         if(! cursor)
@@ -104,7 +103,6 @@ const CategoryType = new GraphQLObjectType({
         else
           cursorPromise = ProductModel.findOne(Object.assign({},find,{createdAt: {$lte: cursor}})).sort({createdAt: -1, _id: -1}).exec()
 
-        console.log(find)
         let cursorItem = await cursorPromise
         if(!cursorItem)
           return {

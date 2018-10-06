@@ -17,8 +17,15 @@ const colors = [
 
 
 class ColorFilter extends Component {
-    selectColor() {
-        console.log('select color')
+    selectColor(slug) {
+        const selected = [...this.props.selected]
+        const index = selected.indexOf(slug)
+        if(index === -1) {
+            selected.push(slug)
+        } else {
+            selected.splice(index, 1)
+        }
+        this.props.updateFilters({variables: {filters: {colors: [...selected]}}})
     }
     renderLink(color, i) {
         let active = false
@@ -36,7 +43,7 @@ class ColorFilter extends Component {
         return (
             <li 
             key={i}
-            onClick={this.selectColor}
+            onClick={e => {e.preventDefault(); this.selectColor(color.slug)}}
             style={{
                 display: 'inline-block',
                 border: '1px solid black',

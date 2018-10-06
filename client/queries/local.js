@@ -5,7 +5,11 @@ query getFiltersQuery{
     filters @client {
         material,
         colors,
-        styles
+        styles,
+        price {
+            min,
+            max
+        }
     }
 }
 `

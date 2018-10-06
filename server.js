@@ -10,7 +10,7 @@ const cors = require('cors')
 let passport = require('./passport')
 
 const gqlExpress =  require('apollo-server-express')
-
+console.log('hello')
 
 
 const app = express()

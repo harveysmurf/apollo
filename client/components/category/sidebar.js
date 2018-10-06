@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import { Link } from 'react-router-dom'
-import InputRange from 'react-input-range'
 import BagType from './bagtype'
 import ColorFilter from './color_filter'
+import PriceFilter from './price_filter'
 
 export default class Sidebar extends Component {
     constructor(props) {
@@ -15,6 +15,7 @@ export default class Sidebar extends Component {
         }
     }
     render() {
+        console.log(this.props.filters)
         return(
             <div className="col-sm-3 sidebar">
                 <div>
@@ -23,18 +24,8 @@ export default class Sidebar extends Component {
                 <div>
                     <ColorFilter selected={this.props.filters.colors}/>
                 </div>
-
                 <div>
-                    <div className='slider'>
-                        <b>Цена</b>
-                        <InputRange
-                            formatLabel={value => `${value}лв`}
-                            maxValue={150}
-                            minValue={10}
-                            value={this.state.value}
-                            onChange={value => this.setState({ value })}
-                            />
-                    </div>
+                    <PriceFilter price={this.props.filters.price}/>
                 </div>
             </div>
 
