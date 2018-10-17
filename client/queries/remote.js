@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 export const categoryQuery = gql`
-query getCategoryQuery($slug: String, $colors: [String] = [], $cursor: String, $material: String) {
+query getCategory($slug: String!, $colors: [String] = [], $cursor: String, $material: String) {
     getCategory(slug: $slug) {
         name,
         slug,

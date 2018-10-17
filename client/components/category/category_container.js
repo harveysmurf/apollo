@@ -46,7 +46,7 @@ let CategoryContainer = ({slug, url}) =>  (
     <Query query={filtersQuery}>
     {({ data: {filters}}) => {
         return [
-        <Query query={categoryQuery} variables={{...filters, slug}}>
+        <Query query={categoryQuery} variables={{slug, ...filters }}>
         {
             ({ data: {getCategory}, loading, fetchMore}) => {
                 if(loading) {

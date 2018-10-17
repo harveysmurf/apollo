@@ -6,12 +6,6 @@ const ProductModel = require('../models/product')
 const CategoryModel = require('../models/category')
 const _ = require('lodash')
 
-function getProjection (fieldASTs) {
-  return fieldASTs.fieldNodes[0].selectionSet.selections.reduce((projections, selection) => {
-    projections[selection.name.value] = true;
-    return projections;
-  }, {});
-}
 
 const {
   GraphQLObjectType,

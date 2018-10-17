@@ -5,7 +5,7 @@ import CategoryContainer from './category/category_container'
 import ProductContainer from './product/product_container'
 
 const query = gql`
-query getRouteType($slug: String) {
+query getRouteType($slug: String!) {
     getRouteType(slug: $slug)
 }
 `

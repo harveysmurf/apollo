@@ -1,0 +1,105 @@
+type ColorType {
+    group: String
+    name: String
+    idx: Int
+    images: [String]
+    quantity: Int
+}
+
+type AttributeProductType {
+    attribute_id: String
+    product_id: String
+    value: String
+}
+
+type AddressType {
+    street: String
+    city: String
+    state: String
+}
+
+type CategoryType {
+    _id: String
+    name: String
+    description: String
+    meta_title: String
+    meta_description: String
+    parent_id: String
+    slug: String
+    productFeed(cursor: String, colors: [String], material: String): ProductFeed
+    products: [ProductType]
+    subcategories: [CategoryType]
+    parent: CategoryType
+}
+
+type OptionType {
+    name: String
+    description: String
+    picture_id: String
+}
+
+type ProductType {
+    _id: String
+    name: String
+    available: Boolean
+    model: Int
+    main_img: String
+    description_short: String
+    description: String
+    meta_title: String
+    meta_description: String
+    slug: String
+    price: Float
+    createdAt: String
+    colors: [ColorType]
+    similar: [String]
+    similarProducts: [ProductType]
+}
+
+type ProductFeed {
+    cursor: String
+    products: [ProductType]
+    hasMore: Boolean
+}
+
+type OrderItemType {
+    product_id: String
+    option: OptionType
+    quantity: Int
+}
+
+type OrderType {
+    order_item: OrderItemType
+}
+
+type UserType {
+    id: String
+    name: String
+    email: String
+    password: String
+    level: Int
+    attribute_ids: [String]
+    attributes: [AttributeProductType]
+    orders: [OrderType]
+    addresses: [AddressType]
+}
+
+type ViewerType {
+    allCategories: [CategoryType]
+}
+
+type Query {
+    viewer: ViewerType
+    loggedInUser: UserType
+    user: UserType
+    users: [UserType]
+    allCategories: [CategoryType]
+    getCategory(slug: String!, colors: [String], cursor: String, material: String): CategoryType
+    getProduct: ProductType
+    getRouteType(slug: String!): String
+}
+
+type Mutation {
+    addUser(firstname: String!, age: Int!, companyId: String): UserType
+    deleteUser(id: String!): UserType
+}

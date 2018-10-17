@@ -1,5 +1,4 @@
 const express =require('express')
-const expressGraphQL = require('express-graphql')
 const schema = require('./schema/schema')
 const mongoose = require('mongoose')
 const fs = require('fs')
@@ -9,8 +8,8 @@ const bodyParser = require("body-parser")
 const cors = require('cors')
 let passport = require('./passport')
 
-const gqlExpress =  require('apollo-server-express')
-console.log('hello')
+const { ApolloServer } = require('apollo-server-express')
+const resolvers = require('./resolvers')
 
 
 const app = express()
@@ -64,8 +63,12 @@ app.get('/logout', function(req, res){
 });
 
 
-app.use('/graphql', bodyParser.json(), gqlExpress.graphqlExpress({schema}))
-app.get('/graphiql', gqlExpress.graphiqlExpress({ endpointURL: '/graphql' }));
+const typeDefs = fs.readFileSync('./schema/typeDefs.graphql', 'UTF-8')
+const server = new ApolloServer({
+  typeDefs,
+  resolvers
+})
+server.applyMiddleware({app})
 
 app.use('/', (req, res) => {
   res.sendFile(path.join(__dirname,'client','index.html'))
