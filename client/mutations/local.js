@@ -5,3 +5,9 @@ export const UpdateFilters = gql`
         updateFilters(filters: $filters) @client
     }
 `
+
+export const UpdateColors = gql`
+    mutation updateColors($colors: [String]) {
+        updateColors(colors: $colors) @client
+    }
+`

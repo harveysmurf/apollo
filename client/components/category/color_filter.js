@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from "react-apollo";
-import { UpdateFilters } from '../../mutations/local'
+import { UpdateColors } from '../../mutations/local'
 import gql from "graphql-tag";
 
 
@@ -25,7 +25,7 @@ class ColorFilter extends Component {
         } else {
             selected.splice(index, 1)
         }
-        this.props.updateFilters({variables: {filters: {colors: [...selected]}}})
+        this.props.updateColors({variables: {colors: [...selected]}})
     }
     renderLink(color, i) {
         let active = false
@@ -100,9 +100,9 @@ class ColorFilter extends Component {
 
 let withColorMutation = function(WrappedComponent) {
     return ({selected}) => (
-        <Mutation mutation={UpdateFilters} >
-            {(updateFilters, { data }) => (
-                <WrappedComponent updateFilters={updateFilters} selected={selected}/>
+        <Mutation mutation={UpdateColors} >
+            {(updateColors, { data }) => (
+                <WrappedComponent updateColors={updateColors} selected={selected}/>
             )}
         </Mutation>
     )

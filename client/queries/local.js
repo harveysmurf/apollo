@@ -13,3 +13,11 @@ query getFiltersQuery{
     }
 }
 `
+
+export const colorsQuery = gql`
+    query getColorsQuery {
+        filters @client {
+            colors
+        }
+    }
+`

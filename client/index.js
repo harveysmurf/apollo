@@ -57,7 +57,18 @@ const stateLink = withClientState({
   defaults: defaultState,
   resolvers: {
     Mutation: {
+      updateColors: (obj, { colors }, { cache } ) => {
+        cache.writeData({
+          data: {
+            filters: {
+              colors
+            }
+          }
+        })
+        return null
+      },
       updateFilters: (obj, args, { cache } ) => {
+        console.log('not here')
         const currentFilters = cache.readQuery({query: filtersQuery}).filters
         const filters = _.mergeWith(currentFilters,args.filters, customizer)
         const data = {
@@ -67,6 +78,8 @@ const stateLink = withClientState({
             }
           }
         }
+        console.log(data)
+        console.log('hello')
         cache.writeData(data)
         return null
       }
