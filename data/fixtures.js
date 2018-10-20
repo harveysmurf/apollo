@@ -1,5 +1,6 @@
 export const similarProducts = [
     {
+        slug: '01',
         price: 34,
         name: 'чанта 01',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed',
@@ -20,6 +21,7 @@ export const similarProducts = [
         ]
     },
     {
+        slug: '2344',
         price: 45,
         name: 'чанта 2344',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed',
@@ -53,6 +55,7 @@ export const similarProducts = [
     },
     {
         price: 55,
+        slug: '2349',
         name: 'чанта 2349',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed',
         main_img: '/images/products/2349/cherna.jpg',
@@ -87,6 +90,7 @@ export const similarProducts = [
 
 export const lastViewed = [
     {
+        slug: '644',
         price: 25,
         name: 'чанта 644',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed',
@@ -113,6 +117,7 @@ export const lastViewed = [
         ]
     },
     {
+        slug: '1416',
         price: 43,
         name: 'чанта 1460',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed',
@@ -145,6 +150,7 @@ export const lastViewed = [
         ]
     },
     {
+        slug: '2341',
         price: 47,
         name: 'чанта 2341',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed',

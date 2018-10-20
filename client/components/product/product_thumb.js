@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { Link} from 'react-router-dom'
 
 
 export default class ProductThumb extends Component {
@@ -22,7 +23,9 @@ export default class ProductThumb extends Component {
         return (
             <div className="text-center product-thumb">
                 <div>
+                    <Link to={product.slug}>
                 <img width={150} height={150} src={this.getDisplayImage(product, color)}/>
+                    </Link>
                 </div>
                 <div>
                     <a href="#">{product.name}</a>

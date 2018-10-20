@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 export const categoryQuery = gql`
-query getCategory($slug: String!, $colors: [String] = [], $cursor: String, $material: String) {
+query getCategory($slug: String!, $colors: [String] = [], $cursor: String, $material: String, $price: PriceInput) {
     getCategory(slug: $slug) {
         name,
         slug,
@@ -9,7 +9,7 @@ query getCategory($slug: String!, $colors: [String] = [], $cursor: String, $mate
             name,
             slug
         },
-        productFeed(cursor: $cursor, colors: $colors, material: $material ) @connection(key: "productFeed", filter: ["colors", "materials"]){
+        productFeed(cursor: $cursor, colors: $colors, material: $material, price: $price ) @connection(key: "productFeed", filter: ["colors", "materials", "price"]){
             cursor,
             hasMore,
             products {
@@ -18,6 +18,7 @@ query getCategory($slug: String!, $colors: [String] = [], $cursor: String, $mate
                 available,
                 main_img,
                 description,
+                slug,
                 colors {
                     group,
                     name,

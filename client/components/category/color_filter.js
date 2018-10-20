@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Mutation } from "react-apollo";
+import _ from 'lodash'
 import { UpdateColors } from '../../mutations/local'
-import gql from "graphql-tag";
 
 
 const colors = [
@@ -45,16 +46,11 @@ class ColorFilter extends Component {
             key={i}
             onClick={e => {e.preventDefault(); this.selectColor(color.slug)}}
             style={{
-                display: 'inline-block',
-                border: '1px solid black',
                 backgroundColor: color.hex,
-                width: 30,
-                height: 30,
-                borderRadius: 50
             }}
             >
             <a 
-                onClick={(e)=> console.log('clicked1')}
+                onClick={(_e)=> console.log('clicked1')}
                 href="#"
                 style={{
                     display: 'block',
@@ -73,11 +69,9 @@ class ColorFilter extends Component {
     }
 
     clearFilter() {
-        this.props.updateFilters({
+        this.props.updateColors({
             variables: {
-                filters: {
                     colors: []
-                }
             }
         })
     }
@@ -89,7 +83,7 @@ class ColorFilter extends Component {
                     <b>Цвят</b>
                 </div>
                 <div className="col-sm-6 text-right">
-                    <span onClick={ e => this.clearFilter()}>Изчисти</span>
+                    <span onClick={ _e => this.clearFilter()}>Изчисти</span>
                 </div>
             </div>
             {colors.map((color,i) => this.renderLink(color, i))}
@@ -97,14 +91,18 @@ class ColorFilter extends Component {
         )
     }
 }
+ColorFilter.propTypes = {
+    selected: PropTypes.string,
+    updateColors: PropTypes.func
+}
 
-let withColorMutation = function(WrappedComponent) {
-    return ({selected}) => (
+const withColorMutation = (WrappedComponent) =>
+    ({selected}) => (
         <Mutation mutation={UpdateColors} >
-            {(updateColors, { data }) => (
+            {(updateColors) => (
                 <WrappedComponent updateColors={updateColors} selected={selected}/>
             )}
         </Mutation>
     )
-}
+withColorMutation.displayName = 'hi'
 export default withColorMutation(ColorFilter)

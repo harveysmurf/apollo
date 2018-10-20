@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {graphql } from 'react-apollo';
 import gql from 'graphql-tag'
 import CategoryContainer from './category/category_container'
@@ -9,13 +9,9 @@ query getRouteType($slug: String!) {
     getRouteType(slug: $slug)
 }
 `
-const filters = [
-    'colors','material', 'price'
-]
 
 const RouteResolver = (props) => {
     let type = false
-    const params = new URLSearchParams(props.location.search);
 
     if(props.data.loading)
         return <div>Loading</div>

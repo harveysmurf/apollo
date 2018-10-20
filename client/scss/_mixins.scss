@@ -1,0 +1,32 @@
+// Define Breakpoints
+$mobile: 480px;
+$tablet: 960px;
+$desktop: 1280px;
+
+@mixin respond-to($media) {
+  @if $media == small-mobile {
+    @media (max-width: $mobile) { @content; }
+  }
+  @else if $media == mobile {
+    @media (min-width: $mobile ) { @content; }
+  }
+  @else if $media == tablet {
+    @media (min-width: $tablet ){ @content; }
+  }
+  @else if $media == desktop {
+    @media (min-width: $desktop) { @content; }
+  }
+}
+
+/* Example Usage
+  body{
+    background: white;
+    @include respond-to(mobile){
+      background: red;
+    } @include respond-to(tablet){
+      background: green;
+    } @include respond-to(desktop){
+      background: blue;
+    }
+  }
+*/

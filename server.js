@@ -1,5 +1,4 @@
 const express =require('express')
-const schema = require('./schema/schema')
 const mongoose = require('mongoose')
 const fs = require('fs')
 const path = require('path')

@@ -1,6 +1,9 @@
 .sidebar {
-    border: 1px solid lightgray;
-    border-radius: 10px;
+    border-bottom: 1px solid lightgray;
+    @include respond-to(desktop) {
+        border: 1px solid lightgray;
+        border-radius: 10px;
+    }
     ul {
         background-color: white;
         border-bottom: 1px solid lightgray;
@@ -26,6 +29,11 @@
     .color-filter {
         li {
             margin-bottom: 10px;
+            display: inline-block;
+            border: 1px solid black;
+            width: 30px;
+            height: 30px;
+            border-radius: 50px;
         }
         i {
             visibility: hidden;

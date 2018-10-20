@@ -7,7 +7,6 @@ import ProductSlideshow from './products_slideshow'
 import 'react-responsive-carousel/lib/styles/carousel.css'
 import _ from 'lodash'
 import {similarProducts, lastViewed } from '../../../data/fixtures'
-import { log } from 'util';
 
 
 
@@ -20,7 +19,7 @@ const size = {
 }
 
 const query = gql`
-query getProduct($slug: String) {
+query getProduct($slug: String!) {
     getProduct(slug: $slug) {
         name,
         price,
@@ -32,13 +31,14 @@ query getProduct($slug: String) {
             quantity
         }
         similarProducts {
-            name
+            name,
+            slug
         }
     }
 }
 `
 function cachedImage(src, format) {
-    return  '/images/products' +src + '-' + size[format] + '.jpg'
+    return  `${src}-${size[format].slice(0,-4)}.jpg`
 }
 
 class ProductContainer extends Component {
@@ -52,9 +52,6 @@ class ProductContainer extends Component {
     }
 
     notifyMe() {
-        console.log(this.props.data.getProduct.available);
-        console.log(this.props.data.getProduct)
-        
         if( !this.props.data.getProduct.available ||
             (this.state.selectedColor && this.state.selectedColor.quantity < 1)
         )
@@ -194,6 +191,8 @@ class ProductContainer extends Component {
             <div className="col-sm-12 information-tabs">
                 <InformationTabs/>
             </div>
+            {console.log(similarProducts)}
+            {console.log(lastViewed)}
             <div className="col-sm-12 similar">
                 <ProductSlideshow products={similarProducts} title="Подобни продукти"/>
             </div>

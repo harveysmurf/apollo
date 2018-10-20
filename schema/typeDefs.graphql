@@ -1,3 +1,8 @@
+input PriceInput {
+    max: Float
+    min: Float
+}
+
 type ColorType {
     group: String
     name: String
@@ -26,7 +31,7 @@ type CategoryType {
     meta_description: String
     parent_id: String
     slug: String
-    productFeed(cursor: String, colors: [String], material: String): ProductFeed
+    productFeed(cursor: String, colors: [String], material: String, price: PriceInput): ProductFeed
     products: [ProductType]
     subcategories: [CategoryType]
     parent: CategoryType
@@ -94,8 +99,8 @@ type Query {
     user: UserType
     users: [UserType]
     allCategories: [CategoryType]
-    getCategory(slug: String!, colors: [String], cursor: String, material: String): CategoryType
-    getProduct: ProductType
+    getCategory(slug: String!, colors: [String], cursor: String, material: String, price: PriceInput): CategoryType
+    getProduct(slug: String!): ProductType
     getRouteType(slug: String!): String
 }
 

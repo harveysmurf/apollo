@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
 import InputRange from 'react-input-range'
 import { Mutation } from "react-apollo";
-import { UpdateFilters } from '../../mutations/local'
-import gql from "graphql-tag";
+import { UpdatePrice } from '../../mutations/local'
 
-const PriceFilter = ({price, updateFilters}) => (
+const PriceFilter = ({price, updatePrice}) => (
     <div className='slider'>
         <b>Цена</b>
         <InputRange
@@ -12,16 +11,16 @@ const PriceFilter = ({price, updateFilters}) => (
             maxValue={150}
             minValue={10}
             value={{...price}}
-            onChange={value => updateFilters({variables: {filters: {price: value}}})}
+            onChange={value => updatePrice({variables: {price: value}})}
             />
     </div>
 )
 
 let withFilterMutation = function(WrappedComponent) {
     return ({price}) => (
-        <Mutation mutation={UpdateFilters} >
-            {(updateFilters, { data }) => (
-                <WrappedComponent updateFilters={updateFilters} price={price}/>
+        <Mutation mutation={UpdatePrice} >
+            {(updatePrice, { data }) => (
+                <WrappedComponent updatePrice={updatePrice} price={price}/>
             )}
         </Mutation>
     )
