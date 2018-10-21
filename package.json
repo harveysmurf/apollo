@@ -29,6 +29,7 @@
     "express-session": "^1.15.6",
     "graphql": "^0.10.5",
     "graphql-tag": "^2.10.0",
+    "jimp": "^0.5.4",
     "lodash": "^4.17.11",
     "mini.css": "^2.3.7",
     "mongoose": "^4.13.17",

@@ -1,4 +1,5 @@
 dist/index_bundle.js
 dist/styles.css
 dist/fonts
+dist/images/*
 node_modules

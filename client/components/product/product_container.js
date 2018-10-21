@@ -7,16 +7,9 @@ import ProductSlideshow from './products_slideshow'
 import 'react-responsive-carousel/lib/styles/carousel.css'
 import _ from 'lodash'
 import {similarProducts, lastViewed } from '../../../data/fixtures'
+import { getImageCachedSizePath } from '../../../utils/image_utils'
 
 
-
-const size = {
-    xs: '50x50',
-    s: '150x150',
-    m: '300x300',
-    l: '600x600',
-    xl: '1200x1200'
-}
 
 const query = gql`
 query getProduct($slug: String!) {
@@ -37,9 +30,6 @@ query getProduct($slug: String!) {
     }
 }
 `
-function cachedImage(src, format) {
-    return  `${src}-${size[format].slice(0,-4)}.jpg`
-}
 
 class ProductContainer extends Component {
     constructor(props) {
@@ -111,7 +101,7 @@ class ProductContainer extends Component {
                         selectedItem={this.state.selectedImage}
                     >
                     {images.map((image, index) => {
-                        return <img key={index} src={cachedImage(image.img,'m')}/>
+                        return <img key={index} src={getImageCachedSizePath(image.img, 'm')}/>
                     })}
                     </Carousel>
                 </div>
@@ -125,16 +115,17 @@ class ProductContainer extends Component {
                         {data.getProduct.description_short}
                     </div>
                     <div>
-                        {data.getProduct.colors.map((c, index) => {
+                        {data.getProduct.colors.map((c) => {
                             // The index it matches in the ALL images array
-                            let imageIndx = _.findKey(images, (value, index) => {
+                            console.log(images)
+                            let imageIndx = _.findKey(images, (value ) => {
                                 return value.name == c.name
                             })
                             let selected = this.state.selectedColor && this.state.selectedColor.name == c.name
                             let className = selected ? 'selected' : ''
                             className = className += ' color-image'
                             return (<div className="color-thumbnail">
-                                <img className={className} onClick={() => this.colorClick(imageIndx, c)} key={imageIndx} height="50" width="50" src={cachedImage(c.images[0],'xs')}/>
+                                <img className={className} onClick={() => this.colorClick(imageIndx, c)} key={imageIndx} height="50" width="50" src={getImageCachedSizePath(c.images[0],'xs')}/>
                                 {this.state.selectedColor && this.state.selectedColor.name == c.name &&
                                 <i className="fa fa-check" ></i>
                                 }

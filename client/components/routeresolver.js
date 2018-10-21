@@ -1,6 +1,7 @@
 import React from 'react'
 import {graphql } from 'react-apollo';
 import gql from 'graphql-tag'
+import qs from 'query-string'
 import CategoryContainer from './category/category_container'
 import ProductContainer from './product/product_container'
 
@@ -17,13 +18,12 @@ const RouteResolver = (props) => {
         return <div>Loading</div>
     else
         type = props.data.getRouteType
-
     if(!type)
         return <div>Page not found</div>
     else if(type == 'category')
         return <CategoryContainer slug={props.data.variables.slug} url={props.match.url}/>
     else 
-        return <ProductContainer slug={props.data.variables.slug}/>
+        return <ProductContainer slug={props.data.variables.slug} color={qs.parse(location.search).color}/>
 }
 
 export default graphql(query, {
