@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import {graphql } from 'react-apollo';
 import gql from 'graphql-tag'
 import { Carousel } from 'react-responsive-carousel'
+import { withRouter } from "react-router-dom";
+import { compose } from 'recompose'
 import InformationTabs from './information_tabs'
 import ProductSlideshow from './products_slideshow'
 import 'react-responsive-carousel/lib/styles/carousel.css'
@@ -10,7 +12,11 @@ import {similarProducts, lastViewed } from '../../../data/fixtures'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 
 
-
+const updateSearchParams = (search, queryParams) => {
+    let searchParams = new URLSearchParams(search);
+    _.each(queryParams, (value, key) => searchParams.set(key, value))
+    return searchParams.toString();
+}
 const query = gql`
 query getProduct($slug: String!) {
     getProduct(slug: $slug) {
@@ -23,22 +29,31 @@ query getProduct($slug: String!) {
             images,
             quantity
         }
+        availableColors {
+            name,
+            images,
+            quantity
+        }
         similarProducts {
             name,
             slug
+        },
+        images {
+            color,
+            image
         }
     }
 }
 `
 
 class ProductContainer extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            selectedImage : 0,
-            selectedColor: false
-        }
-        this.colorClick = this.colorClick.bind(this)
+    getMainColorImage(color) {
+        console.log(this.props.data.getProduct.images)
+        console.log(color)
+        // The index it matches in the ALL images array
+        return _.findKey(this.props.data.getProduct.images, (value ) => {
+            return value.color == color.name
+        })
     }
 
     notifyMe() {
@@ -66,30 +81,27 @@ class ProductContainer extends Component {
         )
     }
 
-    colorClick(index, color) {
-        this.setState({
-            selectedColor: color,
-            selectedImage: parseInt(index)
-        })
+    getColor(colorName, colors) {
+        return colors.find(c => c.name === colorName)
+    }
+
+    selectedColor() {
+        const { color, data: {getProduct: { colors, availableColors } } } = this.props
+        const selectedColor = color || (availableColors[0] && availableColors[0].name)
+
+        return selectedColor ? this.getColor(selectedColor, colors): null 
+    }
+
+    onColorClick(color) {
+        return () => {
+            const { history, location } = this.props
+            history.push(`${location.pathname}?${updateSearchParams(location.search, {color: color.name})}`)
+        }
     }
 
     render() {
-    let data = this.props.data
-
-    if(data.loading)
-        return (<div>Loading</div>)
-    else 
-    {
-        let images = data.getProduct.colors.reduce((images, c) => {
-        
-            let arr = c.images.map((img) => {
-                return {
-                    name: c.name,
-                    img: img
-                }
-            })
-            return images.concat(arr)
-        }, [])
+        const { data: {getProduct: { images, colors, availableColors }, getProduct } } = this.props
+        const selectedColor = this.selectedColor()
         return (
         <div className="product row">
             <div className="col-sm-12 col-lg-5">
@@ -98,10 +110,10 @@ class ProductContainer extends Component {
                         showStatus={false}
                         showIndicators={false}
                         autoPlay={false}
-                        selectedItem={this.state.selectedImage}
+                        selectedItem={selectedColor ? this.getMainColorImage(selectedColor): 0}
                     >
                     {images.map((image, index) => {
-                        return <img key={index} src={getImageCachedSizePath(image.img, 'm')}/>
+                        return <img key={index} src={getImageCachedSizePath(image.image, 'm')}/>
                     })}
                     </Carousel>
                 </div>
@@ -109,24 +121,19 @@ class ProductContainer extends Component {
             <div className="col-sm-12 col-lg-7">
                 <div className="product-main">
                     <div>
-                    <h1>{data.getProduct.name}</h1>
+                    <h1>{getProduct.name}</h1>
                     </div>
                     <div className="short-description">
-                        {data.getProduct.description_short}
+                        {getProduct.description_short}
                     </div>
                     <div>
-                        {data.getProduct.colors.map((c) => {
-                            // The index it matches in the ALL images array
-                            console.log(images)
-                            let imageIndx = _.findKey(images, (value ) => {
-                                return value.name == c.name
-                            })
-                            let selected = this.state.selectedColor && this.state.selectedColor.name == c.name
+                        {getProduct.colors.map((c, idx) => {
+                            const selected = selectedColor.name === c.name
                             let className = selected ? 'selected' : ''
                             className = className += ' color-image'
-                            return (<div className="color-thumbnail">
-                                <img className={className} onClick={() => this.colorClick(imageIndx, c)} key={imageIndx} height="50" width="50" src={getImageCachedSizePath(c.images[0],'xs')}/>
-                                {this.state.selectedColor && this.state.selectedColor.name == c.name &&
+                            return (<div className="color-thumbnail" key={idx} >
+                                <img className={className} onClick={this.onColorClick(c)} height="50" width="50" src={getImageCachedSizePath(c.images[0],'xs')}/>
+                                {selected &&
                                 <i className="fa fa-check" ></i>
                                 }
                                 </div>)
@@ -135,10 +142,10 @@ class ProductContainer extends Component {
                     <hr/>
                     <div className="row">
                         <div className="col-sm-6 text-left">
-                        <span className="price">{data.getProduct.price.toFixed(2).replace(".", ",")} лв</span>
+                        <span className="price">{getProduct.price.toFixed(2).replace(".", ",")} лв</span>
                         </div>
                         <div className="col-sm-6 text-right">
-                        {this.state.selectedColor && this.state.selectedColor.quantity < 1 &&
+                        {selectedColor && selectedColor.quantity < 1 &&
                             <span className="availability">
                                 Няма в наличност
                             </span>
@@ -182,8 +189,6 @@ class ProductContainer extends Component {
             <div className="col-sm-12 information-tabs">
                 <InformationTabs/>
             </div>
-            {console.log(similarProducts)}
-            {console.log(lastViewed)}
             <div className="col-sm-12 similar">
                 <ProductSlideshow products={similarProducts} title="Подобни продукти"/>
             </div>
@@ -193,14 +198,22 @@ class ProductContainer extends Component {
         </div>
         )
     }
-    }
 }
 
-export default graphql(query, {
+const WithLoadingCheck = WrappedComponent => props => {
+    if(props.data.loading)
+        return <div>Loading</div>
+
+    const WithLoading = <WrappedComponent {...props}/>
+    return WithLoading
+}
+
+const withProductQuery = graphql(query, {
     options:(props) => ({
         variables: {
             slug: props.slug
         }
     })
-})(ProductContainer)
+})
 
+export default compose(withProductQuery, WithLoadingCheck, withRouter)(ProductContainer)

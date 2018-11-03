@@ -6,7 +6,6 @@ import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
-  Link,
   Switch
 } from 'react-router-dom'
 
@@ -15,14 +14,8 @@ import AboutComponent from './components/about'
 import LoginComponent from './components/auth/login'
 import Header from './components/header'
 import Footer from './components/footer'
-import CategoryComponent from './components/category/category_container'
 import MobileNav from './components/header/mobile_nav'
 import RouteResolver from './components/routeresolver'
-
-const screenSize = {
-  md : 768,
-  lg : 1280
-}
 
 class App extends React.Component {
   constructor(props) {

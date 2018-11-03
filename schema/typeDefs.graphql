@@ -43,10 +43,16 @@ type OptionType {
     picture_id: String
 }
 
+type ImageType {
+    color: String
+    image: String 
+}
+
 type ProductType {
     _id: String
     name: String
     available: Boolean
+    availableColors: [ColorType],
     model: Int
     main_img: String
     description_short: String
@@ -58,7 +64,8 @@ type ProductType {
     createdAt: String
     colors: [ColorType]
     similar: [String]
-    similarProducts: [ProductType]
+    similarProducts: [ProductType],
+    images: [ImageType]
 }
 
 type ProductFeed {

@@ -88,6 +88,18 @@ module.exports = {
             let concated = res[0].concat(res[1])
             return _.uniqBy(concated, '_id')
             })
+        },
+        availableColors: ( { colors }) => colors.filter(c => c.quantity > 0 ),
+        images: ({ colors }) => {
+            return colors.reduce((images, c) => {
+                let arr = c.images.map((image) => {
+                    return {
+                        color: c.name,
+                        image
+                    }
+                })
+                return images.concat(arr)
+            }, [])
         }
     },
     OrderType: {
