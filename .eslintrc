@@ -1,11 +1,8 @@
 {
     "parserOptions": {
-        "ecmaVersion": 6,
         "sourceType": "module",
         "ecmaFeatures": {
-            "jsx": true,
-            "experimentalObjectRestSpread": true
-
+            "jsx": true
         }
     },
     "env": {
@@ -14,11 +11,16 @@
         "node":    true,
         "mocha":   true
     },   
+    "parser": "babel-eslint",
     "extends": [
         "eslint:recommended" ,
         "plugin:react/recommended"
     ],    
+    "plugins": [
+        "react"
+    ],
     "rules": {
+        "react/display-name": false,
         "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "argsIgnorePattern": "^_" }]
     }
 }

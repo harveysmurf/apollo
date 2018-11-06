@@ -32,7 +32,7 @@ const MobileNav = (props) => {
             </div>
             Любими
         </Link>
-        <Link to="/" className="mobile-nav-link">
+        <Link to="/cart" className="mobile-nav-link">
             <div>
                 <i className="fa fa-shopping-cart" aria-hidden="true"></i>
             </div>

@@ -84,6 +84,13 @@ type OrderType {
     order_item: OrderItemType
 }
 
+type CartType {
+    product: ProductType,
+    color: String,
+    quantity: Int,
+    available: Int
+}
+
 type UserType {
     id: String
     name: String
@@ -94,6 +101,7 @@ type UserType {
     attributes: [AttributeProductType]
     orders: [OrderType]
     addresses: [AddressType]
+    cart: [CartType]
 }
 
 type ViewerType {
@@ -103,8 +111,8 @@ type ViewerType {
 type Query {
     viewer: ViewerType
     loggedInUser: UserType
-    user: UserType
     users: [UserType]
+    cart: [CartType]
     allCategories: [CategoryType]
     getCategory(slug: String!, colors: [String], cursor: String, material: String, price: PriceInput): CategoryType
     getProduct(slug: String!): ProductType

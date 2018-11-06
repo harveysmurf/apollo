@@ -1,21 +1,15 @@
-import React, {Component} from 'react'
-import {graphql } from 'react-apollo';
+import React from 'react'
 import gql from 'graphql-tag'
+import { Query } from 'react-apollo';
 import { Link} from 'react-router-dom'
-import { withRouter } from 'react-router'
 import Dropdown from '../utilities/dropdown'
+import { userQuery } from '../../queries/remote'
 
-
-const withLoggedInUserData = graphql(gql`query { loggedInUser { name } }`);
-
-
-
-class UserTop extends Component {
-    render() {
-        if(this.props.loading)
+const UserTop = props =>  {
+        if(props.loading)
             return (<div>Loading...</div>)
 
-        const user = this.props.data.loggedInUser
+        const user = props.data.loggedInUser
             return (
                 <div>
                     <Dropdown className="user-link" button_content={
@@ -66,8 +60,9 @@ class UserTop extends Component {
                     </a>
                 </div>
             )
-    }
 }
 
-let UserTopWithData = withLoggedInUserData(UserTop)
-export default UserTopWithData
+export default (props) => (
+<Query query={userQuery} {...props}>
+{UserTop}
+</Query>)

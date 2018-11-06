@@ -1,15 +1,8 @@
 import React, {Component} from 'react'
 import axios from 'axios'
-import {graphql } from 'react-apollo';
-import gql from 'graphql-tag'
+import { Query,  } from 'react-apollo';
+import { userQuery } from  '../../queries/remote'
 
-const query = gql`
-query getFilters($slug: String) {
-    filters@client {
-        materials
-    }
-}
-`
 
 class Login extends Component {
     constructor(props) {
@@ -85,20 +78,7 @@ class Login extends Component {
         )
     }
 }
+export default () =>  <Query query={userQuery}>
+    {props => <Login {...props}></Login> }
+</Query>
 
-export default graphql(query, {
-    props: ({data: {loading, error, filters}}) => {
-        if (loading) {
-        return { loading };
-        }
-
-        if (error) {
-        return { error };
-        }
-
-        return {
-        loading: false,
-        filters
-        };
-    }
-})(Login)

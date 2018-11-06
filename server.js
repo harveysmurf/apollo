@@ -4,6 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const session = require("express-session")
 const bodyParser = require("body-parser")
+const cookieParse = require('cookie-parser')
 const cors = require('cors')
 let passport = require('./passport')
 
@@ -12,6 +13,7 @@ const resolvers = require('./resolvers')
 
 
 const app = express()
+app.use(cookieParse())
 const mongo_uri = 'mongodb://harvey:monio110605@ds159024.mlab.com:59024/damski'
 
 
@@ -65,11 +67,18 @@ app.get('/logout', function(req, res){
 const typeDefs = fs.readFileSync('./schema/typeDefs.graphql', 'UTF-8')
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: ({req, res}) => {
+    return {
+      req,
+      res
+    }
+  }
 })
 server.applyMiddleware({app})
 
 app.use('/', (req, res) => {
+  console.log(req.cookies)
   res.sendFile(path.join(__dirname,'client','index.html'))
 })
 

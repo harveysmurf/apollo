@@ -3,6 +3,20 @@ const UserModel = require('./models/users')
 const ProductModel = require('./models/product')
 const CategoryModel = require('./models/category')
 const _ = require('lodash')
+
+const createCart = cartBase => {
+            return cartBase
+            .map(async cartProduct  => {
+                const product = await ProductModel.findById(cartProduct.product_id).exec()
+                const productColor = product.colors.find(color => color.name === cartProduct.color) 
+                return {
+                    product ,
+                    quantity: cartProduct.quantity,
+                    color: cartProduct.color,
+                    available: productColor.quantity - cartProduct.quantity
+                }
+            })
+}
 const createFilterObject = ({colors, material, categories, price }) => {
     return {
     ...(colors && colors.length > 0 && {'colors.group': { $in: colors}}),
@@ -108,7 +122,20 @@ module.exports = {
     UserType: {
         attributes: () => {},
         orders: () => [],
-        addresses: () => []
+        addresses: () => [],
+        cart: ( parent ) => {
+            return parent.cart
+            .map(async cartProduct  => {
+                const product = await ProductModel.findById(cartProduct.product_id).exec()
+                const productColor = product.colors.find(color => color.name === cartProduct.color) 
+                return {
+                    product ,
+                    quantity: cartProduct.quantity,
+                    color: cartProduct.color,
+                    available: productColor.quantity - cartProduct.quantity
+                }
+            })
+        }
     },
     ViewerType: {
         allCategories: () => CategoryModel.find({}).exec()
@@ -117,11 +144,13 @@ module.exports = {
         viewer: () => {
             return {name: 'Simeon'}
         },
-        loggedInUser: (_parent, _args, context) => {
-            return context.user
+        loggedInUser: (_parent, _args, {req: { user }}) => {
+            return user || null
         },
-        user: () => {
-            return UserModel.findOne({name: 'simeon babev'}).exec()
+        cart: (_parent, _args, {req}) => {
+            const {user, cookies: { cart: sessionCart } } = req
+            const cart = user ? user.cart : JSON.parse(sessionCart) || []
+            return createCart(cart)
         },
         users: () => [],
         allCategories: () => {

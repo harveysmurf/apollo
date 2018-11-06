@@ -30,3 +30,33 @@ query getCategory($slug: String!, $colors: [String] = [], $cursor: String, $mate
     }
 }
 `
+
+export const userQuery = gql`
+    query { 
+        loggedInUser 
+        { 
+            name,
+            email,
+            cart {
+                product {
+                    name
+                },
+                quantity,
+                color,
+                available
+            }
+        } 
+    }
+`
+export const cartQuery = gql`
+    query {
+        cart {
+            product {
+                name
+            }
+            color
+            quantity
+            available
+        }
+    }
+`

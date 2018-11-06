@@ -16,6 +16,7 @@ import Header from './components/header'
 import Footer from './components/footer'
 import MobileNav from './components/header/mobile_nav'
 import RouteResolver from './components/routeresolver'
+import Cart from './components/cart/cart'
 
 class App extends React.Component {
   constructor(props) {
@@ -63,6 +64,7 @@ class App extends React.Component {
               <Route exact path="/" component={HomeComponent}/>
               <Route path="/about" component={AboutComponent}/>
               <Route path="/login" component={LoginComponent}/>
+              <Route path="/cart" component={Cart}/>
               <Route path="/:param*" component={RouteResolver}/>
               </Switch>
               {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}
