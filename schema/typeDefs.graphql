@@ -85,10 +85,17 @@ type OrderType {
 }
 
 type CartType {
+    products: [CartProductType],
+    price: Float
+    quantity: Int
+}
+
+type CartProductType {
     product: ProductType,
     color: String,
     quantity: Int,
-    available: Int
+    available: Int,
+    productColor: ColorType
 }
 
 type UserType {
@@ -101,7 +108,6 @@ type UserType {
     attributes: [AttributeProductType]
     orders: [OrderType]
     addresses: [AddressType]
-    cart: [CartType]
 }
 
 type ViewerType {
@@ -112,7 +118,7 @@ type Query {
     viewer: ViewerType
     loggedInUser: UserType
     users: [UserType]
-    cart: [CartType]
+    cart: CartType
     allCategories: [CategoryType]
     getCategory(slug: String!, colors: [String], cursor: String, material: String, price: PriceInput): CategoryType
     getProduct(slug: String!): ProductType

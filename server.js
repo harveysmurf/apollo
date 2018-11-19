@@ -20,8 +20,9 @@ const mongo_uri = 'mongodb://harvey:monio110605@ds159024.mlab.com:59024/damski'
 mongoose.Promise = global.Promise;
 mongoose.connect(mongo_uri, {
   keepAlive: true,
-  reconnectTries: 30,
-  useMongoClient: true
+  reconnectTries: Number.MAX_VALUE,
+  useMongoClient: true,
+  reconnectInterval: 1000 
 });
 
 var corsOptions = {
@@ -78,7 +79,6 @@ const server = new ApolloServer({
 server.applyMiddleware({app})
 
 app.use('/', (req, res) => {
-  console.log(req.cookies)
   res.sendFile(path.join(__dirname,'client','index.html'))
 })
 

@@ -36,27 +36,28 @@ export const userQuery = gql`
         loggedInUser 
         { 
             name,
-            email,
-            cart {
-                product {
-                    name
-                },
-                quantity,
-                color,
-                available
-            }
+            email
         } 
     }
 `
 export const cartQuery = gql`
     query {
         cart {
-            product {
-                name
-            }
-            color
+            products {
+                product {
+                    name
+                    price
+                }
+                color
+                quantity
+                available
+                productColor {
+                    images
+                    name
+                }
+            },
+            price
             quantity
-            available
         }
     }
 `

@@ -4,8 +4,8 @@ const ProductModel = require('./models/product')
 const CategoryModel = require('./models/category')
 const _ = require('lodash')
 
-const createCart = cartBase => {
-            return cartBase
+const createCart = async cartBase => {
+            const products = await Promise.all(cartBase
             .map(async cartProduct  => {
                 const product = await ProductModel.findById(cartProduct.product_id).exec()
                 const productColor = product.colors.find(color => color.name === cartProduct.color) 
@@ -13,9 +13,21 @@ const createCart = cartBase => {
                     product ,
                     quantity: cartProduct.quantity,
                     color: cartProduct.color,
-                    available: productColor.quantity - cartProduct.quantity
+                    available: productColor.quantity - cartProduct.quantity,
+                    productColor
                 }
-            })
+            }))
+            const cartTotal = products.reduce((sum, cartProduct) => {
+                return {
+                price: sum.price + (cartProduct.product.price*cartProduct.quantity),
+                quantity: sum.quantity + cartProduct.quantity
+                }
+            }, { quantity: 0, price: 0})
+
+            return {
+                products,
+                ...cartTotal
+            }
 }
 const createFilterObject = ({colors, material, categories, price }) => {
     return {
@@ -122,20 +134,7 @@ module.exports = {
     UserType: {
         attributes: () => {},
         orders: () => [],
-        addresses: () => [],
-        cart: ( parent ) => {
-            return parent.cart
-            .map(async cartProduct  => {
-                const product = await ProductModel.findById(cartProduct.product_id).exec()
-                const productColor = product.colors.find(color => color.name === cartProduct.color) 
-                return {
-                    product ,
-                    quantity: cartProduct.quantity,
-                    color: cartProduct.color,
-                    available: productColor.quantity - cartProduct.quantity
-                }
-            })
-        }
+        addresses: () => []
     },
     ViewerType: {
         allCategories: () => CategoryModel.find({}).exec()
