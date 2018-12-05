@@ -17,6 +17,7 @@ import Footer from './components/footer'
 import MobileNav from './components/header/mobile_nav'
 import RouteResolver from './components/routeresolver'
 import Cart from './components/cart/cart'
+import Checkout from './components/checkout/checkout'
 
 class App extends React.Component {
   constructor(props) {
@@ -65,6 +66,7 @@ class App extends React.Component {
               <Route path="/about" component={AboutComponent}/>
               <Route path="/login" component={LoginComponent}/>
               <Route path="/cart" component={Cart}/>
+              <Route path="/checkout" component={Checkout}/>
               <Route path="/:param*" component={RouteResolver}/>
               </Switch>
               {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}

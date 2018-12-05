@@ -1,0 +1,20 @@
+price
+description
+available
+model
+main_img
+images
+slug
+colors:
+  - price
+    name
+    quantity
+    available
+    main_image
+availableColors:
+  - price
+    name
+    quantity
+    available
+    main_image
+similarProducts

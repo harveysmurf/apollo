@@ -5,7 +5,7 @@ const productSchema = new Schema({
     price: Number,
     name: String,
     available: Boolean,
-    model: Number,
+    model: String,
     categories: [String],
     description_short: String,
     description: String,

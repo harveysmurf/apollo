@@ -3,7 +3,44 @@ const UserModel = require('./models/users')
 const ProductModel = require('./models/product')
 const CategoryModel = require('./models/category')
 const _ = require('lodash')
+const R = require('ramda')
 
+
+const parseProductUrl = url => {
+    const [ model, color ] = url.split('_')
+    return { model, color }
+}
+
+const isAvailable = o => o.quantity > 0
+const getBy = property => v => o => o[property] === v
+
+const setMainColorImage = color => R.assoc('main_image',color.images[0], color)
+const setAvailability = color => R.assoc('available',isAvailable(color), color)
+
+const adaptColorForApi = R.pipe(setAvailability, setMainColorImage)
+const productDbToApi = (product, colorName) => {
+    const color = R.find(
+        getBy('name')(colorName),
+        product.colors
+    ) 
+    product.colors = R.map(adaptColorForApi, product.colors)
+    return {
+        ...product,
+        ...(color.price && {price: color.price}),
+        ...(color.description && {description: color.description}),
+        ...(color.description_short && {description_short: color.description}),
+        ...(color.discount && {discount: color.discount}),
+        ...(color.meta_title && {meta_title: color.meta_title}),
+        ...(color.meta_description && {meta_description: color.meta_description}),
+        color: color.name,
+        main_image: color.images[0],
+        quantity: color.quantity,
+        available: product.available && isAvailable(color),
+        images: color.images
+   } 
+}
+
+// [{"color":"черен","product_id":"5a7cae7857e6c77768389714","quantity":55}]
 const createCart = async cartBase => {
             const products = await Promise.all(cartBase
             .map(async cartProduct  => {
@@ -115,18 +152,7 @@ module.exports = {
             return _.uniqBy(concated, '_id')
             })
         },
-        availableColors: ( { colors }) => colors.filter(c => c.quantity > 0 ),
-        images: ({ colors }) => {
-            return colors.reduce((images, c) => {
-                let arr = c.images.map((image) => {
-                    return {
-                        color: c.name,
-                        image
-                    }
-                })
-                return images.concat(arr)
-            }, [])
-        }
+        availableColors: ( { colors }) => colors.filter(c => c.quantity > 0 )
     },
     OrderType: {
         order_item: () => {}
@@ -148,7 +174,7 @@ module.exports = {
         },
         cart: (_parent, _args, {req}) => {
             const {user, cookies: { cart: sessionCart } } = req
-            const cart = user ? user.cart : JSON.parse(sessionCart) || []
+            const cart = user ? user.cart : JSON.parse(sessionCart || {}) 
             return createCart(cart)
         },
         users: () => [],
@@ -160,22 +186,26 @@ module.exports = {
                 slug: args.slug
             }).exec()
         },
-        getProduct: (_parent, args ) => {
-            return ProductModel.findOne({
-                slug: args.slug
+        getProduct: async (_parent, args ) => {
+            const { model, color } = parseProductUrl(args.slug)
+            const product = await ProductModel.findOne({
+                model,
+                colors: { $elemMatch: { name: color} }
             }).exec()
+            return product && productDbToApi(product.toObject(), color)
         },
-        getRouteType: (parent, args ) => {
-            let category = CategoryModel.findOne({slug: args.slug }).select('slug').exec()
-            let product = ProductModel.findOne({slug: args.slug}).select('slug').exec()
-            return Promise.all([category, product]).then((res) => {
-            if(res[0])
+        getRouteType: async (parent, args ) => {
+            const categoryCount = await CategoryModel.count({slug: args.slug }).limit(1).exec()
+            if(categoryCount)
                 return  'category'
-            else if(res[1])
+            const { model, color } = parseProductUrl(args.slug)
+            const product = await ProductModel.count({
+                model,
+                colors: { $elemMatch: { name: color} }
+            }).limit(1).exec()
+            if(product)
                 return 'product'
-            else
-                return null
-            })
+            return null
         }
     },
     Mutation: {

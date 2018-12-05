@@ -23,7 +23,7 @@ const RouteResolver = (props) => {
     else if(type == 'category')
         return <CategoryContainer slug={props.data.variables.slug} url={props.match.url}/>
     else 
-        return <ProductContainer slug={props.data.variables.slug} color={qs.parse(location.search).color}/>
+        return <ProductContainer slug={props.data.variables.slug} />
 }
 
 export default graphql(query, {

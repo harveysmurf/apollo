@@ -1,22 +1,32 @@
 import React, {Component} from 'react'
 import {graphql } from 'react-apollo';
 import gql from 'graphql-tag'
-import { Carousel } from 'react-responsive-carousel'
 import { withRouter } from "react-router-dom";
 import { compose } from 'recompose'
+import { Link} from 'react-router-dom'
 import InformationTabs from './information_tabs'
 import ProductSlideshow from './products_slideshow'
-import 'react-responsive-carousel/lib/styles/carousel.css'
 import _ from 'lodash'
 import {similarProducts, lastViewed } from '../../../data/fixtures'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
-
 
 const updateSearchParams = (search, queryParams) => {
     let searchParams = new URLSearchParams(search);
     _.each(queryParams, (value, key) => searchParams.set(key, value))
     return searchParams.toString();
 }
+
+
+const ProductVariationThumb = ({name, selected, image, model}) => (
+    <Link to={`${model}_${name}`} className="submit-button button text-center">
+        <div className="color-thumbnail">
+            <img className={`color-image ${selected ? 'selected': ''}`} height="50" width="50" src={getImageCachedSizePath(image,'xs')}/>
+                {selected &&
+                <i className="fa fa-check" ></i>
+                }
+        </div>
+    </Link>
+)
 const query = gql`
 query getProduct($slug: String!) {
     getProduct(slug: $slug) {
@@ -24,10 +34,12 @@ query getProduct($slug: String!) {
         price,
         available,
         description_short,
+        model,
         colors {
             name,
             images,
-            quantity
+            quantity,
+            main_image
         }
         availableColors {
             name,
@@ -38,28 +50,16 @@ query getProduct($slug: String!) {
             name,
             slug
         },
-        images {
-            color,
-            image
-        }
+        images,
+        color
+
     }
 }
 `
 
 class ProductContainer extends Component {
-    getMainColorImage(color) {
-        console.log(this.props.data.getProduct.images)
-        console.log(color)
-        // The index it matches in the ALL images array
-        return _.findKey(this.props.data.getProduct.images, (value ) => {
-            return value.color == color.name
-        })
-    }
-
-    notifyMe() {
-        if( !this.props.data.getProduct.available ||
-            (this.state.selectedColor && this.state.selectedColor.quantity < 1)
-        )
+    notifyMe(available) {
+        if( !available)
         return (
             <div className="notify-me col-sm-6 col-md-7">
                 <div>
@@ -81,17 +81,6 @@ class ProductContainer extends Component {
         )
     }
 
-    getColor(colorName, colors) {
-        return colors.find(c => c.name === colorName)
-    }
-
-    selectedColor() {
-        const { color, data: {getProduct: { colors, availableColors } } } = this.props
-        const selectedColor = color || (availableColors[0] && availableColors[0].name)
-
-        return selectedColor ? this.getColor(selectedColor, colors): null 
-    }
-
     onColorClick(color) {
         return () => {
             const { history, location } = this.props
@@ -100,52 +89,57 @@ class ProductContainer extends Component {
     }
 
     render() {
-        const { data: {getProduct: { images, colors, availableColors }, getProduct } } = this.props
-        const selectedColor = this.selectedColor()
+        const { 
+            data: 
+            {getProduct: { 
+                images, 
+                colors, 
+                available,
+                availableColors, 
+                main_image,
+                description_short,
+                description,
+                model,
+                color,
+                price
+             } } } = this.props
         return (
         <div className="product row">
             <div className="col-sm-12 col-lg-5">
                 <div className="product-gallery">
-                    <Carousel
-                        showStatus={false}
-                        showIndicators={false}
-                        autoPlay={false}
-                        selectedItem={selectedColor ? this.getMainColorImage(selectedColor): 0}
-                    >
-                    {images.map((image, index) => {
-                        return <img key={index} src={getImageCachedSizePath(image.image, 'm')}/>
-                    })}
-                    </Carousel>
+                
                 </div>
             </div>
             <div className="col-sm-12 col-lg-7">
                 <div className="product-main">
                     <div>
-                    <h1>{getProduct.name}</h1>
+                    <h1>{name}</h1>
                     </div>
                     <div className="short-description">
-                        {getProduct.description_short}
+                        {description_short}
                     </div>
                     <div>
-                        {getProduct.colors.map((c, idx) => {
-                            const selected = selectedColor.name === c.name
-                            let className = selected ? 'selected' : ''
-                            className = className += ' color-image'
-                            return (<div className="color-thumbnail" key={idx} >
-                                <img className={className} onClick={this.onColorClick(c)} height="50" width="50" src={getImageCachedSizePath(c.images[0],'xs')}/>
-                                {selected &&
-                                <i className="fa fa-check" ></i>
-                                }
-                                </div>)
+                        {colors.map((c, idx) => {
+                            console.log(idx)
+                            const selected = c.name === color
+                            return (
+                            <ProductVariationThumb 
+                            key={idx}
+                            name={c.name} 
+                            selected={selected} 
+                            image={c.main_image}
+                            model={model} 
+                            />
+                            )
                         })}
                     </div>
                     <hr/>
                     <div className="row">
                         <div className="col-sm-6 text-left">
-                        <span className="price">{getProduct.price.toFixed(2).replace(".", ",")} лв</span>
+                        <span className="price">{price.toFixed(2).replace(".", ",")} лв</span>
                         </div>
                         <div className="col-sm-6 text-right">
-                        {selectedColor && selectedColor.quantity < 1 &&
+                        {available &&
                             <span className="availability">
                                 Няма в наличност
                             </span>
@@ -182,7 +176,7 @@ class ProductContainer extends Component {
                             <i className="fa fa-instagram" aria-hidden="true"></i>
                             <i className="fa fa-twitter" aria-hidden="true"></i>
                         </div>
-                        {this.notifyMe()}
+                        {this.notifyMe(available)}
                     </div>
                 </div>
             </div>

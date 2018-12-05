@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import { Link} from 'react-router-dom'
 import { Query } from 'react-apollo';
 import { cartQuery } from '../../queries/remote'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
@@ -20,32 +21,30 @@ const CartRow = ({productColor, product, available, quantity}) => (
                 <div className="col-sm-12"><b>{product.price * quantity}лв.</b></div>
         </div>
     </div>
-    <hr/>
     </Fragment>
 )
 
-const CartSummary = ({cart: {quantity, price}}) => (
+export const CartSummary = ({cart: {quantity, price}}) => (
     <Fragment>    
         <h3>Общо кошница</h3>
         <div className="row">
         {quantity} ПРОДУКТА
         </div>
         <hr/>
-        <div className="row">
+        <div className="row bottom-spacing-xl">
             <div className="col-sm-8">ЦЕНА</div>
             <div className="col-sm-4">{price}лв.</div>
         </div>
-        <div className="button submit-button">Поръчка</div>
     </Fragment>
 
 )
 
-const CartProductsList = ({products: cartProducts}) => {
+export const CartProductsList = ({products: cartProducts}) => {
     return <div className="row">{cartProducts.map(CartRow)}</div>
 }
 
-const CartMiniSummary = ({cart: {price, quantity}}) => (
-    <div className="row bottom-spacing-xl">
+export const CartMiniSummary = ({cart: {price, quantity}}) => (
+    <div className="row bottom-spacing-xl row-center">
         <div className="col-sm-6">
             <div>
                 ОБЩО ({quantity} продукта)
@@ -55,7 +54,9 @@ const CartMiniSummary = ({cart: {price, quantity}}) => (
             </div>
         </div>
         <div className="col-sm-6">
-            <div className="button submit-button">Поръчка</div>
+                <Link to="/checkout" className="submit-button button text-center">
+                    Поръчка
+                </Link>
         </div>
     </div>
 )
@@ -72,6 +73,11 @@ export default  props => (
         <div className="col-sm-12 devider"/>
                     <CartProductsList products={cart.products}/>
                     <CartSummary cart={cart}/>
+                    <div className="row">
+                        <Link to="/checkout" className="submit-button button text-center">
+                            Поръчка
+                        </Link>
+                    </div>
                 </Fragment>
             )}
         </Fragment>

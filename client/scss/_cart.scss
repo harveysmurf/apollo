@@ -1,7 +1,7 @@
 .cart-row {
     border-bottom: 1px solid gray;
 }
-.submit-button {
+a.submit-button, button.submit-button {
     display: block;
-    margin: 0;
+    flex-basis: 100%;
 }

@@ -9,6 +9,9 @@ type ColorType {
     idx: Int
     images: [String]
     quantity: Int
+    price: Float
+    available: Boolean
+    main_image: String
 }
 
 type AttributeProductType {
@@ -52,20 +55,23 @@ type ProductType {
     _id: String
     name: String
     available: Boolean
-    availableColors: [ColorType],
+    quantity: Int
+    availableColors: [ColorType]
     model: Int
-    main_img: String
+    main_image: String
     description_short: String
     description: String
+    discount: Float
     meta_title: String
     meta_description: String
     slug: String
     price: Float
     createdAt: String
+    color: String
     colors: [ColorType]
     similar: [String]
-    similarProducts: [ProductType],
-    images: [ImageType]
+    similarProducts: [ProductType]
+    images: [String]
 }
 
 type ProductFeed {
