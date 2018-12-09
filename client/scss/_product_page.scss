@@ -5,8 +5,11 @@ div.product {
         margin-left: 0;
     }
 
-    .product-main, .product-gallery {
-        padding:15px;
+
+    @include respond-to(desktop) {
+        .product-main, .product-gallery {
+            padding:15px;
+        }
     }
 
     .product-main {

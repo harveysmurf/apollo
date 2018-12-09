@@ -3,8 +3,25 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    &::-webkit-scrollbar { 
+        display: none; 
+    }
     & > div {
         flex: 0 0 auto;
         max-width: 40%;
     } 
+}
+
+.selected {
+    border-bottom: 3px solid darkblue
+}
+
+.scroll-buttons {
+    cursor: pointer;
+    height: 100%;
+    background-color: lightcoral;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
