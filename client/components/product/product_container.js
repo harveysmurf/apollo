@@ -7,6 +7,10 @@ import { Link} from 'react-router-dom'
 import InformationTabs from './information_tabs'
 import ProductSlideshow from './products_slideshow'
 import _ from 'lodash'
+import ProductGallery from './gallery/gallery'
+import { WithLoadingCheck } from '../shared/withLoadingCheck'
+import { withMutation } from '../shared/withQuery'
+import { resetState } from '../../mutations/local'
 import {similarProducts, lastViewed } from '../../../data/fixtures'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 
@@ -18,7 +22,7 @@ const updateSearchParams = (search, queryParams) => {
 
 
 const ProductVariationThumb = ({name, selected, image, model}) => (
-    <Link to={`${model}_${name}`} className="submit-button button text-center">
+    <Link to={`${model}_${name}`} className="text-center">
         <div className="color-thumbnail">
             <img className={`color-image ${selected ? 'selected': ''}`} height="50" width="50" src={getImageCachedSizePath(image,'xs')}/>
                 {selected &&
@@ -58,6 +62,17 @@ query getProduct($slug: String!) {
 `
 
 class ProductContainer extends Component {
+    constructor(props) {
+        super(props)
+        this.props.resetState()
+    }
+
+
+    componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if(prevProps.slug !== this.props.slug)
+        this.props.resetState()
+    }
     notifyMe(available) {
         if( !available)
         return (
@@ -107,7 +122,7 @@ class ProductContainer extends Component {
         <div className="product row">
             <div className="col-sm-12 col-lg-5">
                 <div className="product-gallery">
-                
+                    <ProductGallery images={images} selected={0}/>
                 </div>
             </div>
             <div className="col-sm-12 col-lg-7">
@@ -139,7 +154,7 @@ class ProductContainer extends Component {
                         <span className="price">{price.toFixed(2).replace(".", ",")} лв</span>
                         </div>
                         <div className="col-sm-6 text-right">
-                        {available &&
+                        {!available &&
                             <span className="availability">
                                 Няма в наличност
                             </span>
@@ -194,14 +209,6 @@ class ProductContainer extends Component {
     }
 }
 
-const WithLoadingCheck = WrappedComponent => props => {
-    if(props.data.loading)
-        return <div>Loading</div>
-
-    const WithLoading = <WrappedComponent {...props}/>
-    return WithLoading
-}
-
 const withProductQuery = graphql(query, {
     options:(props) => ({
         variables: {
@@ -210,4 +217,4 @@ const withProductQuery = graphql(query, {
     })
 })
 
-export default compose(withProductQuery, WithLoadingCheck, withRouter)(ProductContainer)
+export default compose(withProductQuery, WithLoadingCheck, withMutation(resetState, {name: 'resetState'}), withRouter)(ProductContainer)

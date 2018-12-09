@@ -6,7 +6,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import {ApolloProvider} from 'react-apollo';
 import { withClientState } from 'apollo-link-state';
 import { ApolloLink } from 'apollo-link'
-import filterResolvers from './resolvers'
+import mutationResolvers from './resolvers/mutations'
 import typeDefs from './typeDefs'
 
 import App from './app'
@@ -21,6 +21,9 @@ const defaultState = {
       max: 55
     },
     lastcolor: null
+  },
+  pdp: {
+    mainImage: 0
   }
 }
 
@@ -36,9 +39,7 @@ const stateLink = withClientState({
   cache,
   defaults: defaultState,
   resolvers: {
-    Mutation: {
-      ...filterResolvers
-    }
+    Mutation: mutationResolvers
   },
   typeDefs
 })

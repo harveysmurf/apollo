@@ -1,6 +1,6 @@
 // import './test.scss'
-import 'font-awesome/scss/font-awesome.scss'
-import './scss/test.scss'
+import 'font-awesome/scss/font-awesome.scss?raw'
+import './scss/test.scss?raw'
 import React from 'react'
 
 import {

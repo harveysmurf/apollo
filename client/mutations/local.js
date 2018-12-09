@@ -11,3 +11,14 @@ export const UpdatePrice = gql`
         updatePrice(price: $price) @client
     }
 `
+
+export const updateSelectedImage = gql`
+    mutation updateSelectedImage($index: Int) {
+        updateSelectedImage(index: $index) @client
+    }
+`
+export const resetState = gql`
+    mutation resetState {
+        resetState @client
+    }
+`

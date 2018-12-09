@@ -37,10 +37,37 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: ["css-loader","sass-loader"]
-        })
+        oneOf: [
+          {
+            resourceQuery: /^\?raw$/,
+            use: ExtractTextPlugin.extract({
+              fallback: "style-loader",
+              use: ['css-loader','sass-loader']
+            }),
+
+          },
+          {
+            use: ExtractTextPlugin.extract({
+              fallback: "style-loader",
+              use: [
+                {
+                  loader: 'css-loader',
+                  options: {
+                    modules: true,
+                    localIdentName: '[name]__[local]___[hash:base64:5]'
+                  }
+                },
+                {
+                  loader: 'sass-loader',
+                  options: {
+                    modules: true,
+                    localIdentName: '[name]__[local]___[hash:base64:5]'
+                  }
+                }
+              ]
+            }),
+          }
+        ]
       },
       {
         test: /\.js$/,

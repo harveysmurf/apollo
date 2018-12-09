@@ -2,9 +2,9 @@ module.exports = {
     updateColors: (obj, { colors }, { cache } ) => {
         cache.writeData({
             data: {
-            filters: {
-                colors
-            }
+                filters: {
+                    colors
+                }
             }
         })
         return null

@@ -22,3 +22,11 @@ export const colorsQuery = gql`
         }
     }
 `
+
+export const mainImageQuery = gql`
+    query getMainImageQuery {
+        pdp {
+            mainImage
+        }
+    }
+`
