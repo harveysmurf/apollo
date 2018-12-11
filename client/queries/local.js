@@ -49,7 +49,9 @@ export const getProductQuery = gql`
             available,
             description_short,
             model,
+            slug,
             colors {
+                slug,
                 name,
                 images,
                 quantity,

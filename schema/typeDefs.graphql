@@ -4,6 +4,7 @@ input PriceInput {
 }
 
 type ColorType {
+    slug: String
     group: String
     name: String
     idx: Int

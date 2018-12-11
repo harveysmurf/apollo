@@ -7,8 +7,8 @@ const R = require('ramda')
 
 
 const parseProductUrl = url => {
-    const [ model, color ] = url.split('_')
-    return { model, color }
+    const [ model, slug ] = url.split('_')
+    return { model, slug }
 }
 
 const isAvailable = o => o.quantity > 0
@@ -18,9 +18,9 @@ const setMainColorImage = color => R.assoc('main_image',color.images[0], color)
 const setAvailability = color => R.assoc('available',isAvailable(color), color)
 
 const adaptColorForApi = R.pipe(setAvailability, setMainColorImage)
-const productDbToApi = (product, colorName) => {
+const productDbToApi = (product, slug) => {
     const color = R.find(
-        getBy('name')(colorName),
+        getBy('slug')(slug),
         product.colors
     ) 
     product.colors = R.map(adaptColorForApi, product.colors)
@@ -33,6 +33,7 @@ const productDbToApi = (product, colorName) => {
         ...(color.meta_title && {meta_title: color.meta_title}),
         ...(color.meta_description && {meta_description: color.meta_description}),
         color: color.name,
+        slug: `${product.model}_${color.slug}`,
         main_image: color.images[0],
         quantity: color.quantity,
         available: product.available && isAvailable(color),
@@ -187,21 +188,23 @@ module.exports = {
             }).exec()
         },
         getProduct: async (_parent, args ) => {
-            const { model, color } = parseProductUrl(args.slug)
+            const { model, slug } = parseProductUrl(args.slug)
+            console.log(model)
+            console.log(slug)
             const product = await ProductModel.findOne({
                 model,
-                colors: { $elemMatch: { name: color} }
+                colors: { $elemMatch: { slug } }
             }).exec()
-            return product && productDbToApi(product.toObject(), color)
+            return product && productDbToApi(product.toObject(), slug)
         },
         getRouteType: async (parent, args ) => {
             const categoryCount = await CategoryModel.count({slug: args.slug }).limit(1).exec()
             if(categoryCount)
                 return  'category'
-            const { model, color } = parseProductUrl(args.slug)
+            const { model, slug } = parseProductUrl(args.slug)
             const product = await ProductModel.count({
                 model,
-                colors: { $elemMatch: { name: color} }
+                colors: { $elemMatch: { slug } }
             }).limit(1).exec()
             if(product)
                 return 'product'

@@ -20,8 +20,8 @@ const updateSearchParams = (search, queryParams) => {
 }
 
 
-const ProductVariationThumb = ({name, selected, image, model}) => (
-    <Link to={`${model}_${name}`} className="text-center">
+const ProductVariationThumb = ({name, selected, image, model, color_slug}) => (
+    <Link to={`${model}_${color_slug}`} className="text-center">
         <div className="color-thumbnail">
             <img className={`color-image ${selected ? 'selected': ''}`} height="50" width="50" src={getImageCachedSizePath(image,'xs')}/>
                 {selected &&
@@ -107,7 +107,6 @@ class ProductContainer extends Component {
                     </div>
                     <div>
                         {colors.map((c, idx) => {
-                            console.log(idx)
                             const selected = c.name === color
                             return (
                             <ProductVariationThumb 
@@ -116,6 +115,7 @@ class ProductContainer extends Component {
                             selected={selected} 
                             image={c.main_image}
                             model={model} 
+                            color_slug={c.slug}
                             />
                             )
                         })}
