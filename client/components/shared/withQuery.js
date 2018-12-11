@@ -1,16 +1,10 @@
 import React, {Component} from 'react'
 import {graphql } from 'react-apollo';
 
-export const withQuery = (query, variables) => graphql(query, {
-    options:{
-        variables
-    }
-})
-
-
-export const WithLoadingCheck = (query, variables) => WrappedComponent => (
-    withQuery(query, variables)( props => {
-            if(props.data.loading)
+export const WithLoadingCheck = (query, config={}) => WrappedComponent => (
+    graphql(query, config)( props => {
+            const resultName = config.name ? config.name : 'data'
+            if(props[resultName].loading)
                 return <div>Loading</div>
             const WithLoading = <WrappedComponent {...props}/>
             return WithLoading

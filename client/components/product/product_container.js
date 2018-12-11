@@ -8,7 +8,7 @@ import InformationTabs from './information_tabs'
 import ProductSlideshow from './products_slideshow'
 import _ from 'lodash'
 import ProductGallery from './gallery/gallery'
-import { WithLoadingCheck } from '../shared/withLoadingCheck'
+import { WithLoadingCheck } from '../shared/withQuery'
 import { withMutation } from '../shared/withQuery'
 import { resetState } from '../../mutations/local'
 import {similarProducts, lastViewed } from '../../../data/fixtures'
@@ -209,7 +209,7 @@ class ProductContainer extends Component {
     }
 }
 
-const withProductQuery = graphql(query, {
+const withProductQuery = WithLoadingCheck(query, {
     options:(props) => ({
         variables: {
             slug: props.slug
@@ -217,4 +217,8 @@ const withProductQuery = graphql(query, {
     })
 })
 
-export default compose(withProductQuery, WithLoadingCheck, withMutation(resetState, {name: 'resetState'}), withRouter)(ProductContainer)
+export default compose(
+    withProductQuery, 
+    withMutation(resetState, {name: 'resetState'}), 
+    withRouter
+    )(ProductContainer)

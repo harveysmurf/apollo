@@ -1,7 +1,7 @@
 import React from 'react'
 import { getImageCachedSizePath } from '../../../../utils/image_utils'
 import { updateSelectedImage} from '../../../mutations/local'
-import { mainImageQuery} from '../../../queries/local'
+import { mainImageQuery, featuresQuery} from '../../../queries/local'
 import { WithLoadingCheck, withMutation } from '../../shared/withQuery'
 import { compose } from 'recompose'
 import styles from './gallery.scss'
@@ -46,7 +46,7 @@ class Gallery extends React.Component {
         this.container.current.scrollLeft -= 100
     }
     render() {
-        const {images, data: { pdp: { mainImage }}, mutate} = this.props
+        const {images, gallery: { pdp: { mainImage }}, mutate} = this.props
         return (
             <div>
                 <div className="main-image">
@@ -93,6 +93,6 @@ class Gallery extends React.Component {
     }
 }
 export default compose(
-    WithLoadingCheck(mainImageQuery),
+    WithLoadingCheck(mainImageQuery, { name: 'gallery'}),
     withMutation(updateSelectedImage)
 )(Gallery) 

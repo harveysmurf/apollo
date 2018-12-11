@@ -25,8 +25,16 @@ export const colorsQuery = gql`
 
 export const mainImageQuery = gql`
     query getMainImageQuery {
-        pdp {
+        pdp @client {
             mainImage
+        }
+    }
+`
+
+export const featuresQuery = gql`
+    query getFeatures {
+        features @client {
+            PDP_SIMILAR_PRODUCTS
         }
     }
 `

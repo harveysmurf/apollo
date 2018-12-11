@@ -12,6 +12,10 @@ import typeDefs from './typeDefs'
 import App from './app'
 
 const defaultState = {
+  features: {
+    PDP_SIMILAR_PRODUCTS: true,
+    PDP_RECOMMENDED_PRODUCTS: true
+  },
   filters: {
     material: '',
     styles: [],
