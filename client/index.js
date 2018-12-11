@@ -13,8 +13,9 @@ import App from './app'
 
 const defaultState = {
   features: {
-    PDP_SIMILAR_PRODUCTS: true,
-    PDP_RECOMMENDED_PRODUCTS: true
+    PDP_SIMILAR_PRODUCTS: false,
+    PDP_RECOMMENDED_PRODUCTS: false,
+    PDP_LAST_VIEWED: false
   },
   filters: {
     material: '',

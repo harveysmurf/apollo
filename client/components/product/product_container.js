@@ -1,6 +1,4 @@
 import React, {Component} from 'react'
-import {graphql } from 'react-apollo';
-import gql from 'graphql-tag'
 import { withRouter } from "react-router-dom";
 import { compose } from 'recompose'
 import { Link} from 'react-router-dom'
@@ -11,6 +9,7 @@ import ProductGallery from './gallery/gallery'
 import { WithLoadingCheck } from '../shared/withQuery'
 import { withMutation } from '../shared/withQuery'
 import { resetState } from '../../mutations/local'
+import { getProductQuery, featuresQuery } from '../../queries/local'
 import {similarProducts, lastViewed } from '../../../data/fixtures'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 
@@ -31,35 +30,6 @@ const ProductVariationThumb = ({name, selected, image, model}) => (
         </div>
     </Link>
 )
-const query = gql`
-query getProduct($slug: String!) {
-    getProduct(slug: $slug) {
-        name,
-        price,
-        available,
-        description_short,
-        model,
-        colors {
-            name,
-            images,
-            quantity,
-            main_image
-        }
-        availableColors {
-            name,
-            images,
-            quantity
-        }
-        similarProducts {
-            name,
-            slug
-        },
-        images,
-        color
-
-    }
-}
-`
 
 class ProductContainer extends Component {
     constructor(props) {
@@ -105,6 +75,7 @@ class ProductContainer extends Component {
 
     render() {
         const { 
+            getFeatures: {features},
             data: 
             {getProduct: { 
                 images, 
@@ -118,6 +89,7 @@ class ProductContainer extends Component {
                 color,
                 price
              } } } = this.props
+             console.log(features)
         return (
         <div className="product row">
             <div className="col-sm-12 col-lg-5">
@@ -162,10 +134,12 @@ class ProductContainer extends Component {
                         </div>
                     </div>
                     <div className="row product-buttons">
-                        <button className="tertiary add-to-cart">
-                            <i className="fa fa-cart-plus" aria-hidden="true"></i>
-                            Добави в количката
-                        </button>
+                        {available && (
+                            <button className="tertiary add-to-cart">
+                                <i className="fa fa-cart-plus" aria-hidden="true"></i>
+                                Добави в количката
+                            </button>
+                        )}
                         <button className="">
                             <i className="fa fa-exchange" aria-hidden="true"></i>
                         </button>
@@ -198,18 +172,23 @@ class ProductContainer extends Component {
             <div className="col-sm-12 information-tabs">
                 <InformationTabs/>
             </div>
+            {features.PDP_SIMILAR_PRODUCTS && (
             <div className="col-sm-12 similar">
                 <ProductSlideshow products={similarProducts} title="Подобни продукти"/>
             </div>
-            <div className="col-sm-12 last-viewed">
-                <ProductSlideshow products={lastViewed} title="Последно разгледани"/>
-            </div>
+            )}
+            {features.PDP_LAST_VIEWED && (
+                <div className="col-sm-12 last-viewed">
+                    <ProductSlideshow products={lastViewed} title="Последно разгледани"/>
+                </div>
+            )}
+
         </div>
         )
     }
 }
 
-const withProductQuery = WithLoadingCheck(query, {
+const withProductQuery = WithLoadingCheck(getProductQuery, {
     options:(props) => ({
         variables: {
             slug: props.slug
@@ -217,7 +196,10 @@ const withProductQuery = WithLoadingCheck(query, {
     })
 })
 
+const withFeaturesQuery = WithLoadingCheck(featuresQuery, {name: 'getFeatures'})
+
 export default compose(
+    withFeaturesQuery,
     withProductQuery, 
     withMutation(resetState, {name: 'resetState'}), 
     withRouter

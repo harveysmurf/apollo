@@ -34,7 +34,39 @@ export const mainImageQuery = gql`
 export const featuresQuery = gql`
     query getFeatures {
         features @client {
-            PDP_SIMILAR_PRODUCTS
+            PDP_SIMILAR_PRODUCTS,
+            PDP_RECOMMENDED_PRODUCTS,
+            PDP_LAST_VIEWED
+        }
+    }
+`
+
+export const getProductQuery = gql`
+    query getProduct($slug: String!) {
+        getProduct(slug: $slug) {
+            name,
+            price,
+            available,
+            description_short,
+            model,
+            colors {
+                name,
+                images,
+                quantity,
+                main_image
+            }
+            availableColors {
+                name,
+                images,
+                quantity
+            }
+            similarProducts {
+                name,
+                slug
+            },
+            images,
+            color
+
         }
     }
 `
