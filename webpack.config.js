@@ -1,5 +1,7 @@
 const path = require('path');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+
 module.exports = {
   entry: './client/index.js',
   output: {
@@ -99,5 +101,12 @@ module.exports = {
   devtool: 'eval-source-map',
   plugins: [
   new ExtractTextPlugin("styles.css"),
+  new BrowserSyncPlugin({
+    // browse to http://localhost:3000/ during development,
+    // ./public directory is being served
+    host: 'localhost',
+    port: 3000,
+    proxy: 'http://localhost:4000'
+  })
   ]
 }
