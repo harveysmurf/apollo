@@ -72,7 +72,7 @@ class Gallery extends React.Component {
                                     className={css({
                                         selected: key == mainImage
                                     })}>
-                                        <img width='150px' src={getImageCachedSizePath(image, 's')}/>
+                                        <img src={getImageCachedSizePath(image, 's')}/>
                                     </div>
                                     )
                                 })}

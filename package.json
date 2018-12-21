@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node server.js",
+    "server-dev": "nodemon -e js,graphql,jsx server.js --ignore client/ --ignore dist/",
     "dev": "concurrently \"npm run server\" \"webpack --watch\"",
-    "start": "nodemon -e js,graphql,jsx server.js --ignore client/ --ignore dist/",
+    "start": "concurrently \"npm run server-dev\" \"npm run webpack\"",
     "webpack": "webpack --watch"
   },
   "keywords": [],

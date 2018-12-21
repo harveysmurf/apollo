@@ -1,0 +1,16 @@
+{
+    "total": 68,
+    "quantity": 2,
+    "products": [
+        {
+            "model": "1472",
+            "color": "cheren",
+            "image": "some_image",
+            "price": 32,
+            "quantity": 2,
+            "total": 34,
+            "available": true
+        }
+    ],
+    "id": "5c1649c023c1c313a06fbbdd"
+}

@@ -1,14 +1,64 @@
 const axios = require('axios')
+const ObjectId = require('mongoose').Types.ObjectId
 const UserModel = require('./models/users')
 const ProductModel = require('./models/product')
 const CategoryModel = require('./models/category')
+const CartModel = require('./models/cart')
 const _ = require('lodash')
 const R = require('ramda')
 
+const notNill = x => R.not(R.isNil(x))
 
 const parseProductUrl = url => {
-    const [ model, slug ] = url.split('_')
-    return { model, slug }
+    const [ productSlug, colorSlug ] = url.split('_')
+    return { productSlug, colorSlug }
+}
+
+
+const getCustomerCart = async ( { products: cartProducts } ) => {
+    // console.log(cartProducts)
+    // const dbProducts = await ProductModel.find({model: { $in: R.map(o => o.model,cartProducts)}}).exec()
+    // const apiProducts = await Promise.all(cartProducts.map(cp => {
+    //     return ProductModel.findOne(
+    //         {
+    //             model: cp.model, 
+    //             colors: { $elemMatch: { slug: cp.colorSlug }}
+    //         }
+    //     )
+    // }))
+    const dbProducts = await Promise.all(cartProducts.map(async cp => {
+        const dbProduct = await ProductModel.findOne(
+            {
+                model: cp.model, 
+                colors: { $elemMatch: { slug: cp.colorSlug }}
+            }
+        ).exec()
+
+        if(!dbProduct) {
+            return null
+        } else {
+            return {
+                product: dbProduct.toObject(),
+                colorSlug: cp.colorSlug
+            }
+        }
+    }))
+    const apiProducts = R.pipe(R.filter(notNill))(dbProducts)
+    console.log({...apiProducts[0]})
+    // console.log(ha)
+    // const apiProducts = R.map(product => {
+    //     const dbProduct = dbProducts.find(dbProduct => (
+    //             R.contains(product.colorSlug,dbProduct.colors) 
+    //             && product.model == dbProduct.model
+    //             )
+    //         )
+    //     console.log(dbProduct)
+    //     return dbProduct ? productDbToApi(dbProduct, product.colorSlug) : null
+    // }, cartProducts)
+    // .filter(R.isEmpty)
+    // console.log(apiProducts)
+    // const apiResult = R.m
+    return null
 }
 
 const isAvailable = o => o.quantity > 0
@@ -173,10 +223,15 @@ module.exports = {
         loggedInUser: (_parent, _args, {req: { user }}) => {
             return user || null
         },
-        cart: (_parent, _args, {req}) => {
-            const {user, cookies: { cart: sessionCart } } = req
-            const cart = user ? user.cart : JSON.parse(sessionCart || {}) 
-            return createCart(cart)
+        cart: async (_parent, _args, {req, res}) => {
+            const cartId = req.cookies['cart']
+            if(!cartId) 
+                return null
+            const cart = await CartModel.findById(cartId).exec()
+            return getCustomerCart(cart)
+            // const {user, cookies: { cart: sessionCart } } = req
+            // const cart = user ? user.cart : JSON.parse(sessionCart || {}) 
+            // return createCart(cart)
         },
         users: () => [],
         allCategories: () => {
@@ -188,23 +243,21 @@ module.exports = {
             }).exec()
         },
         getProduct: async (_parent, args ) => {
-            const { model, slug } = parseProductUrl(args.slug)
-            console.log(model)
-            console.log(slug)
+            const { productSlug, colorSlug } = parseProductUrl(args.slug)
             const product = await ProductModel.findOne({
-                model,
-                colors: { $elemMatch: { slug } }
+                slug: productSlug,
+                colors: { $elemMatch: { slug: colorSlug } }
             }).exec()
-            return product && productDbToApi(product.toObject(), slug)
+            return product && productDbToApi(product.toObject(), colorSlug)
         },
         getRouteType: async (parent, args ) => {
             const categoryCount = await CategoryModel.count({slug: args.slug }).limit(1).exec()
             if(categoryCount)
                 return  'category'
-            const { model, slug } = parseProductUrl(args.slug)
+            const { productSlug, colorSlug } = parseProductUrl(args.slug)
             const product = await ProductModel.count({
-                model,
-                colors: { $elemMatch: { slug } }
+                slug: productSlug,
+                colors: { $elemMatch: { slug: colorSlug } }
             }).limit(1).exec()
             if(product)
                 return 'product'

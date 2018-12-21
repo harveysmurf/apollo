@@ -51,10 +51,10 @@ app.post('/login', (req, res, next) => {
     next()
   },
   passport.authenticate('local',{failWithError:true}), 
-  function(req, res, next) {
+  function(req, res) {
     return res.json({message: 'success'})
   },
-  function(err, req, res, next) {
+  function(err, req, res ) {
     return res.status(401).send({success: false, message: err})
   }
 );
