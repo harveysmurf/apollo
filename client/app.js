@@ -18,6 +18,7 @@ import MobileNav from './components/header/mobile_nav'
 import RouteResolver from './components/routeresolver'
 import Cart from './components/cart/cart'
 import Checkout from './components/checkout/checkout'
+import ProductContainer from './components/product/product_container';
 
 class App extends React.Component {
   constructor(props) {
@@ -67,6 +68,7 @@ class App extends React.Component {
               <Route path="/login" component={LoginComponent}/>
               <Route path="/cart" component={Cart}/>
               <Route path="/checkout" component={Checkout}/>
+              <Route path="/:seoSlug([a-zA-Z0-9_-]+)/:model([a-zA-Z]{2}[0-9]{4})" component={ProductContainer}/>
               <Route path="/:param*" component={RouteResolver}/>
               </Switch>
               {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}

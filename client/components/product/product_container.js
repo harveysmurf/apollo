@@ -9,7 +9,8 @@ import ProductGallery from './gallery/gallery'
 import { WithLoadingCheck } from '../shared/withQuery'
 import { withMutation } from '../shared/withQuery'
 import { resetState } from '../../mutations/local'
-import { getProductQuery, featuresQuery } from '../../queries/local'
+import { getProductQuery } from '../../queries/remote'
+import { featuresQuery } from '../../queries/local'
 import {similarProducts, lastViewed } from '../../../data/fixtures'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 
@@ -20,8 +21,8 @@ const updateSearchParams = (search, queryParams) => {
 }
 
 
-const ProductVariationThumb = ({name, selected, image, model, color_slug}) => (
-    <Link to={`${model}_${color_slug}`} className="text-center">
+const ProductVariationThumb = ({name, selected, image, model, slug}) => (
+    <Link to={`/${slug}/${model}`} className="text-center">
         <div className="color-thumbnail">
             <img className={`color-image ${selected ? 'selected': ''}`} height="50" width="50" src={getImageCachedSizePath(image,'xs')}/>
                 {selected &&
@@ -78,6 +79,7 @@ class ProductContainer extends Component {
             getFeatures: {features},
             data: 
             {getProduct: { 
+                name,
                 images, 
                 colors, 
                 available,
@@ -89,7 +91,6 @@ class ProductContainer extends Component {
                 color,
                 price
              } } } = this.props
-             console.log(features)
         return (
         <div className="product row">
             <div className="col-sm-12 col-lg-5">
@@ -107,15 +108,15 @@ class ProductContainer extends Component {
                     </div>
                     <div>
                         {colors.map((c, idx) => {
-                            const selected = c.name === color
+                            const selected = c.model === model
                             return (
                             <ProductVariationThumb 
                             key={idx}
                             name={c.name} 
                             selected={selected} 
                             image={c.main_image}
-                            model={model} 
-                            color_slug={c.slug}
+                            model={c.model} 
+                            slug={c.slug}
                             />
                             )
                         })}
@@ -191,7 +192,7 @@ class ProductContainer extends Component {
 const withProductQuery = WithLoadingCheck(getProductQuery, {
     options:(props) => ({
         variables: {
-            slug: props.slug
+            model: props.match.params.model
         }
     })
 })
@@ -202,5 +203,4 @@ export default compose(
     withFeaturesQuery,
     withProductQuery, 
     withMutation(resetState, {name: 'resetState'}), 
-    withRouter
     )(ProductContainer)

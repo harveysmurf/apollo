@@ -13,6 +13,8 @@ type ColorType {
     price: Float
     available: Boolean
     main_image: String
+    model: String
+    product_name: String
 }
 
 type AttributeProductType {
@@ -58,7 +60,7 @@ type ProductType {
     available: Boolean
     quantity: Int
     availableColors: [ColorType]
-    model: Int
+    model: String
     main_image: String
     description_short: String
     description: String
@@ -128,7 +130,7 @@ type Query {
     cart: CartType
     allCategories: [CategoryType]
     getCategory(slug: String!, colors: [String], cursor: String, material: String, price: PriceInput): CategoryType
-    getProduct(slug: String!): ProductType
+    getProduct(model: String!): ProductType
     getRouteType(slug: String!): String
 }
 

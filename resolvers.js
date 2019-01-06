@@ -68,22 +68,30 @@ const setMainColorImage = color => R.assoc('main_image',color.images[0], color)
 const setAvailability = color => R.assoc('available',isAvailable(color), color)
 
 const adaptColorForApi = R.pipe(setAvailability, setMainColorImage)
-const productDbToApi = (product, slug) => {
+const productDbToApi = (product, model) => {
     const color = R.find(
-        getBy('slug')(slug),
+        getBy('model')(model),
         product.colors
     ) 
     product.colors = R.map(adaptColorForApi, product.colors)
     return {
         ...product,
+        model: color.model,
+        name: `${product.name} ${color.name}`,
+        description: `${product.description} | ${color.name}`,
+        description_short: `${product.description_short} ${color.name}`,
+        meta_title: `${product.meta_title} ${color.name}`,
+        meta_description: `${product.meta_description} ${color.name}`,
         ...(color.price && {price: color.price}),
         ...(color.description && {description: color.description}),
         ...(color.description_short && {description_short: color.description}),
         ...(color.discount && {discount: color.discount}),
         ...(color.meta_title && {meta_title: color.meta_title}),
         ...(color.meta_description && {meta_description: color.meta_description}),
+        ...(color.slug && {slug: color.slug}),
+        ...(color.product_name && {name: color.product_name}),
+        ...(color.model && {model: color.model}),
         color: color.name,
-        slug: `${product.model}_${color.slug}`,
         main_image: color.images[0],
         quantity: color.quantity,
         available: product.available && isAvailable(color),
@@ -243,24 +251,16 @@ module.exports = {
             }).exec()
         },
         getProduct: async (_parent, args ) => {
-            const { productSlug, colorSlug } = parseProductUrl(args.slug)
+            const model = args.model
             const product = await ProductModel.findOne({
-                slug: productSlug,
-                colors: { $elemMatch: { slug: colorSlug } }
+                colors: { $elemMatch: { model } }
             }).exec()
-            return product && productDbToApi(product.toObject(), colorSlug)
+            return product && productDbToApi(product.toObject(), model)
         },
         getRouteType: async (parent, args ) => {
             const categoryCount = await CategoryModel.count({slug: args.slug }).limit(1).exec()
             if(categoryCount)
                 return  'category'
-            const { productSlug, colorSlug } = parseProductUrl(args.slug)
-            const product = await ProductModel.count({
-                slug: productSlug,
-                colors: { $elemMatch: { slug: colorSlug } }
-            }).limit(1).exec()
-            if(product)
-                return 'product'
             return null
         }
     },

@@ -16,7 +16,7 @@ query getCategory($slug: String!, $colors: [String] = [], $cursor: String, $mate
                 name,
                 price,
                 available,
-                main_img,
+                main_image,
                 description,
                 slug,
                 colors {
@@ -58,6 +58,38 @@ export const cartQuery = gql`
             },
             price
             quantity
+        }
+    }
+`
+export const getProductQuery = gql`
+    query getProduct($model: String!) {
+        getProduct(model: $model) {
+            name,
+            price,
+            available,
+            description_short,
+            model,
+            slug,
+            colors {
+                slug,
+                name,
+                images,
+                quantity,
+                main_image
+                model
+            }
+            availableColors {
+                name,
+                images,
+                quantity
+            }
+            similarProducts {
+                name,
+                slug
+            },
+            images,
+            color
+
         }
     }
 `

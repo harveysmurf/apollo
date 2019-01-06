@@ -40,35 +40,3 @@ export const featuresQuery = gql`
         }
     }
 `
-
-export const getProductQuery = gql`
-    query getProduct($slug: String!) {
-        getProduct(slug: $slug) {
-            name,
-            price,
-            available,
-            description_short,
-            model,
-            slug,
-            colors {
-                slug,
-                name,
-                images,
-                quantity,
-                main_image
-            }
-            availableColors {
-                name,
-                images,
-                quantity
-            }
-            similarProducts {
-                name,
-                slug
-            },
-            images,
-            color
-
-        }
-    }
-`
