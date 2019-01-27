@@ -68,7 +68,7 @@ class App extends React.Component {
               <Route path="/login" component={LoginComponent}/>
               <Route path="/cart" component={Cart}/>
               <Route path="/checkout" component={Checkout}/>
-              <Route path="/:seoSlug([a-zA-Z0-9_-]+)/:model([a-zA-Z]{2}[0-9]{4})" component={ProductContainer}/>
+              <Route path="/:seoSlug/:model([a-zA-Z]{2}[0-9]{4})" component={ProductContainer}/>
               <Route path="/:param*" component={RouteResolver}/>
               </Switch>
               {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}

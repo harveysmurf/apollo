@@ -41,7 +41,7 @@ class ProductContainer extends Component {
 
     componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
-    if(prevProps.slug !== this.props.slug)
+    if(prevProps.model !== this.props.model)
         this.props.resetState()
     }
     notifyMe(available) {
@@ -67,18 +67,12 @@ class ProductContainer extends Component {
         )
     }
 
-    onColorClick(color) {
-        return () => {
-            const { history, location } = this.props
-            history.push(`${location.pathname}?${updateSearchParams(location.search, {color: color.name})}`)
-        }
-    }
-
     render() {
         const { 
             getFeatures: {features},
             data: 
             {getProduct: { 
+                slug,
                 name,
                 images, 
                 colors, 
@@ -87,6 +81,7 @@ class ProductContainer extends Component {
                 main_image,
                 description_short,
                 description,
+                variations,
                 model,
                 color,
                 price
@@ -107,14 +102,14 @@ class ProductContainer extends Component {
                         {description_short}
                     </div>
                     <div>
-                        {colors.map((c, idx) => {
+                        {variations.map((c, idx) => {
                             const selected = c.model === model
                             return (
                             <ProductVariationThumb 
                             key={idx}
                             name={c.name} 
                             selected={selected} 
-                            image={c.main_image}
+                            image={c.images.length && c.images[0]}
                             model={c.model} 
                             slug={c.slug}
                             />

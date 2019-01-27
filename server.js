@@ -1,5 +1,4 @@
 const express =require('express')
-const mongoose = require('mongoose')
 const fs = require('fs')
 const path = require('path')
 const session = require("express-session")
@@ -7,6 +6,7 @@ const bodyParser = require("body-parser")
 const cookieParse = require('cookie-parser')
 const cors = require('cors')
 let passport = require('./passport')
+require('./server/services/mongoose')
 
 const { ApolloServer } = require('apollo-server-express')
 const resolvers = require('./resolvers')
@@ -14,16 +14,6 @@ const resolvers = require('./resolvers')
 
 const app = express()
 app.use(cookieParse())
-const mongo_uri = 'mongodb://harvey:monio110605@ds159024.mlab.com:59024/damski'
-
-
-mongoose.Promise = global.Promise;
-mongoose.connect(mongo_uri, {
-  keepAlive: true,
-  reconnectTries: Number.MAX_VALUE,
-  useMongoClient: true,
-  reconnectInterval: 1000 
-});
 
 var corsOptions = {
   credentials: true // <-- REQUIRED backend setting

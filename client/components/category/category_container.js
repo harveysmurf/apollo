@@ -27,7 +27,6 @@ let CategoryContainer = ({slug, url}) =>  (
                                 (
                                 <div key={index} className="col-sm-3">
                                 <ProductThumb 
-                                color={filters.colors.length > 0 ? filters.colors[0] : null} 
                                 product={p}/>
                                 </div>
                                 )

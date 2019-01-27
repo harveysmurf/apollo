@@ -1,14 +1,22 @@
-const mongo_uri = 'mongodb://harvey:monio110605@ds159024.mlab.com:59024/damski'
-const mongoose = require('mongoose')
+require('./server/services/mongoose')
 const ProductModel = require('./models/product')
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId;
 
-mongoose.connect(mongo_uri, {
-  keepAlive: true,
-  reconnectTries: 30,
-  useMongoClient: true
-});
+// const result = ProductModel.find({ 'colors.name': { $exists: true } }).exec()
+// result.then(res => {
+//   res.forEach(product => {
 
-ProductModel.findById('5a7cae7857e6c77768389714').exec()
-.then(res => {
-    console.log(res)
-})
+//     if(product.colors)
+//     product.colors.map(val => {
+//       val.save()
+//     })
+//     console.log(product.colors)
+//     product.save()
+
+//   })
+// })
+
+const result = ProductModel.updateMany({ 'colors.name': { $exists: true } }, {
+  $unset: {'colors.$.name':''}
+}).exec()

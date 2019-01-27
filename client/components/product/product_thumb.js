@@ -19,16 +19,15 @@ export default class ProductThumb extends Component {
     }
     render() {
         let product = this.props.product
-        let color = this.props.color
         return (
             <div className="text-center product-thumb">
                 <div>
-                    <Link to={product.slug}>
-                <img width={150} height={150} src={this.getDisplayImage(product, color)}/>
+                    <Link to={`${product.slug}/${product.model}`}>
+                <img width={150} height={150} src={product.images[0]}/>
                     </Link>
                 </div>
                 <div>
-                    <a href="#">{product.name}</a>
+                    <a href="#">{`${product.name} | ${product.model}`}</a>
                 </div>
                 <div className="text-left">
                     {product.description}

@@ -6,7 +6,7 @@ input PriceInput {
 type ColorType {
     slug: String
     group: String
-    name: String
+    color: String
     idx: Int
     images: [String]
     quantity: Int
@@ -14,7 +14,8 @@ type ColorType {
     available: Boolean
     main_image: String
     model: String
-    product_name: String
+    name: String
+    similar: [ProductType]
 }
 
 type AttributeProductType {
@@ -70,10 +71,10 @@ type ProductType {
     slug: String
     price: Float
     createdAt: String
-    color: String
+    color: ColorType
     colors: [ColorType]
-    similar: [String]
-    similarProducts: [ProductType]
+    variations: [ColorType]
+    similar: [ProductType]
     images: [String]
 }
 

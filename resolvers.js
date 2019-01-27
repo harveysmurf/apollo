@@ -1,7 +1,7 @@
 const axios = require('axios')
 const ObjectId = require('mongoose').Types.ObjectId
 const UserModel = require('./models/users')
-const ProductModel = require('./models/product')
+const { ProductModel, productPipeline } = require('./models/product')
 const CategoryModel = require('./models/category')
 const CartModel = require('./models/cart')
 const _ = require('lodash')
@@ -127,7 +127,7 @@ const createCart = async cartBase => {
 }
 const createFilterObject = ({colors, material, categories, price }) => {
     return {
-    ...(colors && colors.length > 0 && {'colors.group': { $in: colors}}),
+    ...(colors && colors.length > 0 && {'color.group': { $in: colors}}),
     ...(categories && {categories}),
     ...(material && {material}),
     ...(price && {price: {$gte: price.min, $lte: price.max}})
@@ -141,28 +141,74 @@ module.exports = {
             let hasMore = true
             const find = createFilterObject({colors, material, categories: parentValue.id, price})
             if(! cursor) {
-                cursorPromise = ProductModel.findOne(find).sort({createdAt: -1, _id: -1}).exec()
+                cursorPromise = ProductModel.aggregate([...productPipeline, {
+                    $match: {
+                        ...find
+                    }
+                }, {
+                    $sort: {
+                        createdAt: -1
+                    }
+                }]).exec()
             }
             else {
-                cursorPromise = ProductModel.findOne(Object.assign({},find,{createdAt: {$lte: cursor}}))
-                                .sort({createdAt: -1, _id: -1}).exec()
+                cursorPromise = ProductModel.aggregate([...productPipeline, {
+                    $match: {
+                        ...find,
+                        model: cursor
+                    }
+                }]).exec()
             }
 
-            let cursorItem = await cursorPromise
-            if(!cursorItem)
-            return {
-                cursor,
-                products: [],
-                hasMore: false
+            const cursorResult = await cursorPromise
+            if(!Array.isArray(cursorResult) || !cursorResult.length ) {
+                return {
+                    cursor,
+                    products: [],
+                    hasMore: false
+                }
             }
+
+            const cursorItem = cursorResult[0]
             
-            let lastItem = await ProductModel.findOne(find).sort({createdAt: 1, _id: 1}).exec()
-            let res = await ProductModel.find(Object.assign({},find,{createdAt: {$lte: cursorItem.createdAt}})).sort({createdAt: -1, _id: -1}).limit(15).exec()
+            const lastItemResult = await ProductModel.aggregate(
+                [
+                    ...productPipeline, 
+                    {
+                        $match: {
+                            ...find
+                        }
+                    },
+                    {
+                        $sort: {
+                            createdAt: 1
+                        }
+                    }
+                ]
+            ).exec()
 
+            const lastItem = lastItemResult && Array.isArray(lastItemResult) && lastItemResult[0]
+
+
+            let res = await ProductModel.aggregate([
+                ...productPipeline,
+                {
+                    $match: {
+                        ...find,
+                        createdAt: {$lte: cursorItem.createdAt}
+                    }
+                },
+                {
+                    $sort: {createdAt: -1}
+                },
+                {
+                    $limit: 15
+                }
+            ]).exec()
             let products = res.map((s) => {
-            let obj =  s.toObject()
-            obj.createdAt = s.createdAt.toISOString()
-            return obj
+                // console.log(s)
+            s.createdAt = s.createdAt.toISOString()
+            return s
             })
 
             if(!products) 
@@ -173,11 +219,11 @@ module.exports = {
                 }
             
 
-            if(products[products.length - 1]._id == lastItem.id)
+            if(products[products.length - 1].model == lastItem.model)
                 hasMore = false
 
             return {
-                cursor: res[res.length -1].createdAt.toISOString(),
+                cursor: res[res.length -1].model,
                 products,
                 hasMore
             }
@@ -197,21 +243,7 @@ module.exports = {
         }
     },
     ProductType: {
-        similarProducts: (parentValue) => {
-            let isSimilarTo = ProductModel.find({
-            similar: parentValue._id
-            }).exec()
-
-            let similars =  ProductModel.find({
-            _id: parentValue.similar
-            }).exec()
-
-            return Promise.all([isSimilarTo, similars]).then((res) => {
-            let concated = res[0].concat(res[1])
-            return _.uniqBy(concated, '_id')
-            })
-        },
-        availableColors: ( { colors }) => colors.filter(c => c.quantity > 0 )
+        availableColors: ( { variations }) => variations.filter(c => c.quantity > 0 )
     },
     OrderType: {
         order_item: () => {}
@@ -252,10 +284,27 @@ module.exports = {
         },
         getProduct: async (_parent, args ) => {
             const model = args.model
-            const product = await ProductModel.findOne({
-                colors: { $elemMatch: { model } }
-            }).exec()
-            return product && productDbToApi(product.toObject(), model)
+            const result = await ProductModel.aggregate([...productPipeline, {
+                $match: {
+                    'color.model': model
+                }
+            }]).exec()
+
+            if(!Array.isArray(result) || !result.length) {
+                return null
+            }
+
+
+            const product = result[0]
+            if(Array.isArray(product.similar) && product.similar.length) {
+                product.similar = await ProductModel.aggregate([...productPipeline, {
+
+                    $match: {
+                        'color.model': { $in: product.similar }
+                    }
+                }]).exec()
+            }
+            return product
         },
         getRouteType: async (parent, args ) => {
             const categoryCount = await CategoryModel.count({slug: args.slug }).limit(1).exec()

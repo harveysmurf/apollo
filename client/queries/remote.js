@@ -13,16 +13,18 @@ query getCategory($slug: String!, $colors: [String] = [], $cursor: String, $mate
             cursor,
             hasMore,
             products {
-                name,
-                price,
-                available,
-                main_image,
-                description,
-                slug,
+                model
+                images
+                name
+                price
+                available
+                main_image
+                description
+                slug
                 colors {
-                    group,
-                    name,
-                    images,
+                    group
+                    color
+                    images
                     quantity
                 }
             }
@@ -53,7 +55,7 @@ export const cartQuery = gql`
                 available
                 productColor {
                     images
-                    name
+                    color
                 }
             },
             price
@@ -64,17 +66,18 @@ export const cartQuery = gql`
 export const getProductQuery = gql`
     query getProduct($model: String!) {
         getProduct(model: $model) {
-            name,
-            price,
-            available,
-            description_short,
-            model,
-            slug,
-            colors {
-                slug,
-                name,
-                images,
-                quantity,
+            main_image
+            name
+            price
+            available
+            description_short
+            model
+            slug
+            variations {
+                slug
+                color
+                images
+                quantity
                 main_image
                 model
             }
@@ -83,12 +86,14 @@ export const getProductQuery = gql`
                 images,
                 quantity
             }
-            similarProducts {
+            similar {
                 name,
                 slug
             },
-            images,
-            color
+            images
+            color {
+                color
+            }
 
         }
     }
