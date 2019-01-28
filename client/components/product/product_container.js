@@ -41,7 +41,9 @@ class ProductContainer extends Component {
 
     componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
-    if(prevProps.model !== this.props.model)
+    const  { data: {getProduct: { model, } } } = this.props
+    const  { data: {getProduct: { model:prevModel } } } = prevProps
+    if(prevModel && prevModel !== model)
         this.props.resetState()
     }
     notifyMe(available) {
@@ -90,7 +92,7 @@ class ProductContainer extends Component {
         <div className="product row">
             <div className="col-sm-12 col-lg-5">
                 <div className="product-gallery">
-                    <ProductGallery images={images} selected={0}/>
+                    <ProductGallery images={images} selected={0} model={model}/>
                 </div>
             </div>
             <div className="col-sm-12 col-lg-7">
