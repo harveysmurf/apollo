@@ -49,14 +49,13 @@ export const cartQuery = gql`
                 product {
                     name
                     price
-                }
-                color
-                quantity
-                available
-                productColor {
-                    images
                     color
+                    images
+                    available
+                    quantity
                 }
+                quantity
+                price
             },
             price
             quantity

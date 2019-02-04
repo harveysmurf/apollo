@@ -1,5 +1,7 @@
+$universal-margin: 0;
 @import 'node_modules/mini.css/src/flavors/mini-default.scss';
 @import 'node_modules/react-input-range/src/scss/input-range/input-range.scss';
+
 body {
     margin: 0;
     padding: 0;

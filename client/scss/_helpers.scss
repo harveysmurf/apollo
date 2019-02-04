@@ -1,5 +1,8 @@
 
 // Aligns content horizontally
+.no-gutters {
+    padding: 0;
+}
 .row-center {
     align-items: center;
     justify-content: center

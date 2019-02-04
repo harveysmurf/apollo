@@ -1,24 +1,33 @@
 import React, {Fragment} from 'react'
 import { Link} from 'react-router-dom'
 import { Query } from 'react-apollo';
+import classNames from 'classnames/bind'
 import { cartQuery } from '../../queries/remote'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
+import styles from './cart.scss'
+const css = classNames.bind(styles)
 
 const EmptyBasket = () => (<p>Вашата кошница е празна</p>)
 
-const CartRow = ({productColor, product, available, quantity}) => (
+const CartRow = ({product: {available, images, name, quantity:productQuantity, color}, quantity, price}) => (
     <Fragment>
-    <div className="row">
-        <div className="col-sm-5">
-            <img src={getImageCachedSizePath(productColor.images[0],'s')}/>
+    <div className={css(['row','cart-row'])}>
+        <div className={css(['col-sm-10 no-gutters','cart-row__cart-item'])}>
+            <img src={getImageCachedSizePath(images[0],'s')}/>
+            <div className={css(['cart-row__cart-item-description'])}>
+                    <div>{name}</div>
+                    <div><b>{color}</b></div>
+                    <div>
+                        {quantity} БР.
+                    </div>
+                    <div><b>{price}лв.</b></div>
+            </div>
         </div>
-        <div className="col-sm-7 row">
-                <div className="col-sm-12">{product.name}</div>
-                <div className="col-sm-12"><b>{productColor.name}</b></div>
-                <div className="col-sm-12">
-                    Количество: {quantity}
-                </div>
-                <div className="col-sm-12"><b>{product.price * quantity}лв.</b></div>
+        <div className="col-sm-2">
+            <div className={css(['cart-row__item-actions'])}>
+                <div className={css(['cart-row__cart-icon'])}><i className="fa fa-close"></i></div>
+                <div><i className="fa fa-heart"></i></div>
+            </div>
         </div>
     </div>
     </Fragment>
@@ -26,21 +35,27 @@ const CartRow = ({productColor, product, available, quantity}) => (
 
 export const CartSummary = ({cart: {quantity, price}}) => (
     <Fragment>    
-        <h3>Общо кошница</h3>
         <div className="row">
-        {quantity} ПРОДУКТА
+            <div className="col-sm-12">
+                <h3>Общо кошница</h3>
+                <br/>
+                {quantity} ПРОДУКТА
+            </div>
         </div>
-        <hr/>
+        <div className="row">
+            <div className="col-sm-12 ">
+                <div className="devider"></div>
+            </div>
+        </div>
         <div className="row bottom-spacing-xl">
-            <div className="col-sm-8">ЦЕНА</div>
-            <div className="col-sm-4">{price}лв.</div>
+            <div className="col-sm-12 text-right">Обща ЦЕНА {price} лв</div>
         </div>
     </Fragment>
 
 )
 
 export const CartProductsList = ({products: cartProducts}) => {
-    return <div className="row">{cartProducts.map(CartRow)}</div>
+    return <div >{cartProducts.map(CartRow)}</div>
 }
 
 export const CartMiniSummary = ({cart: {price, quantity}}) => (
@@ -54,7 +69,7 @@ export const CartMiniSummary = ({cart: {price, quantity}}) => (
             </div>
         </div>
         <div className="col-sm-6">
-                <Link to="/checkout" className="submit-button button text-center">
+                <Link to="/checkout" className={css(["cart-button", "submit-button button text-center"])}>
                     Поръчка
                 </Link>
         </div>
@@ -68,13 +83,20 @@ export default  props => (
             {!cart && !loading ? <EmptyBasket/>: 
             (
                 <Fragment>
-                    <h3>Кошница</h3>
+                    <div className="col-sm-12">
+                        <h3 className={css(['basket-header','col-sm-12'])}>Кошница</h3>
+                    </div>
                     <CartMiniSummary cart={cart}/>
-        <div className="col-sm-12 devider"/>
+                    <div className='col-sm-12'>
+                        <div className="devider"/>
+                    </div>
                     <CartProductsList products={cart.products}/>
                     <CartSummary cart={cart}/>
+                    <div className='col-sm-12'>
+                        <div className="devider"/>
+                    </div>
                     <div className="row">
-                        <Link to="/checkout" className="submit-button button text-center">
+                        <Link to="/checkout" className={css(["cart-button", "submit-button", "button", "text-center"])}>
                             Поръчка
                         </Link>
                     </div>

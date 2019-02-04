@@ -71,7 +71,7 @@ type ProductType {
     slug: String
     price: Float
     createdAt: String
-    color: ColorType
+    color: String
     colors: [ColorType]
     variations: [ColorType]
     similar: [ProductType]
@@ -101,11 +101,9 @@ type CartType {
 }
 
 type CartProductType {
-    product: ProductType,
-    color: String,
-    quantity: Int,
-    available: Int,
-    productColor: ColorType
+    product: ProductType
+    quantity: Int
+    price: String
 }
 
 type UserType {

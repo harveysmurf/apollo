@@ -87,7 +87,7 @@ const ProductPipeline = [
                    cond: { $ne: [ "$$item.model", "$color.model" ] }
                 }
             },
-            color:1,
+            color: "$color.color",
             updatedAt: {
                 $cond: {
                     if: {$gt: ["$updatedAt", "$color.updatedAt"]},

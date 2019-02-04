@@ -4,127 +4,38 @@ const UserModel = require('./models/users')
 const { ProductModel, productPipeline } = require('./models/product')
 const CategoryModel = require('./models/category')
 const CartModel = require('./models/cart')
-const _ = require('lodash')
 const R = require('ramda')
 
-const notNill = x => R.not(R.isNil(x))
+const getCustomerCart = async (cartId) => {
+    const { products: cartProducts} = await CartModel.findById(cartId).exec()
 
-const parseProductUrl = url => {
-    const [ productSlug, colorSlug ] = url.split('_')
-    return { productSlug, colorSlug }
-}
-
-
-const getCustomerCart = async ( { products: cartProducts } ) => {
-    // console.log(cartProducts)
-    // const dbProducts = await ProductModel.find({model: { $in: R.map(o => o.model,cartProducts)}}).exec()
-    // const apiProducts = await Promise.all(cartProducts.map(cp => {
-    //     return ProductModel.findOne(
-    //         {
-    //             model: cp.model, 
-    //             colors: { $elemMatch: { slug: cp.colorSlug }}
-    //         }
-    //     )
-    // }))
-    const dbProducts = await Promise.all(cartProducts.map(async cp => {
-        const dbProduct = await ProductModel.findOne(
-            {
-                model: cp.model, 
-                colors: { $elemMatch: { slug: cp.colorSlug }}
-            }
-        ).exec()
-
-        if(!dbProduct) {
-            return null
-        } else {
-            return {
-                product: dbProduct.toObject(),
-                colorSlug: cp.colorSlug
-            }
+    const models = cartProducts.map((value) => value.model)
+    const products = await ProductModel.aggregate([...productPipeline, {
+        $match: {
+            model: {$in: models}
         }
-    }))
-    const apiProducts = R.pipe(R.filter(notNill))(dbProducts)
-    console.log({...apiProducts[0]})
-    // console.log(ha)
-    // const apiProducts = R.map(product => {
-    //     const dbProduct = dbProducts.find(dbProduct => (
-    //             R.contains(product.colorSlug,dbProduct.colors) 
-    //             && product.model == dbProduct.model
-    //             )
-    //         )
-    //     console.log(dbProduct)
-    //     return dbProduct ? productDbToApi(dbProduct, product.colorSlug) : null
-    // }, cartProducts)
-    // .filter(R.isEmpty)
-    // console.log(apiProducts)
-    // const apiResult = R.m
-    return null
+    }])
+
+
+    const cart = products.reduce((cart,product) => {
+        const quantity = cartProducts.find(cp => cp.model === product.model).quantity
+        if(!quantity) {
+            return cart
+        }
+        const price = quantity * product.price
+        cart.price += price
+        cart.quantity += quantity
+
+        cart.products.push({
+            quantity,
+            product,
+            price
+        })
+        return cart
+    }, {price: 0, products: [], quantity: 0})
+    return cart
 }
 
-const isAvailable = o => o.quantity > 0
-const getBy = property => v => o => o[property] === v
-
-const setMainColorImage = color => R.assoc('main_image',color.images[0], color)
-const setAvailability = color => R.assoc('available',isAvailable(color), color)
-
-const adaptColorForApi = R.pipe(setAvailability, setMainColorImage)
-const productDbToApi = (product, model) => {
-    const color = R.find(
-        getBy('model')(model),
-        product.colors
-    ) 
-    product.colors = R.map(adaptColorForApi, product.colors)
-    return {
-        ...product,
-        model: color.model,
-        name: `${product.name} ${color.name}`,
-        description: `${product.description} | ${color.name}`,
-        description_short: `${product.description_short} ${color.name}`,
-        meta_title: `${product.meta_title} ${color.name}`,
-        meta_description: `${product.meta_description} ${color.name}`,
-        ...(color.price && {price: color.price}),
-        ...(color.description && {description: color.description}),
-        ...(color.description_short && {description_short: color.description}),
-        ...(color.discount && {discount: color.discount}),
-        ...(color.meta_title && {meta_title: color.meta_title}),
-        ...(color.meta_description && {meta_description: color.meta_description}),
-        ...(color.slug && {slug: color.slug}),
-        ...(color.product_name && {name: color.product_name}),
-        ...(color.model && {model: color.model}),
-        color: color.name,
-        main_image: color.images[0],
-        quantity: color.quantity,
-        available: product.available && isAvailable(color),
-        images: color.images
-   } 
-}
-
-// [{"color":"черен","product_id":"5a7cae7857e6c77768389714","quantity":55}]
-const createCart = async cartBase => {
-            const products = await Promise.all(cartBase
-            .map(async cartProduct  => {
-                const product = await ProductModel.findById(cartProduct.product_id).exec()
-                const productColor = product.colors.find(color => color.name === cartProduct.color) 
-                return {
-                    product ,
-                    quantity: cartProduct.quantity,
-                    color: cartProduct.color,
-                    available: productColor.quantity - cartProduct.quantity,
-                    productColor
-                }
-            }))
-            const cartTotal = products.reduce((sum, cartProduct) => {
-                return {
-                price: sum.price + (cartProduct.product.price*cartProduct.quantity),
-                quantity: sum.quantity + cartProduct.quantity
-                }
-            }, { quantity: 0, price: 0})
-
-            return {
-                products,
-                ...cartTotal
-            }
-}
 const createFilterObject = ({colors, material, categories, price }) => {
     return {
     ...(colors && colors.length > 0 && {'color.group': { $in: colors}}),
@@ -264,14 +175,13 @@ module.exports = {
             return user || null
         },
         cart: async (_parent, _args, {req, res}) => {
-            const cartId = req.cookies['cart']
-            if(!cartId) 
+            const {user, cookies: { cart } } = req
+            const cartId = user ? user.cart : cart
+            if(!cartId) {
                 return null
-            const cart = await CartModel.findById(cartId).exec()
-            return getCustomerCart(cart)
-            // const {user, cookies: { cart: sessionCart } } = req
-            // const cart = user ? user.cart : JSON.parse(sessionCart || {}) 
-            // return createCart(cart)
+            }
+
+            return getCustomerCart(cartId)
         },
         users: () => [],
         allCategories: () => {
