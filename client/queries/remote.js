@@ -90,10 +90,7 @@ export const getProductQuery = gql`
                 slug
             },
             images
-            color {
-                color
-            }
-
+            color 
         }
     }
 `

@@ -108,8 +108,19 @@ const ProductPipeline = [
     
     ]
 
+const ProductModel = mongoose.model('products', productSchema)
+
+const getProductBy = key => async value => {
+    const result = await ProductModel.aggregate([...ProductPipeline, {
+        $match: {
+            [key]: value
+        }
+    }])
+    return result[0] || null
+} 
 module.exports = {
-    ProductModel: mongoose.model('products', productSchema),
-    productPipeline: ProductPipeline
+    ProductModel,
+    productPipeline: ProductPipeline,
+    getProductBy
 } 
 

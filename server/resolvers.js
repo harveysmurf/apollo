@@ -1,40 +1,12 @@
 const axios = require('axios')
 const ObjectId = require('mongoose').Types.ObjectId
-const UserModel = require('./models/users')
-const { ProductModel, productPipeline } = require('./models/product')
-const CategoryModel = require('./models/category')
-const CartModel = require('./models/cart')
+const UserModel = require('../models/users')
+const { ProductModel, productPipeline } = require('../models/product')
+const CategoryModel = require('../models/category')
+const CartModel = require('../models/cart')
 const R = require('ramda')
+const cartQuery = require('./resolvers/queries/cart')
 
-const getCustomerCart = async (cartId) => {
-    const { products: cartProducts} = await CartModel.findById(cartId).exec()
-
-    const models = cartProducts.map((value) => value.model)
-    const products = await ProductModel.aggregate([...productPipeline, {
-        $match: {
-            model: {$in: models}
-        }
-    }])
-
-
-    const cart = products.reduce((cart,product) => {
-        const quantity = cartProducts.find(cp => cp.model === product.model).quantity
-        if(!quantity) {
-            return cart
-        }
-        const price = quantity * product.price
-        cart.price += price
-        cart.quantity += quantity
-
-        cart.products.push({
-            quantity,
-            product,
-            price
-        })
-        return cart
-    }, {price: 0, products: [], quantity: 0})
-    return cart
-}
 
 const createFilterObject = ({colors, material, categories, price }) => {
     return {
@@ -168,20 +140,12 @@ module.exports = {
         allCategories: () => CategoryModel.find({}).exec()
     },
     Query: {
+        ...cartQuery,
         viewer: () => {
             return {name: 'Simeon'}
         },
         loggedInUser: (_parent, _args, {req: { user }}) => {
             return user || null
-        },
-        cart: async (_parent, _args, {req, res}) => {
-            const {user, cookies: { cart } } = req
-            const cartId = user ? user.cart : cart
-            if(!cartId) {
-                return null
-            }
-
-            return getCustomerCart(cartId)
         },
         users: () => [],
         allCategories: () => {
@@ -196,16 +160,17 @@ module.exports = {
             const model = args.model
             const result = await ProductModel.aggregate([...productPipeline, {
                 $match: {
-                    'color.model': model
+                    model
                 }
             }]).exec()
-
+            
             if(!Array.isArray(result) || !result.length) {
                 return null
             }
 
 
             const product = result[0]
+            
             if(Array.isArray(product.similar) && product.similar.length) {
                 product.similar = await ProductModel.aggregate([...productPipeline, {
 
@@ -224,16 +189,27 @@ module.exports = {
         }
     },
     Mutation: {
-        addUser: (parent, args, {firstname, age}) => {
+        addUser: (_parent, _args, {firstname, age}) => {
             return axios.post('http://localhost:3000/users', {
             firstname,
             age
             })
             .then(res => res.data)
         },
-        deleteUser: (parent, {id}) => {
+        deleteUser: (_parent, {id}) => {
             return axios.delete(`http://localhost:3000/users/${id}`)
             .then(res => res.data)
+        },
+        modifyCart: (_parent, {model, quantity}, {req}) => {
+            const {user, cookies: { cart } } = req
+            const cartId = user ? user.cart : cart
+            if(!cartId) {
+                return null
+            }
+
+            const existingCart = getCustomerCart(cartId)
+            // console.log(existingCart)
+            return null
         }
     }
 }

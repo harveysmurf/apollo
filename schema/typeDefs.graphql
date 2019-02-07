@@ -135,5 +135,6 @@ type Query {
 
 type Mutation {
     addUser(firstname: String!, age: Int!, companyId: String): UserType
+    modifyCart(model: String, quantity: Int): CartType
     deleteUser(id: String!): UserType
 }
