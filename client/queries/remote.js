@@ -53,6 +53,7 @@ export const cartQuery = gql`
                     images
                     available
                     quantity
+                    model
                 }
                 quantity
                 price
