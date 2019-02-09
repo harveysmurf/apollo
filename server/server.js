@@ -6,13 +6,19 @@ const bodyParser = require("body-parser")
 const cookieParse = require('cookie-parser')
 const cors = require('cors')
 let passport = require('../passport')
-require('./services/mongoose')
-
+// require('./services/mongoose')
+const { getDb } = require('./db/mongodb')
 const { ApolloServer } = require('apollo-server-express')
 const resolvers = require('./resolvers')
 
 
 const app = express()
+app.use( async (req, _res, next) => {
+  if(!req.db) {
+    req.db = await getDb()
+  }
+  next()
+})
 app.use(cookieParse())
 
 var corsOptions = {
@@ -69,9 +75,10 @@ const server = new ApolloServer({
 server.applyMiddleware({app})
 
 app.use('/', (req, res) => {
-  res.sendFile(path.join(__dirname,'client','index.html'))
+  res.sendFile(path.join(__dirname,'../client','index.html'))
 })
 
+
 app.listen(4000, () => {
-  console.log('listening on port 4000');
+  console.log('listening to 4000')
 })

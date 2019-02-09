@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import InputRange from 'react-input-range'
 import { Mutation } from "react-apollo";
 import { UpdatePrice } from '../../mutations/local'
-import debounce from 'debounce'
 
 class PriceFilter extends Component {
     constructor(props) {

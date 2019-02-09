@@ -72,6 +72,7 @@ const ProductPipeline = [
             quantity: '$color.quantity',
             main_image: {$arrayElemAt: ['$color.images', 0]},
             images: '$color.images',
+            color_group: '$color.group',
             material: 1,
             origin: 1,
             weight: 1,

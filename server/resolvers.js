@@ -1,16 +1,17 @@
 const axios = require('axios')
-const ObjectId = require('mongoose').Types.ObjectId
-const UserModel = require('../models/users')
-const { ProductModel, productPipeline } = require('../models/product')
-const CategoryModel = require('../models/category')
-const CartModel = require('../models/cart')
-const R = require('ramda')
-const cartQuery = require('./resolvers/queries/cart')
+const { productPipeline } = require('../models/product')
+const { 
+    getProductsCollection, 
+    getCategoriesCollection
+} = require('./db/mongodb')
+const { queries: cartQueries, mutations: cartMutations }  = require('./resolvers/cart')
 
+const productsCollection = getProductsCollection()
+const categoriesCollection = getCategoriesCollection()
 
 const createFilterObject = ({colors, material, categories, price }) => {
     return {
-    ...(colors && colors.length > 0 && {'color.group': { $in: colors}}),
+    ...(colors && colors.length > 0 && {'color_group': { $in: colors}}),
     ...(categories && {categories}),
     ...(material && {material}),
     ...(price && {price: {$gte: price.min, $lte: price.max}})
@@ -24,7 +25,7 @@ module.exports = {
             let hasMore = true
             const find = createFilterObject({colors, material, categories: parentValue.id, price})
             if(! cursor) {
-                cursorPromise = ProductModel.aggregate([...productPipeline, {
+                cursorPromise = productsCollection.aggregate([...productPipeline, {
                     $match: {
                         ...find
                     }
@@ -32,19 +33,20 @@ module.exports = {
                     $sort: {
                         createdAt: -1
                     }
-                }]).exec()
+                }]).next()
             }
             else {
-                cursorPromise = ProductModel.aggregate([...productPipeline, {
+                cursorPromise = productsCollection.aggregate([...productPipeline, {
                     $match: {
                         ...find,
                         model: cursor
                     }
-                }]).exec()
+                }]).next()
             }
 
             const cursorResult = await cursorPromise
-            if(!Array.isArray(cursorResult) || !cursorResult.length ) {
+
+            if(!cursorResult) {
                 return {
                     cursor,
                     products: [],
@@ -52,9 +54,9 @@ module.exports = {
                 }
             }
 
-            const cursorItem = cursorResult[0]
+            const cursorItem = cursorResult
             
-            const lastItemResult = await ProductModel.aggregate(
+            const lastItemResult = await productsCollection.aggregate(
                 [
                     ...productPipeline, 
                     {
@@ -68,12 +70,12 @@ module.exports = {
                         }
                     }
                 ]
-            ).exec()
+            ).next()
 
-            const lastItem = lastItemResult && Array.isArray(lastItemResult) && lastItemResult[0]
+            const lastItem = lastItemResult
 
 
-            let res = await ProductModel.aggregate([
+            let res = await productsCollection.aggregate([
                 ...productPipeline,
                 {
                     $match: {
@@ -87,9 +89,8 @@ module.exports = {
                 {
                     $limit: 15
                 }
-            ]).exec()
+            ]).toArray()
             let products = res.map((s) => {
-                // console.log(s)
             s.createdAt = s.createdAt.toISOString()
             return s
             })
@@ -116,13 +117,13 @@ module.exports = {
             find.categories = parentValue.id
             if(Array.isArray(colors) && colors.length > 0)
             find['colors.group'] = { $all: colors}
-            return ProductModel.find(find).exec()
+            return productsCollection.find(find).exec()
         },
         subcategories: (parentValue) => {
-            return CategoryModel.find({parent_id: parentValue.id}).exec()
+            return categoriesCollection.find({parent_id: parentValue.id}).toArray()
         },
         parent: (parentValue) => {
-            return CategoryModel.findOne({_id: parentValue.parent_id}).exec()
+            return categoriesCollection.findOne({_id: parentValue.parent_id})
         }
     },
     ProductType: {
@@ -137,10 +138,10 @@ module.exports = {
         addresses: () => []
     },
     ViewerType: {
-        allCategories: () => CategoryModel.find({}).exec()
+        allCategories: () => categoriesCollection.find({}).toArray()
     },
     Query: {
-        ...cartQuery,
+        ...cartQueries,
         viewer: () => {
             return {name: 'Simeon'}
         },
@@ -149,20 +150,20 @@ module.exports = {
         },
         users: () => [],
         allCategories: () => {
-            return CategoryModel.find({}).exec()
+            return categoriesCollection.find({}).toArray()
         },
         getCategory: (_parent, args) => {
-            return CategoryModel.findOne({
+            return categoriesCollection.findOne({
                 slug: args.slug
-            }).exec()
+            })
         },
         getProduct: async (_parent, args ) => {
             const model = args.model
-            const result = await ProductModel.aggregate([...productPipeline, {
+            const result = await productsCollection.aggregate([...productPipeline, {
                 $match: {
                     model
                 }
-            }]).exec()
+            }]).toArray()
             
             if(!Array.isArray(result) || !result.length) {
                 return null
@@ -172,17 +173,17 @@ module.exports = {
             const product = result[0]
             
             if(Array.isArray(product.similar) && product.similar.length) {
-                product.similar = await ProductModel.aggregate([...productPipeline, {
+                product.similar = await productsCollection.aggregate([...productPipeline, {
 
                     $match: {
                         'color.model': { $in: product.similar }
                     }
-                }]).exec()
+                }]).toArray()
             }
             return product
         },
         getRouteType: async (parent, args ) => {
-            const categoryCount = await CategoryModel.count({slug: args.slug }).limit(1).exec()
+            const categoryCount = await categoriesCollection.count({slug: args.slug })
             if(categoryCount)
                 return  'category'
             return null
@@ -200,16 +201,6 @@ module.exports = {
             return axios.delete(`http://localhost:3000/users/${id}`)
             .then(res => res.data)
         },
-        modifyCart: (_parent, {model, quantity}, {req}) => {
-            const {user, cookies: { cart } } = req
-            const cartId = user ? user.cart : cart
-            if(!cartId) {
-                return null
-            }
-
-            const existingCart = getCustomerCart(cartId)
-            // console.log(existingCart)
-            return null
-        }
+        ...cartMutations
     }
 }

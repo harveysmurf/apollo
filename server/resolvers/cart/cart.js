@@ -1,9 +1,16 @@
 const UserModel = require('../../../models/users')
-const { ProductModel, productPipeline } = require('../../../models/product')
-const CartModel = require('../../../models/cart')
+const { productPipeline } = require('../../../models/product')
+const ObjectID = require('mongodb').ObjectID
+const { carts: CartModel, products: ProductModel} = require('../../db/mongodb')
 
 const getCartRecords = async (cartId) => {
-    const { products: cartProducts } = await CartModel.findById(cartId).exec()
+    console.log(CartModel)
+    return null
+    const { products: cartProducts } = await CartModel.findOne({
+        _id: ObjectID(cartId)
+    })
+
+    return null
 
     const models = cartProducts.map((value) => value.model)
     const dbProducts = await ProductModel.aggregate([...productPipeline, {
@@ -42,6 +49,7 @@ const createCart = cartRecords => {
 
 const getCustomerCart = async (cartId) => {
     const cartRecords = await getCartRecords(cartId)
+    return null
     return createCart(cartRecords)
 }
 

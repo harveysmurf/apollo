@@ -4,9 +4,9 @@ const Schema = mongoose.Schema
 const cartSchema = new Schema({
     products: [{
         model: String,
-        colorSlug: String,
         quantity: Number
-    }]
+    }],
+    mihes: String
 })
 
-module.exports = mongoose.model('cart', cartSchema)
+module.exports = mongoose.model('carts', cartSchema)
