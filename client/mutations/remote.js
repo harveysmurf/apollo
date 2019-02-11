@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 export const ModifyCart = gql`
     mutation modifyCart($model: String, $quantity: Int) {
@@ -15,9 +15,32 @@ export const ModifyCart = gql`
                 }
                 quantity
                 price
+                Checkout
+                price
+                quantity
             }
-            price
-            quantity
         }
     }
-`;
+`
+
+export const Checkout = gql`
+    mutation checkout(
+        $name: String
+        $lastname: String
+        $email: String
+        $city: String
+        $comment: String
+        $consent: String
+        $delivery: String
+    ) {
+        checkout(
+            name: $name
+            lastname: $lastname
+            email: $email
+            city: $city
+            comment: $comment
+            consent: $consent
+            delivery: $delivery
+        )
+    }
+`

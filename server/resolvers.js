@@ -8,6 +8,7 @@ const {
   queries: cartQueries,
   mutations: cartMutations
 } = require("./resolvers/cart");
+const { mutations: orderMutations } = require("./resolvers/order");
 
 const productsCollection = getProductsCollection();
 const categoriesCollection = getCategoriesCollection();
@@ -146,9 +147,6 @@ module.exports = {
   ProductType: {
     availableColors: ({ variations }) => variations.filter(c => c.quantity > 0)
   },
-  OrderType: {
-    order_item: () => {}
-  },
   UserType: {
     attributes: () => {},
     orders: () => [],
@@ -229,13 +227,7 @@ module.exports = {
         .delete(`http://localhost:3000/users/${id}`)
         .then(res => res.data);
     },
-    checkout: (
-      _parent,
-      { name, lastname, email, address, city, comment, consent, delivery }
-    ) => {
-        console.log(name)
-        return true
-    },
-    ...cartMutations
+    ...cartMutations,
+    ...orderMutations
   }
 };

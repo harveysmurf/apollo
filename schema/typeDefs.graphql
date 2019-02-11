@@ -85,13 +85,30 @@ type ProductFeed {
 }
 
 type OrderItemType {
-    product_id: String
-    option: OptionType
+    model: String
     quantity: Int
+    price: Float
+    amount: Float
+    discount: Float
+}
+
+type CustomerDetailsType {
+    name: String
+    lastname: String
+    email: String
+    address: String
+    city: String
+    telephone: String
 }
 
 type OrderType {
-    order_item: OrderItemType
+    order_items: [OrderItemType]
+    customer_details: CustomerDetailsType
+    comment: String
+    delivery: String
+    amount: Float
+    createdAt: String
+    customer_id: String
 }
 
 type CartType {
@@ -138,4 +155,5 @@ type Mutation {
     modifyCart(model: String, quantity: Int): CartType
     removeItemFromCart(model: String): CartType
     deleteUser(id: String!): UserType
+    checkout(name: String, lastname: String, email: String, address: String, city: String, comment: String, consent: String, delivery: String): Boolean
 }
