@@ -1,7 +1,16 @@
+.cart-summary-price {
+    display: flex;
+    justify-content: space-between;
+}
 .basket-header {
     margin-bottom: 20px;
 }
+.cart {
+    max-width: 950px;
+    margin: 0 auto;
+}
 .cart-row {
+    border: 1px solid lightgray;
     text-transform: uppercase;
     margin-top: 10px;
     margin-bottom: 30px;
@@ -9,11 +18,16 @@
         display: flex;
     }
     &__cart-item-description {
+        width: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         padding-left: 10px;
         padding-right: 10px;
+    }
+    &__cart-line-item {
+        display: flex;
+        justify-content: space-between;
     }
     &__item-actions {
         display: flex;

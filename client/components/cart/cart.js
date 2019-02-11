@@ -18,11 +18,10 @@ const quantityDropdowns = (available) => {
 }
 
 const EmptyBasket = () => (<p>Вашата кошница е празна</p>)
-const CartRow = ({product: {available, model, images, name, quantity:productQuantity, color}, quantity, price}) => (
+const CartRow = ({product: {available, model, images, name, quantity:productQuantity, color, price: productPrice}, quantity, price}) => (
     <Mutation 
     mutation={ModifyCart}
     update={(cache, { data }) => {
-        console.log(data.modifyCart)
         cache.writeQuery({
             query: cartQuery,
             data: {
@@ -36,7 +35,10 @@ const CartRow = ({product: {available, model, images, name, quantity:productQuan
             <div className={css(['col-sm-10 no-gutters','cart-row__cart-item'])}>
                 <img src={getImageCachedSizePath(images[0],'s')}/>
                 <div className={css(['cart-row__cart-item-description'])}>
-                        <div>{name}</div>
+                        <div className={css('cart-row__cart-line-item')}>
+                            <a href="#">{name}</a>
+                            <div className="hidden-sm">{productPrice} лв.</div>
+                        </div>
                         <div><b>{color}</b></div>
                         <div>
                             <select onChange={({target: {value}}) => modifyCart({variables: {model, quantity: parseInt(value) }})} defaultValue={quantity}>
@@ -58,7 +60,7 @@ const CartRow = ({product: {available, model, images, name, quantity:productQuan
     </Mutation>
 )
 
-export const CartSummary = ({cart: {quantity, price}}) => (
+export const CartSummary = ({cart: {quantity, price}, hideSubmit}) => (
     <Fragment>    
         <div className="row">
             <div className="col-sm-12">
@@ -73,8 +75,22 @@ export const CartSummary = ({cart: {quantity, price}}) => (
             </div>
         </div>
         <div className="row bottom-spacing-xl">
-            <div className="col-sm-12 text-right">Обща ЦЕНА {price} лв</div>
+            <div className={css(['col-sm-12','cart-summary-price'])}>
+                <div>
+                    Общо цена
+                </div>
+                <div>
+                    {price} лв
+                </div>
+            </div>
         </div>
+        {!hideSubmit && (
+                <div className="row hidden-sm">
+                <Link to="/checkout" className={css(["cart-button", "submit-button", "button", "text-center"])}>
+                    Поръчка
+                </Link>
+                </div>
+        )}
     </Fragment>
 
 )
@@ -84,7 +100,7 @@ export const CartProductsList = ({products: cartProducts}) => {
 }
 
 export const CartMiniSummary = ({cart: {price, quantity}}) => (
-    <div className="row bottom-spacing-xl row-center">
+    <div className="hidden-lg hidden-md row bottom-spacing-xl row-center">
         <div className="col-sm-6">
             <div>
                 ОБЩО ({quantity} продукта)
@@ -107,25 +123,29 @@ export default  props => (
         <Fragment>
             {!cart && !loading ? <EmptyBasket/>: 
             (
-                <Fragment>
-                    <div className="col-sm-12">
+                <div className={css(['cart', 'row'])}>
+                    <div className="col-sm-12 col-md-8">
                         <h3 className={css(['basket-header','col-sm-12'])}>Кошница</h3>
+                        <CartMiniSummary cart={cart}/>
+                        <CartProductsList products={cart.products}/>
+                        <div className="col-sm-offset-6 col-sm-6 hidden-sm no-gutters">
+                            <Link to="/checkout" className={css(["cart-button", "submit-button", "button", "text-center"])}>
+                                Поръчка
+                            </Link>
+                        </div>
                     </div>
-                    <CartMiniSummary cart={cart}/>
-                    <div className='col-sm-12'>
+                    <div className="col-sm-12 col-md-4">
+                        <CartSummary cart={cart}/>
+                    </div>
+                    <div className='col-sm-12 hiddel-lg hidden-md'>
                         <div className="devider"/>
                     </div>
-                    <CartProductsList products={cart.products}/>
-                    <CartSummary cart={cart}/>
-                    <div className='col-sm-12'>
-                        <div className="devider"/>
-                    </div>
-                    <div className="row">
+                    <div className="col-sm-12 hidden-lg hidden-md no-gutters">
                         <Link to="/checkout" className={css(["cart-button", "submit-button", "button", "text-center"])}>
                             Поръчка
                         </Link>
                     </div>
-                </Fragment>
+                </div>
             )}
         </Fragment>
     )}

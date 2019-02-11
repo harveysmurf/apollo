@@ -1,5 +1,9 @@
 
 // Aligns content horizontally
+.limit-page {
+    max-width: 950px;
+    margin: 0 auto;
+}
 .no-gutters {
     padding: 0;
 }
@@ -30,6 +34,9 @@
 
 .bottom-spacing-xl {
     margin-bottom: 25px;
+}
+.bottom-spacing-m {
+    margin-bottom: 15px;
 }
 .devider {
     margin: 0 0 20px;

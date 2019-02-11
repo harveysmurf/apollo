@@ -1,4 +1,13 @@
 {
+    "settings": {
+        "es6": "true",
+        "propWrapperFunctions": ["forbidExtraProps"],
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx", ".json"]
+            }
+        }
+    },
     "parserOptions": {
         "sourceType": "module",
         "ecmaFeatures": {
@@ -14,13 +23,30 @@
     "parser": "babel-eslint",
     "extends": [
         "eslint:recommended" ,
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "plugin:jest/recommended",
+        "prettier"
     ],    
     "plugins": [
-        "react"
+        "react",
+        "html",
+        "json",
+        "jest",
+        "prettier",
+        "import"
     ],
     "rules": {
-        "react/display-name": 0,
-        "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "argsIgnorePattern": "^_" }]
+        "require-await": "error",
+        "prettier/prettier": "error",
+        "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "argsIgnorePattern": "^_" }],
+        "react/prop-types": 0,
+        "react/jsx-no-literals": 0,
+        "react/no-deprecated": "error",
+        "react/jsx-no-target-blank": 1,
+        "react/jsx-curly-brace-presence": [
+        "error",
+        { "children": "ignore", "props": "never" }
+        ],
+       "react/display-name": 0
     }
 }
