@@ -3,3 +3,4 @@ dist/styles.css
 dist/fonts
 dist/images/*
 node_modules
+.config.json

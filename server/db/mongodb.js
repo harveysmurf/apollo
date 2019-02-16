@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient
-const mongo_uri = 'mongodb://harvey:monio110605@ds159024.mlab.com:59024/damski'
+const config = require('../../.config.json')
+const mongo_uri = config.mongo
 
 let _db = null
 const connect = () => {

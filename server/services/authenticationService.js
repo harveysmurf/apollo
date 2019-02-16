@@ -10,7 +10,7 @@ module.exports = (db, cartService) => ({
       try {
         user.cart = await cartService.getCart(user.cart)
       } catch (error) {
-        console.log(error)
+        user.cart = null
       }
       console.log(user)
       return user
