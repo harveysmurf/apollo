@@ -1,5 +1,5 @@
-const {connect} = require('./db/mongodb')
+const { connect } = require('./db/mongodb')
 connect().then(() => {
-    console.log('db initialized')
-    require('./server')
+  console.log('db initialized')
+  require('./server')
 })

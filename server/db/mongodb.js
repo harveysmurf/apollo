@@ -1,32 +1,36 @@
-const MongoClient = require("mongodb").MongoClient;
-const mongo_uri = "mongodb://harvey:monio110605@ds159024.mlab.com:59024/damski";
+const MongoClient = require('mongodb').MongoClient
+const mongo_uri = 'mongodb://harvey:monio110605@ds159024.mlab.com:59024/damski'
 
-let _db = null;
+let _db = null
 const connect = () => {
   return new Promise((resolve, reject) => {
     MongoClient.connect(
       mongo_uri,
       {
-        useNewUrlParser: true
+        useNewUrlParser: true,
+        connectTimeoutMS: 3000,
+        wtimeout: 1,
+        socketTimeoutMS: 3000
       },
       (error, db) => {
         if (error) {
-          _db = null;
-          reject(error);
+          _db = null
+          reject(error)
         }
-        _db = db.db("damski");
-        resolve(_db);
+        _db = db.db('damski')
+        resolve(_db)
       }
-    );
-  });
-};
-const getDb = async () => _db || (await connect());
+    )
+  })
+}
+const getDb = async () => _db || (await connect())
 
 module.exports = {
-  getCartsCollection: () => _db.collection("carts"),
-  getProductsCollection: () => _db.collection("products"),
-  getCategoriesCollection: () => _db.collection("categories"),
-  getOrdersCollection: () => _db.collection("orders"),
+  getCartsCollection: () => _db.collection('carts'),
+  getProductsCollection: () => _db.collection('products'),
+  getCategoriesCollection: () => _db.collection('categories'),
+  getOrdersCollection: () => _db.collection('orders'),
+  getUsersCollection: () => _db.collection('users'),
   getDb,
   connect
-};
+}

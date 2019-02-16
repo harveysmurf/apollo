@@ -1,5 +1,5 @@
-const path = require('path');
-const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const path = require('path')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 
 module.exports = {
@@ -18,23 +18,23 @@ module.exports = {
             loader: 'image-webpack-loader',
             options: {
               bypassOnDebug: true, // webpack@1.x
-              disable: true, // webpack@2.x and newer
-            },
-          },
-        ],
+              disable: true // webpack@2.x and newer
+            }
+          }
+        ]
       },
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: "css-loader"
+          fallback: 'style-loader',
+          use: 'css-loader'
         })
       },
       {
         test: /\.sass$/,
         use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: ["css-loader","sass-loader"]
+          fallback: 'style-loader',
+          use: ['css-loader', 'sass-loader']
         })
       },
       {
@@ -43,14 +43,13 @@ module.exports = {
           {
             resourceQuery: /^\?raw$/,
             use: ExtractTextPlugin.extract({
-              fallback: "style-loader",
-              use: ['css-loader','sass-loader']
-            }),
-
+              fallback: 'style-loader',
+              use: ['css-loader', 'sass-loader']
+            })
           },
           {
             use: ExtractTextPlugin.extract({
-              fallback: "style-loader",
+              fallback: 'style-loader',
               use: [
                 {
                   loader: 'css-loader',
@@ -67,7 +66,7 @@ module.exports = {
                   }
                 }
               ]
-            }),
+            })
           }
         ]
       },
@@ -76,7 +75,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env','@babel/preset-react'],
+            presets: ['@babel/preset-env', '@babel/preset-react'],
             plugins: [
               '@babel/plugin-proposal-object-rest-spread',
               '@babel/plugin-proposal-class-properties'
@@ -87,26 +86,28 @@ module.exports = {
       },
       {
         test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: 'fonts/',
-            publicPath: '../fonts'
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/',
+              publicPath: '../fonts'
+            }
           }
-        }]
+        ]
       }
-    ],
+    ]
   },
   devtool: 'eval-source-map',
   plugins: [
-  new ExtractTextPlugin("styles.css"),
-  new BrowserSyncPlugin({
-    // browse to http://localhost:3000/ during development,
-    // ./public directory is being served
-    host: 'localhost',
-    port: 3000,
-    proxy: 'http://localhost:4000'
-  })
+    new ExtractTextPlugin('styles.css'),
+    new BrowserSyncPlugin({
+      // browse to http://localhost:3000/ during development,
+      // ./public directory is being served
+      host: 'localhost',
+      port: 3000,
+      proxy: 'http://localhost:4000'
+    })
   ]
 }
