@@ -2,7 +2,7 @@ const services = require('../services')
 const R = require('ramda')
 module.exports = (req, _res, next) => {
   const getCartService = R.once(() =>
-    services.getCartService(services.cartProvider)
+    services.getCartService(services.cartProvider, req.db)
   )
 
   const getAuthenticationService = R.once(() =>

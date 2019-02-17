@@ -5,14 +5,6 @@ const { getCartsCollection, getProductsCollection } = require('../db/mongodb')
 const cartsCollection = getCartsCollection()
 const productsCollection = getProductsCollection()
 
-const getCartId = req => {
-  const {
-    user,
-    cookies: { cart }
-  } = req
-  return user ? user.cart : cart
-}
-
 // Product entity to db products array objects
 const adaptCartRecords = async cartProducts => {
   const models = cartProducts.map(value => value.model)
@@ -37,9 +29,11 @@ const adaptCartRecords = async cartProducts => {
   })
 }
 
-// Uses adapted cartRecords (with product entity inside)
-// and creates the correct cart object
-const createCart = adaptedCartRecords => {
+const mergeCartProducts = (current, incoming) => {
+  return R.uniqBy(R.prop('model'), [...current, ...incoming])
+}
+
+const adaptedRecordsToCart = adaptedCartRecords => {
   return adaptedCartRecords.reduce(
     (cart, { quantity, product }) => {
       if (!quantity) {
@@ -60,25 +54,52 @@ const createCart = adaptedCartRecords => {
   )
 }
 
+// Uses adapted cartRecords (with product entity inside)
+// and creates the correct cart object
+const createCart = async cartDbRecords => {
+  const adaptedCartRecords = await adaptCartRecords(cartDbRecords)
+  return adaptedRecordsToCart(adaptedCartRecords)
+}
 const getCustomerCart = async cartId => {
   const { products } = await cartsCollection.findOne({
     _id: ObjectID(cartId)
   })
-  const cartRecords = await adaptCartRecords(products)
-  return createCart(cartRecords)
+  return createCart(products)
 }
 
-const getDbCart = (cartId, filter = {}) => {
+const getDbCart = cartId => {
   return cartsCollection.findOne({
     _id: ObjectID(cartId)
   })
 }
 
+const createNewDbCart = () => {
+  return cartsCollection.insertOne({
+    products: []
+  })
+}
+
+const clearCart = cartId => {
+  cartsCollection.updateOne(
+    {
+      _id: ObjectID(cartId)
+    },
+    {
+      $set: {
+        products: []
+      }
+    }
+  )
+}
+
 module.exports = {
+  createNewDbCart,
   getDbCart,
   getCustomerCart,
   createCart,
-  getCartId,
   adaptCartRecords,
-  getCart: getCustomerCart
+  getCart: getCustomerCart,
+  mergeCartProducts,
+  clearCart,
+  adaptedRecordsToCart
 }

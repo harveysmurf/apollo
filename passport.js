@@ -19,7 +19,7 @@ passport.use(
     function(req, email, password, done) {
       req
         .getAuthenticationService()
-        .login(email, password)
+        .login(email, password, req.cookies.cart)
         .then(res => done(null, res))
         .catch(reason => {
           done(null, false, { message: 'hello' })

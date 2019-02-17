@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const session = require('express-session')
 const bodyParser = require('body-parser')
-const cookieParse = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const cors = require('cors')
 let passport = require('../passport')
 // require('./services/mongoose')
@@ -19,13 +19,20 @@ app.use(async (req, _res, next) => {
   }
   next()
 })
-app.use(cookieParse())
+app.use(cookieParser())
 
 var corsOptions = {
   credentials: true // <-- REQUIRED backend setting
 }
 app.use(cors(corsOptions))
 app.use(withServices)
+app.use(async (req, res, next) => {
+  if (!req.cookies.cart) {
+    const cartId = await req.getCartService().createNewCart()
+    res.cookie('cart', cartId, { maxAge: 86400 * 30 * 1000, httpOnly: true })
+  }
+  next()
+})
 
 app.use(express.static('public'))
 app.use(express.static('dist'))

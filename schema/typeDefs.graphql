@@ -132,7 +132,8 @@ type UserType {
     attribute_ids: [String]
     attributes: [AttributeProductType]
     orders: [OrderType]
-    addresses: [AddressType]
+    addresses: [AddressType],
+    cart: CartType
 }
 
 type ViewerType {

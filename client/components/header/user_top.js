@@ -51,7 +51,7 @@ const UserTop = props => {
           Любими
         </a>
       )}
-      <a href="#" className="top-cart user-link">
+      <a href="/cart" className="top-cart user-link">
         <i className="fas fa-shopping-cart" aria-hidden="true" />
         Количка
       </a>
