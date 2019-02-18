@@ -5,7 +5,7 @@ import { Query, Mutation } from 'react-apollo'
 import classNames from 'classnames/bind'
 
 import { cartQuery } from '../../queries/remote'
-import { ModifyCart } from '../../mutations/remote'
+import { ModifyCart, RemoveItemFromCart } from '../../mutations/remote'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 import styles from './cart.scss'
 const css = classNames.bind(styles)
@@ -45,46 +45,64 @@ const CartRow = ({
     }}
   >
     {modifyCart => (
-      <div className={css(['row', 'cart-row'])}>
-        <div className={css(['col-sm-10 no-gutters', 'cart-row__cart-item'])}>
-          <img src={getImageCachedSizePath(images[0], 's')} />
-          <div className={css(['cart-row__cart-item-description'])}>
-            <div className={css('cart-row__cart-line-item')}>
-              <a href="#">{name}</a>
-              <div className="hidden-sm">{productPrice} лв.</div>
+      <Mutation
+        mutation={RemoveItemFromCart}
+        update={(cache, { data }) => {
+          if (data && data.removeItemFromCart) {
+            cache.writeQuery({
+              query: cartQuery,
+              data: {
+                cart: data.removeItemFromCart
+              }
+            })
+          }
+        }}
+      >
+        {removeItemFromCart => (
+          <div className={css(['row', 'cart-row'])}>
+            <div
+              className={css(['col-sm-10 no-gutters', 'cart-row__cart-item'])}
+            >
+              <img src={getImageCachedSizePath(images[0], 's')} />
+              <div className={css(['cart-row__cart-item-description'])}>
+                <div className={css('cart-row__cart-line-item')}>
+                  <a href="#">{name}</a>
+                  <div className="hidden-sm">{productPrice} лв.</div>
+                </div>
+                <div>
+                  <b>{color}</b>
+                </div>
+                <div>
+                  <select
+                    onChange={({ target: { value } }) =>
+                      modifyCart({
+                        variables: { model, quantity: parseInt(value) }
+                      })
+                    }
+                    defaultValue={quantity}
+                  >
+                    {quantityDropdowns(productQuantity, quantity)}
+                  </select>
+                  БР.
+                </div>
+                <div>
+                  <b>{price}лв.</b>
+                </div>
+              </div>
             </div>
-            <div>
-              <b>{color}</b>
-            </div>
-            <div>
-              <select
-                onChange={({ target: { value } }) =>
-                  modifyCart({
-                    variables: { model, quantity: parseInt(value) }
-                  })
-                }
-                defaultValue={quantity}
-              >
-                {quantityDropdowns(productQuantity, quantity)}
-              </select>
-              БР.
-            </div>
-            <div>
-              <b>{price}лв.</b>
+            <div className="col-sm-2">
+              <div className={css(['cart-row__item-actions'])}>
+                <div
+                  onClick={() => removeItemFromCart({ variables: { model } })}
+                  className={css(['cart-row__cart-icon'])}
+                >
+                  <i className="fas fa-times" />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-sm-2">
-          <div className={css(['cart-row__item-actions'])}>
-            <div className={css(['cart-row__cart-icon'])}>
-              <i className="fa fa-close" />
-            </div>
-            <div>
-              <i className="fa fa-heart" />
-            </div>
-          </div>
-        </div>
-      </div>
+        )}
+      </Mutation>
     )}
   </Mutation>
 )

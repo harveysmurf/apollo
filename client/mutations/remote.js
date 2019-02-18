@@ -22,6 +22,28 @@ export const ModifyCart = gql`
   }
 `
 
+export const RemoveItemFromCart = gql`
+  mutation removeItemFromCart($model: String) {
+    removeItemFromCart(model: $model) {
+      products {
+        product {
+          name
+          price
+          color
+          images
+          available
+          quantity
+          model
+        }
+        quantity
+        price
+      }
+      quantity
+      price
+    }
+  }
+`
+
 export const Checkout = gql`
   mutation checkout(
     $name: String
