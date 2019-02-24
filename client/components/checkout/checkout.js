@@ -207,7 +207,7 @@ const CheckoutForm = ({ cart }) => (
 export default props => (
   <Query query={cartQuery}>
     {({ data: { cart, loading } }) => (
-      <Fragment>
+      <div className="confined-container">
         {!cart && !loading ? (
           <EmptyBasket />
         ) : (
@@ -216,7 +216,7 @@ export default props => (
             <CheckoutForm cart={cart} />
           </Fragment>
         )}
-      </Fragment>
+      </div>
     )}
   </Query>
 );

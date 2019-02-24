@@ -35,12 +35,12 @@
             height: 30px;
             border-radius: 50px;
         }
-        i {
+        svg {
             visibility: hidden;
         }
         .active {
             font-weight: bold;
-            i {
+            svg {
                 visibility: visible;
             }
         }

@@ -3,7 +3,7 @@ import * as R from 'ramda'
 import { Link } from 'react-router-dom'
 import { Query, Mutation } from 'react-apollo'
 import classNames from 'classnames/bind'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { cartQuery } from '../../queries/remote'
 import { ModifyCart, RemoveItemFromCart } from '../../mutations/remote'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
@@ -96,7 +96,7 @@ const CartRow = ({
                   onClick={() => removeItemFromCart({ variables: { model } })}
                   className={css(['cart-row__cart-icon'])}
                 >
-                  <i className="fas fa-times" />
+                  <FontAwesomeIcon icon="times" />
                 </div>
               </div>
             </div>
@@ -197,7 +197,7 @@ export default props => (
             <div className="col-sm-12 col-md-4">
               <CartSummary cart={cart} />
             </div>
-            <div className="col-sm-12 hiddel-lg hidden-md">
+            <div className="col-sm-12 hidden-lg hidden-md">
               <div className="devider" />
             </div>
             <div className="col-sm-12 hidden-lg hidden-md no-gutters">

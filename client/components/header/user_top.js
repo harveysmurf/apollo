@@ -1,6 +1,7 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
 import Dropdown from '../utilities/dropdown'
 import { userQuery } from '../../queries/remote'
@@ -15,7 +16,7 @@ const UserTop = props => {
         className="user-link"
         button_content={
           <div>
-            <i className="fa fa-phone" aria-hidden="true" />
+            <FontAwesomeIcon icon="phone" />
             <span>За връзка</span>
           </div>
         }
@@ -28,38 +29,38 @@ const UserTop = props => {
       />
       {!user && (
         <Link to="/register" className="user-link">
-          <i className="fa fa-user-plus" aria-hidden="true" />
+          <FontAwesomeIcon icon="user-plus" />
           Регистрация
         </Link>
       )}
       {!user && (
         <Link to="/login" className="user-link">
-          <i className="fa fa-sign-in" aria-hidden="true" />
+          <FontAwesomeIcon icon="sign-in-alt" />
           Вход
         </Link>
       )}
       {user && (
-        <a href="#" className="user-link">
-          <i className="fa fa-user" aria-hidden="true" />
+        <Link to="/profile" className="user-link">
+          <FontAwesomeIcon icon="user" />
           <span>Профил</span>
-        </a>
+        </Link>
       )}
 
       {user && (
         <a href="#" className="favorites user-link">
-          <i className="fa fa-heart" aria-hidden="true" />
+          <FontAwesomeIcon icon="heart" />
           Любими
         </a>
       )}
-      <a href="/cart" className="top-cart user-link">
-        <i className="fas fa-shopping-cart" aria-hidden="true" />
+      <Link to="/checkout" className="top-cart user-link">
+        <FontAwesomeIcon icon="shopping-cart" />
         Количка
-      </a>
+      </Link>
       {user && (
-        <a href="#" className="favorites user-link">
-          <i className="fas fa-sign-out-alt" />
+        <Link to="/logout" className="favorites user-link">
+          <FontAwesomeIcon icon="sign-out-alt" />
           Изход
-        </a>
+        </Link>
       )}
     </div>
   )

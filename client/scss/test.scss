@@ -1,4 +1,7 @@
 $universal-margin: 0;
+$button-fore-color: white;
+$button-back-color: #63606b;
+$button-hover-back-color: #79847d;
 @import 'node_modules/mini.css/src/flavors/mini-default.scss';
 @import 'node_modules/react-input-range/src/scss/input-range/input-range.scss';
 
@@ -9,6 +12,11 @@ body {
 
 .main-container {
     background-color:white;
+}
+
+.confined-container {
+    max-width: 950px;
+    margin: 0 auto;
 }
 
 ul {
