@@ -63,7 +63,7 @@ module.exports = {
       }
 
       const cursorResult = await cursorPromise
-
+      console.log(cursorResult.model)
       if (!cursorResult) {
         return {
           cursor,
@@ -91,14 +91,13 @@ module.exports = {
         .next()
 
       const lastItem = lastItemResult
-
       let res = await productsCollection
         .aggregate([
           ...productPipeline,
           {
             $match: {
               ...find,
-              createdAt: { $lte: cursorItem.createdAt }
+              createdAt: { $lt: cursorItem.createdAt }
             }
           },
           {
@@ -114,15 +113,16 @@ module.exports = {
         return s
       })
 
-      if (!products)
+      if (!products.length)
         return {
-          cursor: cursorItem.createdAt,
+          cursor: cursorItem.model,
           products: [],
           hasMore: false
         }
 
-      if (products[products.length - 1].model == lastItem.model) hasMore = false
+      if (products[products.length - 1].model === lastItem.model) hasMore = false
 
+      console.log(res[res.length - 1])
       return {
         cursor: res[res.length - 1].model,
         products,

@@ -26,7 +26,7 @@ const defaultState = {
   filters: {
     material: '',
     styles: [],
-    colors: ['cheren', 'byal'],
+    colors: [],
     price: {
       min: 16,
       max: 55
