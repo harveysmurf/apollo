@@ -1,13 +1,27 @@
 import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { withRouter } from 'react-router'
 
-export default class Search extends Component {
+class Search extends Component {
+  state = {
+    input: ''
+  }
+  handleClick = () => {
+    this.props.history.push(`/search?q=${this.state.input}`)
+  }
   render() {
     return (
       <div className="search">
         <div className="input-control-addon">
-          <input type="text" placeholder="Търси" />
-          <button className="button">
+          <input
+            type="text"
+            value={this.state.input}
+            onChange={({ target: { value } }) =>
+              this.setState({ input: value })
+            }
+            placeholder="Търси"
+          />
+          <button onClick={this.handleClick} className="button">
             <FontAwesomeIcon icon="search" />
           </button>
         </div>
@@ -15,3 +29,5 @@ export default class Search extends Component {
     )
   }
 }
+
+export default withRouter(Search)
