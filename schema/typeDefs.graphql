@@ -148,6 +148,7 @@ type Query {
     allCategories: [CategoryType]
     getCategory(slug: String!, colors: [String], cursor: String, material: String, price: PriceInput): CategoryType
     getProduct(model: String!): ProductType
+    getProducts(colors: [String], cursor: String, material: String, price: PriceInput, search: String): ProductFeed
     getRouteType(slug: String!): String
 }
 

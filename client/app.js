@@ -5,6 +5,7 @@ import React from 'react'
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
+import SearchComponent from './components/search/search'
 import HomeComponent from './components/home'
 import AboutComponent from './components/about'
 import LoginComponent from './components/auth/login'
@@ -61,6 +62,7 @@ class App extends React.Component {
                   <Route path="/login" component={LoginComponent} />
                   <Route path="/cart" component={Cart} />
                   <Route path="/checkout" component={Checkout} />
+                  <Route path="/search" component={SearchComponent} />
                   <Route
                     path="/:seoSlug/:model([a-zA-Z]{2}[0-9]{4})"
                     component={ProductContainer}

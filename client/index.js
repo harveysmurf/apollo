@@ -24,6 +24,7 @@ const defaultState = {
     NEWSLETTER_SUBSCRIBE: false
   },
   filters: {
+    search: '',
     material: '',
     styles: [],
     colors: [],

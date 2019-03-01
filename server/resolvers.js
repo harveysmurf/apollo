@@ -9,125 +9,21 @@ const {
   mutations: cartMutations
 } = require('./resolvers/cart')
 const { mutations: orderMutations } = require('./resolvers/order')
+const { getProductFeed } = require('./resolvers/helpers/product')
 
 const productsCollection = getProductsCollection()
 const categoriesCollection = getCategoriesCollection()
 
-const createFilterObject = ({ colors, material, categories, price }) => {
-  return {
-    ...(colors && colors.length > 0 && { color_group: { $in: colors } }),
-    ...(categories && { categories }),
-    ...(material && { material }),
-    ...(price && { price: { $gte: price.min, $lte: price.max } })
-  }
-}
 module.exports = {
   CategoryType: {
-    productFeed: async (parentValue, { cursor, colors, material, price }) => {
-      let cursorPromise
-      let hasMore = true
-      const find = createFilterObject({
+    productFeed: (parentValue, { cursor, colors, material, price }) => {
+      return getProductFeed({
+        cursor,
         colors,
         material,
-        categories: parentValue.id,
-        price
+        price,
+        category: parentValue.id
       })
-      if (!cursor) {
-        cursorPromise = productsCollection
-          .aggregate([
-            ...productPipeline,
-            {
-              $match: {
-                ...find
-              }
-            },
-            {
-              $sort: {
-                createdAt: -1
-              }
-            }
-          ])
-          .next()
-      } else {
-        cursorPromise = productsCollection
-          .aggregate([
-            ...productPipeline,
-            {
-              $match: {
-                ...find,
-                model: cursor
-              }
-            }
-          ])
-          .next()
-      }
-
-      const cursorResult = await cursorPromise
-      console.log(cursorResult.model)
-      if (!cursorResult) {
-        return {
-          cursor,
-          products: [],
-          hasMore: false
-        }
-      }
-
-      const cursorItem = cursorResult
-
-      const lastItemResult = await productsCollection
-        .aggregate([
-          ...productPipeline,
-          {
-            $match: {
-              ...find
-            }
-          },
-          {
-            $sort: {
-              createdAt: 1
-            }
-          }
-        ])
-        .next()
-
-      const lastItem = lastItemResult
-      let res = await productsCollection
-        .aggregate([
-          ...productPipeline,
-          {
-            $match: {
-              ...find,
-              createdAt: { $lt: cursorItem.createdAt }
-            }
-          },
-          {
-            $sort: { createdAt: -1 }
-          },
-          {
-            $limit: 15
-          }
-        ])
-        .toArray()
-      let products = res.map(s => {
-        s.createdAt = s.createdAt.toISOString()
-        return s
-      })
-
-      if (!products.length)
-        return {
-          cursor: cursorItem.model,
-          products: [],
-          hasMore: false
-        }
-
-      if (products[products.length - 1].model === lastItem.model) hasMore = false
-
-      console.log(res[res.length - 1])
-      return {
-        cursor: res[res.length - 1].model,
-        products,
-        hasMore
-      }
     },
     products: (parentValue, { colors }) => {
       let find = {}
@@ -170,6 +66,9 @@ module.exports = {
       return categoriesCollection.findOne({
         slug: args.slug
       })
+    },
+    getProducts: (_parent, args) => {
+      return getProductFeed(args)
     },
     getProduct: async (_parent, args) => {
       const model = args.model
