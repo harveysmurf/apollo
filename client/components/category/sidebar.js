@@ -6,9 +6,11 @@ import PriceFilter from './price_filter'
 
 export default ({ className, filters, category, url }) => (
   <div className={`${className} sidebar`}>
-    <div>
-      <BagType category={category} url={url} />
-    </div>
+    {category && (
+      <div>
+        <BagType category={category} url={url} />
+      </div>
+    )}
     <div>
       <ColorFilter selected={filters.colors} />
     </div>

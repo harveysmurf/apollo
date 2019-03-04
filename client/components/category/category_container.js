@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import * as R from 'ramda'
 import Sidebar from './sidebar'
 import _ from 'lodash'
 import ProductThumb from '../product/product_thumb'
@@ -10,7 +11,10 @@ import { categoryQuery } from '../../queries/remote'
 let CategoryContainer = ({ slug, url }) => (
   <Query query={filtersQuery}>
     {({ data: { filters } }) => (
-      <Query query={categoryQuery} variables={{ slug, ...filters }}>
+      <Query
+        query={categoryQuery}
+        variables={{ slug, ...R.omit(['search'], filters) }}
+      >
         {({ data: { getCategory }, loading, fetchMore }) => {
           if (loading) {
             return <div>Loading...</div>

@@ -40,6 +40,7 @@ export const featuresQuery = gql`
       PDP_LAST_VIEWED
       PDP_VIEW_COUNT
       NEWSLETTER_SUBSCRIBE
+      PDP_NOTIFY_AVAILABLE
     }
   }
 `

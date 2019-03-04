@@ -21,7 +21,8 @@ const defaultState = {
     PDP_RECOMMENDED_PRODUCTS: false,
     PDP_LAST_VIEWED: false,
     PDP_VIEW_COUNT: false,
-    NEWSLETTER_SUBSCRIBE: false
+    NEWSLETTER_SUBSCRIBE: false,
+    PDP_NOTIFY_AVAILABLE: false
   },
   filters: {
     search: '',

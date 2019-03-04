@@ -25,7 +25,6 @@ const modifyQuantity = (quantity, model) =>
 module.exports = {
   queries: {
     cart: async (_parent, _args, { req: { user, cookies } }) => {
-      console.log(user)
       if (user) {
         return user.cart
       }
@@ -43,6 +42,28 @@ module.exports = {
     }
   },
   mutations: {
+    addToCart: async (_, { model, quantity }, { req }) => {
+      const cookieCartId = R.path(['cookies', 'cart'], req)
+      const { quantity: availableQuantity } = await req.db
+        .collection('products')
+        .aggregate([
+          ...productPipeline,
+          {
+            $match: {
+              model
+            }
+          }
+        ])
+        .next()
+
+      const products = req.user
+        ? req.user.dbCart.products
+        : await req.getCartService().getCartItems(cookieCartId)
+
+      const existingProduct = products.find(x => x.model === model)
+      console.log(existingProduct)
+      return null
+    },
     modifyCart: async (_parent, { model, quantity }, { req }) => {
       // const then = R.curry((f, p) => p.then(f))
       const cookieCartId = R.path(['cookies', 'cart'], req)

@@ -175,7 +175,7 @@ class ProductContainer extends Component {
                 <FontAwesomeIcon icon={['fab', 'instagram']} />
                 <FontAwesomeIcon icon={['fab', 'twitter']} />
               </div>
-              {this.notifyMe(available)}
+              {features.PDP_NOTIFY_AVAILABLE && this.notifyMe(available)}
             </div>
           </div>
         </div>

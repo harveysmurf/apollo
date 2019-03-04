@@ -1,11 +1,22 @@
 const bcrypt = require('bcrypt')
+const { concat } = require('ramda')
+const sha1 = require('js-sha1')
 const R = require('ramda')
+
+const verifyUser = async (password, { salt, password: hashPassword }) => {
+  if (salt) {
+    const result = sha1(concat(salt, sha1(concat(salt, sha1(password)))))
+    return result === hashPassword
+  }
+
+  return await bcrypt.compare(password, hashPassword)
+}
 module.exports = (db, cartService) => ({
   login: async (email, password, currentCartId) => {
     const user = await db.collection('users').findOne({
       email
     })
-    const verified = await bcrypt.compare(password, user.password)
+    const verified = await verifyUser(password, user)
     if (verified) {
       try {
         const currentCartProducts = await cartService.getCartItems(

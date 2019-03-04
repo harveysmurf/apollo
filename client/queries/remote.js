@@ -23,7 +23,7 @@ export const categoryQuery = gql`
       )
         @connection(
           key: "productFeed"
-          filter: ["colors", "materials", "price"]
+          filter: ["cursor, colors", "materials", "price"]
         ) {
         cursor
         hasMore
@@ -106,6 +106,47 @@ export const getProductQuery = gql`
       }
       images
       color
+    }
+  }
+`
+
+export const getProductsFeedQuery = gql`
+  query getProducts(
+    $colors: [String] = []
+    $cursor: String
+    $material: String
+    $price: PriceInput
+    $search: String
+  ) {
+    getProducts(
+      cursor: $cursor
+      colors: $colors
+      material: $material
+      price: $price
+      search: $search
+    )
+      @connection(
+        key: "productFeedSearch"
+        filter: ["cursor", "colors", "material", "price", "search"]
+      ) {
+      cursor
+      hasMore
+      products {
+        model
+        images
+        name
+        price
+        available
+        main_image
+        description
+        slug
+        colors {
+          group
+          color
+          images
+          quantity
+        }
+      }
     }
   }
 `

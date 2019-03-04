@@ -208,7 +208,7 @@ export default props => (
   <Query query={cartQuery}>
     {({ data: { cart, loading } }) => (
       <div className="confined-container">
-        {!cart && !loading ? (
+        {(!cart || (cart && cart.products.length === 0)) && !loading ? (
           <EmptyBasket />
         ) : (
           <Fragment>

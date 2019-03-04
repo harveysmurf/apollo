@@ -50,6 +50,7 @@
     "final-form": "^4.11.0",
     "graphql": "^14.0.0",
     "graphql-tag": "^2.10.0",
+    "js-sha1": "^0.6.0",
     "lodash": "^4.17.11",
     "mini.css": "^3.0.1",
     "mongodb": "^3.1.13",
