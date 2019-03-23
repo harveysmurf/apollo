@@ -1,7 +1,7 @@
 const ObjectID = require('mongodb').ObjectID
-module.exports = (cartProvider, db) => ({
+module.exports = (cartProvider, db, currentCartId) => ({
   createCartFromAdaptedRecords: cartProvider.adaptedRecordsToCart,
-  getCart: cartId => {
+  getCart: (cartId = currentCartId) => {
     return cartProvider.getCart(cartId)
   },
   createCart: records => cartProvider.createCart(records),
@@ -15,35 +15,31 @@ module.exports = (cartProvider, db) => ({
     const result = await cartProvider.createNewDbCart()
     return result.insertedId.toString()
   },
-  modifyCart: async ({ quantity, model }, cartId = null, email = false) => {
-    if (email) {
-      await db.collection('users').updateOne(
-        {
-          email
-        },
-        {
-          $set: {
-            'cart.products.$[elem].quantity': quantity
-          }
-        },
-        {
-          multi: true,
-          arrayFilters: [{ 'elem.model': model }]
+  modifyCart: async ({ quantity, model }, cartId = null) => {
+    await db.collection('carts').updateOne(
+      { _id: ObjectID(cartId) },
+      {
+        $set: {
+          'products.$[elem].quantity': quantity
         }
-      )
-    } else {
-      await db.collection('carts').updateOne(
-        { _id: ObjectID(cartId) },
-        {
-          $set: {
-            'products.$[elem].quantity': quantity
+      },
+      {
+        multi: true,
+        arrayFilters: [{ 'elem.model': model }]
+      }
+    )
+  },
+  addToCart: async ({ quantity, model }, cartId = null) => {
+    await db.collection('carts').updateOne(
+      { _id: ObjectID(cartId) },
+      {
+        $push: {
+          products: {
+            quantity,
+            model
           }
-        },
-        {
-          multi: true,
-          arrayFilters: [{ 'elem.model': model }]
         }
-      )
-    }
+      }
+    )
   }
 })

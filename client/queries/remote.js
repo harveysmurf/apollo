@@ -15,6 +15,10 @@ export const categoryQuery = gql`
         name
         slug
       }
+      breadcrumbs {
+        name
+        href
+      }
       productFeed(
         cursor: $cursor
         colors: $colors
@@ -23,7 +27,7 @@ export const categoryQuery = gql`
       )
         @connection(
           key: "productFeed"
-          filter: ["cursor, colors", "materials", "price"]
+          filter: ["cursor", "colors", "materials", "price"]
         ) {
         cursor
         hasMore

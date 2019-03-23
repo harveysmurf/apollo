@@ -1,14 +1,15 @@
-import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
-import { Query } from "react-apollo";
-import { cartQuery } from "../../queries/remote";
-import { getImageCachedSizePath } from "../../../utils/image_utils";
-import { Form, Field } from "react-final-form";
-import { CartProductsList, CartSummary } from "../cart/cart";
-import * as R from "ramda";
+import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom'
+import { Query, Mutation } from 'react-apollo'
+import { cartQuery } from '../../queries/remote'
+import { getImageCachedSizePath } from '../../../utils/image_utils'
+import { Form, Field } from 'react-final-form'
+import { CartProductsList, CartSummary } from '../cart/cart'
+import * as R from 'ramda'
+import { Checkout } from '../../mutations/remote'
 
-const requiredFieldError = "Задължително поле";
-const REGEX_EMAIL = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+const requiredFieldError = 'Задължително поле'
+const REGEX_EMAIL = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
 const validationRules = {
   name: [
@@ -26,19 +27,19 @@ const validationRules = {
   city: [
     {
       test: x => !!x,
-      error: "Моля въведете населено място"
+      error: 'Моля въведете населено място'
     }
   ],
   address: [
     {
       test: x => !!x,
-      error: "Моля въведете адрес за доставка"
+      error: 'Моля въведете адрес за доставка'
     }
   ],
   telephone: [
     {
       test: x => !!x,
-      error: "Моля въведете телефонен номер"
+      error: 'Моля въведете телефонен номер'
     }
   ],
   email: [
@@ -48,22 +49,22 @@ const validationRules = {
     },
     {
       test: x => REGEX_EMAIL.test(x),
-      error: "Моля въведете валиден имейл"
+      error: 'Моля въведете валиден имейл'
     }
   ]
-};
+}
 
 const validate = (data, rules) => {
   const getError = (fieldRules, field) => {
     const failedRule = fieldRules.find(
       rule => !rule.test(R.path([field], data), data)
-    );
-    return failedRule ? failedRule.error : undefined;
-  };
-  return R.pickBy(Boolean, R.mapObjIndexed(getError, rules));
-};
+    )
+    return failedRule ? failedRule.error : undefined
+  }
+  return R.pickBy(Boolean, R.mapObjIndexed(getError, rules))
+}
 
-const EmptyBasket = () => <p>Вашата кошница е празна</p>;
+const EmptyBasket = () => <p>Вашата кошница е празна</p>
 
 const TextInput = ({
   input,
@@ -71,14 +72,14 @@ const TextInput = ({
   required,
   meta: { error, touched, active }
 }) => {
-  const showValidation = touched || (!!input.value && !active);
+  const showValidation = touched || (!!input.value && !active)
   return (
     <div>
-      <input {...input} className="input" type={type ? type : "text"} />
+      <input {...input} className="input" type={type ? type : 'text'} />
       {showValidation && error && <span className="input-error">{error}</span>}
     </div>
-  );
-};
+  )
+}
 
 const TextArea = ({
   input,
@@ -86,24 +87,27 @@ const TextArea = ({
   required,
   meta: { error, touched, active }
 }) => {
-  const showValidation = touched || (!!input.value && !active);
+  const showValidation = touched || (!!input.value && !active)
   return (
     <div>
       <textarea {...input} className="input" />
       {showValidation && error && <span className="input-error">{error}</span>}
     </div>
-  );
-};
+  )
+}
 
-const CheckoutForm = ({ cart }) => (
+const CheckoutForm = ({ cart, mutationData, checkout }) => (
   <Form
     onSubmit={values => {
-      console.log(values);
+      console.log(values)
+      checkout({
+        variables: values
+      })
     }}
     validate={values => {
-      return validate(values, validationRules);
+      return validate(values, validationRules)
     }}
-    render={({ handleSubmit, pristine, invalid }) => (
+    render={({ handleSubmit }) => (
       <div className="row limit-page">
         <div className="col-sm-12 col-md-6">
           <form onSubmit={handleSubmit}>
@@ -202,7 +206,7 @@ const CheckoutForm = ({ cart }) => (
       </div>
     )}
   />
-);
+)
 
 export default props => (
   <Query query={cartQuery}>
@@ -213,10 +217,18 @@ export default props => (
         ) : (
           <Fragment>
             <h3>Доставка</h3>
-            <CheckoutForm cart={cart} />
+            <Mutation mutation={Checkout}>
+              {(checkout, { data: mutationData }) => (
+                <CheckoutForm
+                  cart={cart}
+                  checkout={checkout}
+                  mutationData={mutationData}
+                />
+              )}
+            </Mutation>
           </Fragment>
         )}
       </div>
     )}
   </Query>
-);
+)

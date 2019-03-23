@@ -1,5 +1,6 @@
 const axios = require('axios')
 const { productPipeline } = require('../models/product')
+const { categoryPipeline } = require('../models/category')
 const {
   getProductsCollection,
   getCategoriesCollection
@@ -13,6 +14,18 @@ const { getProductFeed } = require('./resolvers/helpers/product')
 
 const productsCollection = getProductsCollection()
 const categoriesCollection = getCategoriesCollection()
+
+const createBreadCrumbs = async (category, result = []) => {
+  if (category) {
+    const currentHref = result[result.length - 1] || ''
+    result.push({
+      name: category.name,
+      href: `${currentHref}/${category.slug}`
+    })
+    return await createBreadCrumbs(category.parent, result)
+  }
+  return result
+}
 
 module.exports = {
   CategoryType: {
@@ -32,12 +45,9 @@ module.exports = {
         find['colors.group'] = { $all: colors }
       return productsCollection.find(find).exec()
     },
-    subcategories: parentValue => {
-      return categoriesCollection.find({ parent_id: parentValue.id }).toArray()
-    },
-    parent: parentValue => {
-      return categoriesCollection.findOne({ _id: parentValue.parent_id })
-    }
+    subcategories: parentValue =>
+      categoriesCollection.find({ parent_id: parentValue._id }).toArray(),
+    breadcrumbs: parentValue => createBreadCrumbs(parentValue.parent)
   },
   ProductType: {
     availableColors: ({ variations }) => variations.filter(c => c.quantity > 0)
@@ -62,10 +72,17 @@ module.exports = {
     allCategories: () => {
       return categoriesCollection.find({}).toArray()
     },
-    getCategory: (_parent, args) => {
-      return categoriesCollection.findOne({
-        slug: args.slug
-      })
+    getCategory: async (_parent, args) => {
+      return categoriesCollection
+        .aggregate([
+          {
+            $match: {
+              slug: args.slug
+            }
+          },
+          ...categoryPipeline
+        ])
+        .next()
     },
     getProducts: (_parent, args) => {
       return getProductFeed(args)

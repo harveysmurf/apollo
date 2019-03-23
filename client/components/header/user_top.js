@@ -4,7 +4,7 @@ import { Query } from 'react-apollo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
 import Dropdown from '../utilities/dropdown'
-import { userQuery } from '../../queries/remote'
+import { userQuery, cartQuery } from '../../queries/remote'
 
 const UserTop = props => {
   if (props.loading) return <div>Loading...</div>
@@ -52,10 +52,14 @@ const UserTop = props => {
           Любими
         </a>
       )}
-      <Link to="/checkout" className="top-cart user-link">
-        <FontAwesomeIcon icon="shopping-cart" />
-        Количка
-      </Link>
+      <Query query={cartQuery}>
+        {({ data: { cart } }) => (
+          <Link to="/checkout" className="top-cart user-link">
+            <FontAwesomeIcon icon="shopping-cart" />
+            Количка <b>{cart && !!cart.quantity && ` (${cart.quantity})`}</b>
+          </Link>
+        )}
+      </Query>
       {user && (
         <Link to="/logout" className="favorites user-link">
           <FontAwesomeIcon icon="sign-out-alt" />

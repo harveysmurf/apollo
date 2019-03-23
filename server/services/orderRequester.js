@@ -27,17 +27,12 @@ const createOrder = async (req, data) => {
     city: data.city,
     telephone: data.telephone
   }
-  try {
-    await ordersCollection.insertOne({
-      ...adaptCartToOrder(cart),
-      customer_details: customerDetails,
-      delivery: data.delivery,
-      customer_id: req.user || null
-    })
-    return true
-  } catch (error) {
-    return false
-  }
+  await ordersCollection.insertOne({
+    ...adaptCartToOrder(cart),
+    customer_details: customerDetails,
+    delivery: data.delivery,
+    customer_id: req.user && req.user._id
+  })
 }
 
 module.exports = {

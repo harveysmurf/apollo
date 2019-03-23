@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const { concat } = require('ramda')
 const sha1 = require('js-sha1')
 const R = require('ramda')
+const ObjectID = require('mongodb').ObjectID
 
 const verifyUser = async (password, { salt, password: hashPassword }) => {
   if (salt) {
@@ -18,38 +19,46 @@ module.exports = (db, cartService) => ({
     })
     const verified = await verifyUser(password, user)
     if (verified) {
+      const userCartId = user.cart || currentCartId
+      if (!user.cart) {
+        db.collection('users').updateOne(
+          {
+            email: user.email
+          },
+          {
+            $set: { cart: userCartId }
+          }
+        )
+      }
       try {
-        const currentCartProducts = await cartService.getCartItems(
-          currentCartId
-        )
-
-        const cartProducts = cartService.mergeCartProducts(
-          currentCartProducts,
-          user.cart.products
-        )
-
-        if (!R.equals(cartProducts, user.cart.products)) {
-          await db.collection('users').updateOne(
-            {
-              email: user.email
-            },
-            {
-              $set: {
-                'cart.products': cartProducts
-              }
-            }
+        if (userCartId !== currentCartId) {
+          const userDbProducts = await cartService.getCartItems(userCartId)
+          const currentCartProducts = await cartService.getCartItems(
+            currentCartId
           )
+          const cartProducts = cartService.mergeCartProducts(
+            currentCartProducts,
+            userDbProducts
+          )
+          if (!R.equals(currentCartProducts, userDbProducts)) {
+            await db.collection('carts').updateOne(
+              {
+                _id: ObjectID(userCartId)
+              },
+              {
+                $set: {
+                  products: cartProducts
+                }
+              }
+            )
+          }
+          cartService.clearCart(currentCartId)
         }
-        const userCart = await cartService.createCart(cartProducts)
-        user.dbCart = { products: cartProducts }
-        user.cart = userCart
-        cartService.clearCart(currentCartId)
+
+        user.cart = userCartId
       } catch (error) {
-        user.cart = {
-          products: [],
-          price: 0,
-          quantity: 0
-        }
+        console.log(error)
+        return false
       }
       return user
     }

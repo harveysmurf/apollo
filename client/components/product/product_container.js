@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
+import { Mutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
 import InformationTabs from './information_tabs'
 import ProductSlideshow from './products_slideshow'
@@ -9,17 +9,12 @@ import ProductGallery from './gallery/gallery'
 import { WithLoadingCheck } from '../shared/withQuery'
 import { withMutation } from '../shared/withQuery'
 import { resetState } from '../../mutations/local'
-import { getProductQuery } from '../../queries/remote'
+import { AddToCart } from '../../mutations/remote'
+import { getProductQuery, cartQuery } from '../../queries/remote'
 import { featuresQuery } from '../../queries/local'
 import { similarProducts, lastViewed } from '../../../data/fixtures'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-const updateSearchParams = (search, queryParams) => {
-  let searchParams = new URLSearchParams(search)
-  _.each(queryParams, (value, key) => searchParams.set(key, value))
-  return searchParams.toString()
-}
 
 const ProductVariationThumb = ({ name, selected, image, model, slug }) => (
   <Link to={`/${slug}/${model}`} className="text-center">
@@ -29,6 +24,7 @@ const ProductVariationThumb = ({ name, selected, image, model, slug }) => (
         height="50"
         width="50"
         src={getImageCachedSizePath(image, 'xs')}
+        alt={name}
       />
       {selected ? <FontAwesomeIcon icon="check-circle" /> : null}
     </div>
@@ -143,17 +139,44 @@ class ProductContainer extends Component {
             </div>
             <div className="row product-buttons">
               {available && (
-                <button className="tertiary add-to-cart">
-                  <FontAwesomeIcon icon="cart-plus" />
-                  Добави в количката
+                <Mutation
+                  mutation={AddToCart}
+                  update={(cache, { data }) => {
+                    if (data && data.addToCart) {
+                      cache.writeQuery({
+                        query: cartQuery,
+                        data: {
+                          cart: data.addToCart
+                        }
+                      })
+                    }
+                  }}
+                >
+                  {addToCart => (
+                    <button
+                      onClick={() => {
+                        addToCart({
+                          variables: { model, quantity: 1 }
+                        })
+                      }}
+                      className="tertiary add-to-cart"
+                    >
+                      <FontAwesomeIcon icon="cart-plus" />
+                      Добави в количката
+                    </button>
+                  )}
+                </Mutation>
+              )}
+              {null && (
+                <button className="">
+                  <FontAwesomeIcon icon="exchange-alt" />
                 </button>
               )}
-              <button className="">
-                <FontAwesomeIcon icon="exchange-alt" />
-              </button>
-              <button>
-                <FontAwesomeIcon icon="heart" />
-              </button>
+              {null && (
+                <button>
+                  <FontAwesomeIcon icon="heart" />
+                </button>
+              )}
             </div>
             <hr />
             <div className="row delivery text-left">

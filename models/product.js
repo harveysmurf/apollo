@@ -80,7 +80,9 @@ const ProductPipeline = [
     $project: {
       price: { $ifNull: ['$color.price', '$price'] },
       name: { $ifNull: ['$color.name', '$name'] },
-      available: { $ifNull: ['$color.available', '$available'] },
+      available: {
+        $ifNull: ['$color.available', { $ifNull: ['$available', true] }]
+      },
       model: '$color.model',
       categories: 1,
       description_short: {

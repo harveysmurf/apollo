@@ -21,6 +21,27 @@ export const ModifyCart = gql`
     }
   }
 `
+export const AddToCart = gql`
+  mutation modifyCart($model: String, $quantity: Int) {
+    addToCart(model: $model, quantity: $quantity) {
+      products {
+        product {
+          name
+          price
+          color
+          images
+          available
+          quantity
+          model
+        }
+        quantity
+        price
+      }
+      quantity
+      price
+    }
+  }
+`
 
 export const RemoveItemFromCart = gql`
   mutation removeItemFromCart($model: String) {
@@ -49,7 +70,9 @@ export const Checkout = gql`
     $name: String
     $lastname: String
     $email: String
+    $address: String
     $city: String
+    $telephone: String
     $comment: String
     $consent: String
     $delivery: String
@@ -58,7 +81,9 @@ export const Checkout = gql`
       name: $name
       lastname: $lastname
       email: $email
+      address: $address
       city: $city
+      telephone: $telephone
       comment: $comment
       consent: $consent
       delivery: $delivery

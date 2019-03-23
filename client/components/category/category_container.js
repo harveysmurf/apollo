@@ -7,6 +7,7 @@ import ProductThumb from '../product/product_thumb'
 import { Query } from 'react-apollo'
 import { filtersQuery } from '../../queries/local'
 import { categoryQuery } from '../../queries/remote'
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-list.jsx'
 
 let CategoryContainer = ({ slug, url }) => (
   <Query query={filtersQuery}>
@@ -21,6 +22,9 @@ let CategoryContainer = ({ slug, url }) => (
           } else {
             return (
               <div className="category row">
+                <div className="col-sm-12">
+                  <Breadcrumbs breadcrumbs={getCategory.breadcrumbs} />
+                </div>
                 <Sidebar
                   className="col-sm-12 col-lg-4"
                   url={url}

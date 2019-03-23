@@ -30,6 +30,11 @@ type AddressType {
     state: String
 }
 
+type BreadCrumb {
+    name: String
+    href: String
+    last: Boolean
+}
 type CategoryType {
     _id: String
     name: String
@@ -42,6 +47,7 @@ type CategoryType {
     products: [ProductType]
     subcategories: [CategoryType]
     parent: CategoryType
+    breadcrumbs: [BreadCrumb]
 }
 
 type OptionType {

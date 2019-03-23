@@ -74,6 +74,7 @@ const CartRow = ({
                 </div>
                 <div>
                   <select
+                    disabled={!available}
                     onChange={({ target: { value } }) =>
                       modifyCart({
                         variables: { model, quantity: parseInt(value) }

@@ -25,14 +25,6 @@ var corsOptions = {
   credentials: true // <-- REQUIRED backend setting
 }
 app.use(cors(corsOptions))
-app.use(withServices)
-app.use(async (req, res, next) => {
-  if (!req.cookies.cart) {
-    const cartId = await req.getCartService().createNewCart()
-    res.cookie('cart', cartId, { maxAge: 86400 * 30 * 1000, httpOnly: true })
-  }
-  next()
-})
 
 app.use(express.static('public'))
 app.use(express.static('dist'))
@@ -47,6 +39,23 @@ app.use(bodyParser.json())
 app.use(passport.initialize())
 app.use(passport.session())
 
+app.use(withServices)
+app.use(async (req, res, next) => {
+  let cookieCartId
+  if (!req.cookies.cart) {
+    cookieCartId = await req.getCartService().createNewCart()
+    res.cookie('cart', cookieCartId, {
+      maxAge: 86400 * 30 * 1000,
+      httpOnly: true
+    })
+  } else {
+    cookieCartId = req.cookies.cart
+  }
+
+  req.cart = req.user ? req.user.cart : cookieCartId
+
+  next()
+})
 app.post(
   '/login',
   (req, res, next) => {
@@ -59,8 +68,13 @@ app.post(
   passport.authenticate('local')
 )
 
-app.get('/logout', function(req, res) {
+app.get('/logout', async function(req, res) {
   req.logout()
+  const cookieCartId = await req.getCartService().createNewCart()
+  res.cookie('cart', cookieCartId, {
+    maxAge: 86400 * 30 * 1000,
+    httpOnly: true
+  })
   res.json({ message: 'You have successfully logged out' })
 })
 
