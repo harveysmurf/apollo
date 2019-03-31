@@ -16,7 +16,7 @@ const connect = () => {
       (error, db) => {
         if (error) {
           _db = null
-          reject(error)
+          return reject(error)
         }
         _db = db.db('damski')
         resolve(_db)

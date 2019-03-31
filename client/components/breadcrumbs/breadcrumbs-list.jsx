@@ -2,11 +2,11 @@ import React from 'react'
 import * as R from 'ramda'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-const BreadCrumb = ({ name, separator, href }) => (
-  <React.Fragment>
+import styles from './breadcrumbs.scss'
+const BreadCrumb = ({ breadcrumb: { name, href } }) => (
+  <li>
     <Link to={href}>{name}</Link>
-    {separator && '/'}
-  </React.Fragment>
+  </li>
 )
 const homeBreadCrumb = {
   href: '/',
@@ -21,23 +21,17 @@ const prependIf = booly => val => {
   }
 }
 const createBreadCrumbs = (breadcrumbs, home = true) => {
-  const mapIndexed = R.addIndex(R.map)
   const teste = R.pipe(
     prependIf(home),
-    mapIndexed((breadcrumb, i, breadcrumbs) =>
-      R.assoc('separator', i !== breadcrumbs.length - 1, breadcrumb)
-    )
+    R.ifElse(x => x.length > 1, R.identity, () => [])
   )(breadcrumbs)
-
-  console.log(teste)
   return teste
 }
 
-export const Breadcrumbs = ({ breadcrumbs, home }) => (
-  <React.Fragment>
-    <BreadCrumb name="Home" separator href="/" />
-    {createBreadCrumbs(breadcrumbs).map((breadcrumb, key) => (
-      <BreadCrumb key={key} breadcrumb={breadcrumb} />
-    ))}
-  </React.Fragment>
+export const Breadcrumbs = ({ breadcrumbs }) => (
+  <ul className={styles.breadcrumbs}>
+    {createBreadCrumbs(breadcrumbs).map((breadcrumb, key) => {
+      return <BreadCrumb key={key} breadcrumb={breadcrumb} />
+    })}
+  </ul>
 )

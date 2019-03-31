@@ -1,0 +1,13 @@
+ul.breadcrumbs {
+  background-color: #e2e2e2;
+  border-radius: 60px 0 0 60px;
+  padding: 10px;
+  li {
+    display: inline-block;
+    &:not(:last-child):after {
+      content: '/';
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
+}

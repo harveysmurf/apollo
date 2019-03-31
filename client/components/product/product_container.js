@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import qs from 'query-string'
 import { compose } from 'recompose'
 import { Mutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
@@ -15,6 +16,7 @@ import { featuresQuery } from '../../queries/local'
 import { similarProducts, lastViewed } from '../../../data/fixtures'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-list.jsx'
 
 const ProductVariationThumb = ({ name, selected, image, model, slug }) => (
   <Link to={`/${slug}/${model}`} className="text-center">
@@ -80,6 +82,7 @@ class ProductContainer extends Component {
       getFeatures: { features },
       data: {
         getProduct: {
+          breadcrumbs,
           slug,
           name,
           images,
@@ -98,6 +101,9 @@ class ProductContainer extends Component {
     } = this.props
     return (
       <div className="product row">
+        <div className="col-sm-12 bottom-spacing-m">
+          <Breadcrumbs breadcrumbs={breadcrumbs} />
+        </div>
         <div className="col-sm-12 col-lg-5">
           <div className="product-gallery">
             <ProductGallery images={images} selected={0} model={model} />
@@ -229,7 +235,8 @@ class ProductContainer extends Component {
 const withProductQuery = WithLoadingCheck(getProductQuery, {
   options: props => ({
     variables: {
-      model: props.match.params.model
+      model: props.match.params.model,
+      referer: props.referer
     }
   })
 })
@@ -238,7 +245,13 @@ const withFeaturesQuery = WithLoadingCheck(featuresQuery, {
   name: 'getFeatures'
 })
 
+const withQueryString = Component => props => {
+  const queryParams = qs.parse(props.location.search)
+  return <Component referer={queryParams.referer} {...props} />
+}
+
 export default compose(
+  withQueryString,
   withFeaturesQuery,
   withProductQuery,
   withMutation(resetState, { name: 'resetState' })

@@ -30,13 +30,13 @@ type AddressType {
     state: String
 }
 
-type BreadCrumb {
+type Breadcrumb {
     name: String
     href: String
     last: Boolean
 }
 type CategoryType {
-    _id: String
+    id: String
     name: String
     description: String
     meta_title: String
@@ -47,7 +47,7 @@ type CategoryType {
     products: [ProductType]
     subcategories: [CategoryType]
     parent: CategoryType
-    breadcrumbs: [BreadCrumb]
+    breadcrumbs: [Breadcrumb]
 }
 
 type OptionType {
@@ -63,6 +63,7 @@ type ImageType {
 
 type ProductType {
     _id: String
+    breadcrumbs: [Breadcrumb]
     name: String
     available: Boolean
     quantity: Int
@@ -153,7 +154,7 @@ type Query {
     cart: CartType
     allCategories: [CategoryType]
     getCategory(slug: String!, colors: [String], cursor: String, material: String, price: PriceInput): CategoryType
-    getProduct(model: String!): ProductType
+    getProduct(model: String!, referer: String): ProductType
     getProducts(colors: [String], cursor: String, material: String, price: PriceInput, search: String): ProductFeed
     getRouteType(slug: String!): String
 }

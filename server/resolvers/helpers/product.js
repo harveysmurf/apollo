@@ -1,15 +1,11 @@
 const { productPipeline } = require('../../../models/product')
 const { getProductsCollection } = require('../../db/mongodb')
-const createFilterObject = ({
-  colors,
-  material,
-  categories,
-  price,
-  search
-}) => {
+const createFilterObject = ({ colors, material, category, price, search }) => {
   return {
     ...(colors && colors.length > 0 && { color_group: { $in: colors } }),
-    ...(categories && { categories }),
+    ...(category && {
+      categories: category
+    }),
     ...(material && { material }),
     ...(search && {
       $or: [
@@ -39,10 +35,11 @@ const getProductFeed = async ({
   const find = createFilterObject({
     colors,
     material,
-    categories: category,
+    category,
     price,
     search
   })
+  console.log(find)
   if (!cursor) {
     cursorpromise = productsCollection
       .aggregate([

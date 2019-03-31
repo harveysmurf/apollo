@@ -1,22 +1,25 @@
-require('./server/services/mongoose')
-const ProductModel = require('./models/product')
-const mongoose = require('mongoose')
-const ObjectId = mongoose.Types.ObjectId;
+const { connect, getProductsCollection } = require('./server/db/mongodb')
+const ObjectID = require('mongodb').ObjectID
 
-// const result = ProductModel.find({ 'colors.name': { $exists: true } }).exec()
-// result.then(res => {
-//   res.forEach(product => {
-
-//     if(product.colors)
-//     product.colors.map(val => {
-//       val.save()
-//     })
-//     console.log(product.colors)
-//     product.save()
-
-//   })
-// })
-
-const result = ProductModel.updateMany({ 'colors.name': { $exists: true } }, {
-  $unset: {'colors.$.name':''}
-}).exec()
+connect().then(async () => {
+  console.log('db initialized')
+  const productsCollection = getProductsCollection()
+  const products = await productsCollection.find().toArray()
+  products.forEach(({ categories, _id }) => {
+    if (categories) {
+      if (Array.isArray(categories)) {
+        const result = categories.map(cat => ObjectID(cat))
+        productsCollection.updateOne(
+          { _id },
+          {
+            $set: {
+              categories: result
+            }
+          }
+        )
+      } else {
+        console.log('not array:', _id)
+      }
+    }
+  })
+})

@@ -9,6 +9,7 @@ export const categoryQuery = gql`
     $price: PriceInput
   ) {
     getCategory(slug: $slug) {
+      id
       name
       slug
       subcategories {
@@ -82,10 +83,14 @@ export const cartQuery = gql`
   }
 `
 export const getProductQuery = gql`
-  query getProduct($model: String!) {
-    getProduct(model: $model) {
+  query getProduct($model: String!, $referer: String) {
+    getProduct(model: $model, referer: $referer) {
       main_image
       name
+      breadcrumbs {
+        name
+        href
+      }
       price
       available
       description_short

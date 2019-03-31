@@ -22,7 +22,7 @@ let CategoryContainer = ({ slug, url }) => (
           } else {
             return (
               <div className="category row">
-                <div className="col-sm-12">
+                <div className="col-sm-12 bottom-spacing-m">
                   <Breadcrumbs breadcrumbs={getCategory.breadcrumbs} />
                 </div>
                 <Sidebar
@@ -36,7 +36,7 @@ let CategoryContainer = ({ slug, url }) => (
                   <div className="row">
                     {getCategory.productFeed.products.map((p, index) => (
                       <div key={index} className="col-sm-3">
-                        <ProductThumb product={p} />
+                        <ProductThumb categoryId={getCategory.id} product={p} />
                       </div>
                     ))}
                   </div>

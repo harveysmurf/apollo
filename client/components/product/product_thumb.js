@@ -15,11 +15,12 @@ export default class ProductThumb extends Component {
     }
   }
   render() {
-    let product = this.props.product
+    const { categoryId, product } = this.props
+    const referer = categoryId ? `?referer=${categoryId}` : ''
     return (
       <div className="text-center product-thumb">
         <div>
-          <Link to={`${product.slug}/${product.model}`}>
+          <Link to={`/${product.slug}/${product.model}${referer}`}>
             <img width={150} height={150} src={product.images[0]} />
           </Link>
         </div>

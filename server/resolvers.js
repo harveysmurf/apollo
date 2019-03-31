@@ -1,6 +1,12 @@
 const axios = require('axios')
+const ObjectId = require('mongodb').ObjectId
+const R = require('ramda')
 const { productPipeline } = require('../models/product')
-const { categoryPipeline } = require('../models/category')
+const {
+  categoryPipeline,
+  createBreadCrumbs,
+  getCategoryById
+} = require('../models/category')
 const {
   getProductsCollection,
   getCategoriesCollection
@@ -15,18 +21,6 @@ const { getProductFeed } = require('./resolvers/helpers/product')
 const productsCollection = getProductsCollection()
 const categoriesCollection = getCategoriesCollection()
 
-const createBreadCrumbs = async (category, result = []) => {
-  if (category) {
-    const currentHref = result[result.length - 1] || ''
-    result.push({
-      name: category.name,
-      href: `${currentHref}/${category.slug}`
-    })
-    return await createBreadCrumbs(category.parent, result)
-  }
-  return result
-}
-
 module.exports = {
   CategoryType: {
     productFeed: (parentValue, { cursor, colors, material, price }) => {
@@ -35,7 +29,7 @@ module.exports = {
         colors,
         material,
         price,
-        category: parentValue.id
+        category: parentValue._id
       })
     },
     products: (parentValue, { colors }) => {
@@ -47,10 +41,31 @@ module.exports = {
     },
     subcategories: parentValue =>
       categoriesCollection.find({ parent_id: parentValue._id }).toArray(),
-    breadcrumbs: parentValue => createBreadCrumbs(parentValue.parent)
+    breadcrumbs: parentValue => createBreadCrumbs(parentValue)
   },
   ProductType: {
-    availableColors: ({ variations }) => variations.filter(c => c.quantity > 0)
+    availableColors: ({ variations }) => variations.filter(c => c.quantity > 0),
+    breadcrumbs: async ({ referer: referer_id, slug, name }) => {
+      if (!referer_id) {
+        return null
+      }
+      try {
+        const referer = await getCategoryById(ObjectId(referer_id))
+
+        if (!referer) {
+          return null
+        }
+        const refererBreadcrumbs = await createBreadCrumbs(referer)
+        const last = refererBreadcrumbs[refererBreadcrumbs.length - 1]
+
+        return R.append({
+          name,
+          href: `${last.href}/${slug}`
+        })(refererBreadcrumbs)
+      } catch (error) {
+        return null
+      }
+    }
   },
   UserType: {
     attributes: () => {},
@@ -73,7 +88,7 @@ module.exports = {
       return categoriesCollection.find({}).toArray()
     },
     getCategory: async (_parent, args) => {
-      return categoriesCollection
+      const category = await categoriesCollection
         .aggregate([
           {
             $match: {
@@ -83,13 +98,15 @@ module.exports = {
           ...categoryPipeline
         ])
         .next()
+      category.id = category._id.toString()
+      return category
     },
     getProducts: (_parent, args) => {
       return getProductFeed(args)
     },
     getProduct: async (_parent, args) => {
       const model = args.model
-      const result = await productsCollection
+      const product = await productsCollection
         .aggregate([
           ...productPipeline,
           {
@@ -98,13 +115,11 @@ module.exports = {
             }
           }
         ])
-        .toArray()
+        .next()
 
-      if (!Array.isArray(result) || !result.length) {
+      if (!product) {
         return null
       }
-
-      const product = result[0]
 
       if (Array.isArray(product.similar) && product.similar.length) {
         product.similar = await productsCollection
@@ -118,6 +133,7 @@ module.exports = {
           ])
           .toArray()
       }
+      product.referer = args.referer
       return product
     },
     getRouteType: async (parent, args) => {
