@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Query } from 'react-apollo'
+import styles from './login.scss'
 import { userQuery } from '../../queries/remote'
 
 class Login extends Component {
   constructor(props) {
     super(props)
-    console.log(props)
     this.state = {
       email: '',
       password: '',
@@ -49,36 +49,48 @@ class Login extends Component {
 
   render() {
     let error = this.state.error
-    console.log(this.props)
     return (
-      <div>
+      <div className={`${styles['login']} bottom-spacing-xl`}>
         {error && <span>Грешно потребителско име или парола</span>}
         <fieldset>
-          <label htmlFor="nameField">Email</label>
-          <input
-            type="text"
-            placeholder="example@abv.net"
-            name="email"
-            value={this.state.email}
-            onChange={this.handleInputChange}
-          />
-
-          <label htmlFor="nameField">Password</label>
-
-          <input
-            type="text"
-            placeholder="type your password"
-            name="password"
-            value={this.state.password}
-            onChange={this.handleInputChange}
-          />
-
-          <input
-            className="button-primary"
-            type="submit"
-            value="Login"
-            onClick={this.login}
-          />
+          <div className="row horizontal-align-center bottom-spacing-m">
+            <div className="col-sm-3 col-md-3 text-right">
+              <label>Имейл</label>
+            </div>
+            <div className="col-sm col-md">
+              <input
+                type="text"
+                placeholder="example@abv.net"
+                name="email"
+                value={this.state.email}
+                onChange={this.handleInputChange}
+              />
+            </div>
+          </div>
+          <div className="row horizontal-align-center bottom-spacing-m">
+            <div className="col-sm-3 col-md-3 text-right">
+              <label>Парола</label>
+            </div>
+            <div className="col-sm col-md">
+              <input
+                type="text"
+                placeholder="Парола"
+                name="password"
+                value={this.state.password}
+                onChange={this.handleInputChange}
+              />
+            </div>
+          </div>
+          <div className="row horizontal-align-center">
+            <div className="col-sm-12">
+              <input
+                className="button-primary"
+                type="submit"
+                value="Login"
+                onClick={this.login}
+              />
+            </div>
+          </div>
         </fieldset>
       </div>
     )

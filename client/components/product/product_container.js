@@ -18,8 +18,18 @@ import { getImageCachedSizePath } from '../../../utils/image_utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-list.jsx'
 
-const ProductVariationThumb = ({ name, selected, image, model, slug }) => (
-  <Link to={`/${slug}/${model}`} className="text-center">
+const ProductVariationThumb = ({
+  name,
+  selected,
+  image,
+  model,
+  slug,
+  referer
+}) => (
+  <Link
+    to={`/${slug}/${model}${(referer && '?referer=' + referer) || ''}`}
+    className="text-center"
+  >
     <div className="color-thumbnail">
       <img
         className={`color-image ${selected ? 'selected' : ''}`}
@@ -79,6 +89,7 @@ class ProductContainer extends Component {
 
   render() {
     const {
+      referer,
       getFeatures: { features },
       data: {
         getProduct: {
@@ -101,20 +112,26 @@ class ProductContainer extends Component {
     } = this.props
     return (
       <div className="product row">
-        <div className="col-sm-12 bottom-spacing-m">
-          <Breadcrumbs breadcrumbs={breadcrumbs} />
-        </div>
-        <div className="col-sm-12 col-lg-5">
+        {breadcrumbs && breadcrumbs.length > 0 && (
+          <div className="col-sm-12 bottom-spacing-m">
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+          </div>
+        )}
+        <div className="col-sm-12 col-lg-7">
           <div className="product-gallery">
             <ProductGallery images={images} selected={0} model={model} />
           </div>
         </div>
-        <div className="col-sm-12 col-lg-7">
+        <div className="col-sm-12 col-lg-5">
           <div className="product-main">
-            <div>
+            <div className="bottom-spacing-m">
               <h1>{name}</h1>
             </div>
-            <div className="short-description">{description_short}</div>
+            {description_short && (
+              <div className="short-description bottom-spacing-s">
+                {description_short}
+              </div>
+            )}
             <div>
               {variations.map((c, idx) => {
                 const selected = c.model === model
@@ -126,6 +143,7 @@ class ProductContainer extends Component {
                     image={c.images.length && c.images[0]}
                     model={c.model}
                     slug={c.slug}
+                    referer={referer}
                   />
                 )
               })}
@@ -143,7 +161,7 @@ class ProductContainer extends Component {
                 )}
               </div>
             </div>
-            <div className="row product-buttons">
+            <div className="row product-buttons bottom-spacing-xl">
               {available && (
                 <Mutation
                   mutation={AddToCart}
@@ -184,21 +202,19 @@ class ProductContainer extends Component {
                 </button>
               )}
             </div>
-            <hr />
             <div className="row delivery text-left">
               <FontAwesomeIcon icon="truck" />
               <span className="delivery">
                 Безплатна доставка за поръчки над 90 лв
               </span>
             </div>
-            <hr />
             {features.PDP_VIEW_COUNT && (
               <div className="row product-views row-center">
                 700 човека разгледаха продукта
               </div>
             )}
             <br />
-            <div className="row">
+            <div className="row bottom-spacing-m">
               <div className="col-sm-6 col-md-5 product-social">
                 <FontAwesomeIcon icon={['fab', 'facebook']} />
                 <FontAwesomeIcon icon={['fab', 'instagram']} />
@@ -207,9 +223,9 @@ class ProductContainer extends Component {
               {features.PDP_NOTIFY_AVAILABLE && this.notifyMe(available)}
             </div>
           </div>
-        </div>
-        <div className="col-sm-12 information-tabs">
-          <InformationTabs />
+          <div className="information-tabs">
+            <InformationTabs />
+          </div>
         </div>
         {features.PDP_SIMILAR_PRODUCTS && (
           <div className="col-sm-12 similar">

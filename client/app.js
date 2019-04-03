@@ -9,6 +9,7 @@ import SearchComponent from './components/search/search'
 import HomeComponent from './components/home'
 import AboutComponent from './components/about'
 import LoginComponent from './components/auth/login'
+import RegistrationComponent from './components/auth/signup'
 import Header from './components/header'
 import Footer from './components/footer'
 import MobileNav from './components/header/mobile_nav'
@@ -60,6 +61,7 @@ class App extends React.Component {
                   <Route exact path="/" component={HomeComponent} />
                   <Route path="/about" component={AboutComponent} />
                   <Route path="/login" component={LoginComponent} />
+                  <Route path="/register" component={RegistrationComponent} />
                   <Route path="/cart" component={Cart} />
                   <Route path="/checkout" component={Checkout} />
                   <Route path="/search" component={SearchComponent} />

@@ -58,8 +58,11 @@ class Gallery extends React.Component {
     } = this.props
     return (
       <div>
-        <div className="main-image">
-          <img src={getImageCachedSizePath(images[mainImage], 'l')} />
+        <div>
+          <img
+            className={styles['main-image']}
+            src={getImageCachedSizePath(images[mainImage], 'l')}
+          />
         </div>
         <div className="row">
           <div className="col-sm-1">

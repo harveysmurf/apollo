@@ -90,3 +90,14 @@ export const Checkout = gql`
     )
   }
 `
+
+export const Register = gql`
+  mutation register(
+    $name: String
+    $lastname: String
+    $email: String
+    $consent: String
+  ) {
+    register(name: $name, lastname: $lastname, email: $email, consent: $consent)
+  }
+`

@@ -100,12 +100,19 @@ div.product {
         border-bottom: 1px solid gray;
         padding-bottom: 10px;
         .product-tabs {
-            border-bottom: 1px solid gray;
+            font-size: 0.7rem;
             span {
+                @include respond-to(tablet) {
+                    font-size: 1rem;
+                }
                 display: inline-block;
                 text-transform: uppercase;
                 &:not(.tab-devider) {
+
+                @include respond-to(tablet) {
+                    font-size: 1rem;
                     padding: 0.8rem;
+                }
                     cursor: pointer;
                 }
                 &:not(:last-child) {
