@@ -93,10 +93,10 @@ export const Checkout = gql`
 
 export const Register = gql`
   mutation register(
-    $name: String
-    $lastname: String
-    $email: String
-    $consent: String
+    $name: String!
+    $lastname: String!
+    $email: String!
+    $consent: Boolean!
   ) {
     register(name: $name, lastname: $lastname, email: $email, consent: $consent)
   }

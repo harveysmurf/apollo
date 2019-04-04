@@ -158,6 +158,10 @@ module.exports = {
         .delete(`http://localhost:3000/users/${id}`)
         .then(res => res.data)
     },
+    register: (parent, args, req) => {
+      console.log(args)
+      return null
+    },
     ...cartMutations,
     ...orderMutations
   }

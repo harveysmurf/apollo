@@ -160,6 +160,7 @@ type Query {
 }
 
 type Mutation {
+    register(name: String!, lastname: String!, email: String!, consent: Boolean!): Boolean
     addUser(firstname: String!, age: Int!, companyId: String): UserType
     modifyCart(model: String, quantity: Int): CartType
     addToCart(model: String, quantity: Int): CartType
