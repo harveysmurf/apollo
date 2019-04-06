@@ -1,25 +1,18 @@
-const { connect, getProductsCollection } = require('./server/db/mongodb')
-const ObjectID = require('mongodb').ObjectID
+const { sign, verify } = require('jsonwebtoken')
+const secret = 'mihes'
+const payload = {
+  name: 'simeon',
+  email: 'harveysmurf@abv.bg'
+}
 
-connect().then(async () => {
-  console.log('db initialized')
-  const productsCollection = getProductsCollection()
-  const products = await productsCollection.find().toArray()
-  products.forEach(({ categories, _id }) => {
-    if (categories) {
-      if (Array.isArray(categories)) {
-        const result = categories.map(cat => ObjectID(cat))
-        productsCollection.updateOne(
-          { _id },
-          {
-            $set: {
-              categories: result
-            }
-          }
-        )
-      } else {
-        console.log('not array:', _id)
-      }
-    }
-  })
+const token = sign(payload, secret, {
+  expiresIn: '1h'
 })
+
+console.log(token)
+
+const decoded = verify(token, secret)
+
+console.log(decoded.iat)
+
+console.log(Date.now())

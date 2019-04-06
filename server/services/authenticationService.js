@@ -3,6 +3,8 @@ const { concat } = require('ramda')
 const sha1 = require('js-sha1')
 const R = require('ramda')
 const ObjectID = require('mongodb').ObjectID
+const { sign, verify } = require('jsonwebtoken')
+const { secret } = require('../../.config.json')
 
 const verifyUser = async (password, { salt, password: hashPassword }) => {
   if (salt) {
@@ -13,6 +15,9 @@ const verifyUser = async (password, { salt, password: hashPassword }) => {
   return await bcrypt.compare(password, hashPassword)
 }
 module.exports = (db, cartService) => ({
+  verify: token => {
+    return verify(token, secret)
+  },
   login: async (email, password, currentCartId) => {
     const user = await db.collection('users').findOne({
       email
@@ -60,7 +65,12 @@ module.exports = (db, cartService) => ({
         console.log(error)
         return false
       }
-      return user
+      return {
+        token: sign(user, secret, {
+          expiresIn: '6h'
+        }),
+        user
+      }
     }
     return false
   }

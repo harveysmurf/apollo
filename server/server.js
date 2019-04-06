@@ -5,12 +5,12 @@ const session = require('express-session')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
-let passport = require('../passport')
 // require('./services/mongoose')
 const { getDb } = require('./db/mongodb')
 const { ApolloServer } = require('apollo-server-express')
 const resolvers = require('./resolvers')
 const withServices = require('./middlewares/services')
+const authController = require('./controllers/authController')
 
 const app = express()
 app.use(async (req, _res, next) => {
@@ -36,8 +36,6 @@ app.use(
   })
 )
 app.use(bodyParser.json())
-app.use(passport.initialize())
-app.use(passport.session())
 
 app.use(withServices)
 app.use(async (req, res, next) => {
@@ -52,21 +50,11 @@ app.use(async (req, res, next) => {
     cookieCartId = req.cookies.cart
   }
 
-  req.cart = req.user ? req.user.cart : cookieCartId
+  req.cart = cookieCartId
 
   next()
 })
-app.post(
-  '/login',
-  (req, res, next) => {
-    if (req.user) {
-      return res.status(400).json({
-        message: 'Already signed in'
-      })
-    } else next()
-  },
-  passport.authenticate('local')
-)
+app.use(authController.router)
 
 app.get('/logout', async function(req, res) {
   req.logout()

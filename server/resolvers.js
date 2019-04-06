@@ -15,12 +15,12 @@ const {
   queries: cartQueries,
   mutations: cartMutations
 } = require('./resolvers/cart')
+const { executeWithAuthorization } = require('./resolvers/middlewares')
 const { mutations: orderMutations } = require('./resolvers/order')
 const { getProductFeed } = require('./resolvers/helpers/product')
 
 const productsCollection = getProductsCollection()
 const categoriesCollection = getCategoriesCollection()
-
 module.exports = {
   CategoryType: {
     productFeed: (parentValue, { cursor, colors, material, price }) => {
@@ -80,9 +80,11 @@ module.exports = {
     viewer: () => {
       return { name: 'Simeon' }
     },
-    loggedInUser: (_parent, _args, { req: { user } }) => {
-      return user || null
-    },
+    loggedInUser: executeWithAuthorization(
+      (_parent, _args, { req: { user } }) => {
+        return user || null
+      }
+    ),
     users: () => [],
     allCategories: () => {
       return categoriesCollection.find({}).toArray()
