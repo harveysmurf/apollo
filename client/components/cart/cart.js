@@ -9,9 +9,10 @@ import { ModifyCart, RemoveItemFromCart } from '../../mutations/remote'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 import styles from './cart.scss'
 const css = classNames.bind(styles)
-const quantityDropdowns = available => {
+const quantityDropdowns = (available, quantity) => {
+  const defaultMax = Math.max(5, quantity)
   const itemsToRender = []
-  for (var i = 1; i <= Math.min(available, 5); i++) {
+  for (var i = 1; i <= Math.min(available, defaultMax); i++) {
     itemsToRender.push(<option value={i}>{i}</option>)
   }
   return itemsToRender

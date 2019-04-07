@@ -171,9 +171,26 @@ module.exports = {
           maxAge: DAY,
           httpOnly: true
         })
+
+        res.cookie('cart', user.cart, {
+          maxAge: 86400 * 30 * 1000,
+          httpOnly: true
+        })
         return user
       } catch (error) {
+        console.log('registe error', error)
         return null
+      }
+    },
+    logout: (parent, args, { req, res }) => {
+      try {
+        Object.keys(req.cookies).forEach(cookie => {
+          res.clearCookie(cookie)
+        })
+        return true
+      } catch (error) {
+        console.log('logout error', error.message)
+        return false
       }
     },
     ...cartMutations,

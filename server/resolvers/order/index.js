@@ -7,7 +7,7 @@ module.exports = {
         await createOrder(req, data)
         return true
       } catch (error) {
-        console.log(error)
+        console.log('order error', error)
         return false
       }
     }

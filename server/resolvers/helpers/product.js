@@ -39,7 +39,6 @@ const getProductFeed = async ({
     price,
     search
   })
-  console.log(find)
   if (!cursor) {
     cursorpromise = productsCollection
       .aggregate([

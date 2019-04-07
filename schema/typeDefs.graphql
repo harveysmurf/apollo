@@ -167,4 +167,5 @@ type Mutation {
     removeItemFromCart(model: String): CartType
     deleteUser(id: String!): UserType
     checkout(name: String, lastname: String, email: String, address: String, city: String, telephone: String, comment: String, consent: String, delivery: String): Boolean
+    logout: Boolean
 }

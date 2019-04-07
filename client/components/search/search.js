@@ -14,7 +14,6 @@ import { getProductsFeedQuery } from '../../queries/remote'
 
 export default ({ location: { search } }) => {
   const query = qs.parse(search).q
-  console.log(query)
   return (
     <Query query={filtersQuery}>
       {({ data: { filters } }) => (
@@ -91,7 +90,6 @@ const fetchMoreProducts = (filters, cursor, fetchMore) => {
           newProductFeed.products
         )
       }
-      console.log(newData.products)
 
       return {
         getProducts: newData

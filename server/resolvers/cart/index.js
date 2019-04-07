@@ -10,10 +10,12 @@ const withUserCart = callback => (root, args, context, info) => {
   const user = req.user
   const currentCart = req.cart
   if (user) {
-    if (currentCart !== req.user.cart) {
-      req.cart = req.user.cart
-      res.cookie('cart', req.user.cart, {
-        maxAge: 86400 * 30 * 1000,
+    console.log(user)
+    if (currentCart !== user.cart) {
+      req.cart = user.cart
+      console.log(req.cart)
+      res.cookie('cart', user.cart, {
+        maxAge: 86400 * 7 * 1000,
         httpOnly: true
       })
     }
@@ -36,12 +38,11 @@ const modifyQuantity = (quantity, model) =>
 module.exports = {
   queries: {
     cart: executeWithUserCart(async (_parent, _args, { req: { cart } }) => {
-      console.log(cart)
       try {
         if (!cart) {
           return null
         }
-
+        console.log('get customer car', cart)
         return await getCustomerCart(cart)
       } catch (error) {
         //TODO log here

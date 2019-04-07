@@ -97,14 +97,23 @@ export const Register = gql`
     $lastname: String!
     $email: String!
     $consent: Boolean!
-    $register: String!
+    $password: String!
   ) {
     register(
       name: $name
       lastname: $lastname
       email: $email
       consent: $consent
-      register: $register
-    )
+      password: $password
+    ) {
+      name
+      email
+    }
+  }
+`
+
+export const Logout = gql`
+  mutation logout {
+    logout
   }
 `

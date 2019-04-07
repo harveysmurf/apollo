@@ -22,7 +22,6 @@ export default class ColorVariationThumb extends Component {
 
   render() {
     const { images } = this.props
-    console.log(images)
     return (
       <div>
         <h2>Slider Syncing (AsNavFor)</h2>

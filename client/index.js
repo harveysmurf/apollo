@@ -15,7 +15,7 @@ import typeDefs from './typeDefs'
 
 import App from './app'
 library.add(far, fas, fab)
-const defaultState = {
+export const defaultState = {
   features: {
     PDP_SIMILAR_PRODUCTS: false,
     PDP_RECOMMENDED_PRODUCTS: false,

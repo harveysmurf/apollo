@@ -1,9 +1,11 @@
 import { Form, Field } from 'react-final-form'
 import React from 'react'
 import { Mutation } from 'react-apollo'
+import { withRouter } from 'react-router-dom'
 import { Register } from '../../mutations/remote'
 import * as R from 'ramda'
 import styles from './signup.scss'
+import { userQuery, cartQuery } from '../../queries/remote'
 const requiredFieldError = 'Задължително поле'
 const REGEX_EMAIL = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
@@ -28,6 +30,12 @@ const validationRules = {
     {
       test: x => REGEX_EMAIL.test(x),
       error: 'Моля въведете валиден имейл'
+    }
+  ],
+  password: [
+    {
+      test: x => !!x,
+      error: requiredFieldError
     }
   ]
 }
@@ -66,7 +74,6 @@ const TextInput = ({
 const RegistrationForm = ({ register, registrationData }) => (
   <Form
     onSubmit={values => {
-      console.log(values)
       register({
         variables: values
       })
@@ -106,6 +113,16 @@ const RegistrationForm = ({ register, registrationData }) => (
           </div>
         </div>
         <div className="row horizontal-align-center bottom-spacing-m">
+          <div className="col-sm col-md">
+            <Field
+              name="password"
+              placeholder="Парола"
+              type="password"
+              component={TextInput}
+            />
+          </div>
+        </div>
+        <div className="row horizontal-align-center bottom-spacing-m">
           <div className="col-sm">
             <label className={styles['signup-checkbox']}>
               <Field name="consent" component="input" type="checkbox" />
@@ -125,13 +142,26 @@ const RegistrationForm = ({ register, registrationData }) => (
   />
 )
 
-export default props => (
+export default withRouter(props => (
   <div className="confined-container">
     <React.Fragment>
       <h3>Регистрация</h3>
       <Mutation
         onCompleted={() => {
-          console.log('completed')
+          props.history.push('/')
+        }}
+        refetchQueries={() => {
+          return [{ query: cartQuery }]
+        }}
+        update={(cache, { data }) => {
+          if (data && data.register) {
+            cache.writeQuery({
+              query: userQuery,
+              data: {
+                loggedInUser: data.register
+              }
+            })
+          }
         }}
         mutation={Register}
       >
@@ -141,4 +171,4 @@ export default props => (
       </Mutation>
     </React.Fragment>
   </div>
-)
+))

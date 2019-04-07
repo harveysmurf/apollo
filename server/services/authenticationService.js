@@ -6,6 +6,42 @@ const ObjectID = require('mongodb').ObjectID
 const { sign, verify } = require('jsonwebtoken')
 const { secret } = require('../../.config.json')
 
+const mergeCarts = async (user, currentCartId, cartService, db) => {
+  const userCartId = user.cart || currentCartId
+  if (!user.cart) {
+    db.collection('users').updateOne(
+      {
+        email: user.email
+      },
+      {
+        $set: { cart: userCartId }
+      }
+    )
+  }
+  if (userCartId !== currentCartId) {
+    const userDbProducts = await cartService.getCartItems(userCartId)
+    const currentCartProducts = await cartService.getCartItems(currentCartId)
+    const cartProducts = cartService.mergeCartProducts(
+      currentCartProducts,
+      userDbProducts
+    )
+    if (!R.equals(currentCartProducts, userDbProducts)) {
+      await db.collection('carts').updateOne(
+        {
+          _id: ObjectID(userCartId)
+        },
+        {
+          $set: {
+            products: cartProducts
+          }
+        }
+      )
+    }
+    cartService.clearCart(currentCartId)
+  }
+
+  return userCartId
+}
 const verifyUser = async (password, { salt, password: hashPassword }) => {
   if (salt) {
     const result = sha1(concat(salt, sha1(concat(salt, sha1(password)))))
@@ -20,19 +56,24 @@ module.exports = (db, cartService) => ({
   },
   register: async ({ email, password, name, lastname, consent, cart }) => {
     const hashedPassword = await bcrypt.hash(password, 1)
+    const newCart = await cartService.createNewCart()
     const result = await db.collection('users').insertOne({
       email,
       password: hashedPassword,
-      cart,
+      cart: newCart,
       name,
       lastname,
       consent
     })
+    const user = result.ops[0]
+    const userCart = await mergeCarts(user, cart, cartService, db)
+    user.cart = userCart
+
     return {
-      token: sign({ email: result.ops[0].email }, secret, {
+      token: sign({ email: user.email }, secret, {
         expiresIn: '6h'
       }),
-      user: result.ops[0]
+      user
     }
   },
   login: async (email, password, currentCartId) => {
@@ -41,54 +82,15 @@ module.exports = (db, cartService) => ({
     })
     const verified = await verifyUser(password, user)
     if (verified) {
-      const userCartId = user.cart || currentCartId
-      if (!user.cart) {
-        db.collection('users').updateOne(
-          {
-            email: user.email
-          },
-          {
-            $set: { cart: userCartId }
-          }
-        )
-      }
-      try {
-        if (userCartId !== currentCartId) {
-          const userDbProducts = await cartService.getCartItems(userCartId)
-          const currentCartProducts = await cartService.getCartItems(
-            currentCartId
-          )
-          const cartProducts = cartService.mergeCartProducts(
-            currentCartProducts,
-            userDbProducts
-          )
-          if (!R.equals(currentCartProducts, userDbProducts)) {
-            await db.collection('carts').updateOne(
-              {
-                _id: ObjectID(userCartId)
-              },
-              {
-                $set: {
-                  products: cartProducts
-                }
-              }
-            )
-          }
-          cartService.clearCart(currentCartId)
-        }
-
-        user.cart = userCartId
-      } catch (error) {
-        console.log(error)
-        return false
-      }
+      user.cart = await mergeCarts(user, currentCartId, cartService, db)
       return {
         token: sign({ email: user.email }, secret, {
           expiresIn: '6h'
         }),
         user
       }
+    } else {
+      return null
     }
-    return false
   }
 })

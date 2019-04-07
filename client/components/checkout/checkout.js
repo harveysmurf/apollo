@@ -99,7 +99,6 @@ const TextArea = ({
 const CheckoutForm = ({ cart, mutationData, checkout }) => (
   <Form
     onSubmit={values => {
-      console.log(values)
       checkout({
         variables: values
       })

@@ -1,10 +1,11 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import { Query } from 'react-apollo'
+import { Query, Mutation, withApollo } from 'react-apollo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
 import Dropdown from '../utilities/dropdown'
 import { userQuery, cartQuery } from '../../queries/remote'
+import { Logout } from '../../mutations/remote'
 
 const UserTop = props => {
   if (props.loading) return <div>Loading...</div>
@@ -61,17 +62,36 @@ const UserTop = props => {
         )}
       </Query>
       {user && (
-        <Link to="/logout" className="favorites user-link">
-          <FontAwesomeIcon icon="sign-out-alt" />
-          Изход
-        </Link>
+        <Mutation
+          onCompleted={data => {
+            if (data && data.logout) {
+              props.client.clearStore()
+              props.client.resetStore()
+            }
+          }}
+          mutation={Logout}
+        >
+          {(logout, { data }) => (
+            <a
+              onClick={e => {
+                e.preventDefault()
+                logout()
+              }}
+              href="#"
+              className="favorites user-link"
+            >
+              <FontAwesomeIcon icon="sign-out-alt" />
+              Изход
+            </a>
+          )}
+        </Mutation>
       )}
     </div>
   )
 }
 
-export default props => (
+export default withApollo(props => (
   <Query query={userQuery} {...props}>
     {UserTop}
   </Query>
-)
+))

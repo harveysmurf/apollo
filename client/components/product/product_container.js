@@ -43,10 +43,31 @@ const ProductVariationThumb = ({
   </Link>
 )
 
+const FlashMessage = ({ open = null }) =>
+  open && (
+    <span className="toast">Продуктът беше успешно добавен в кошницата</span>
+  )
+
 class ProductContainer extends Component {
+  state = {
+    flashOpened: null
+  }
   constructor(props) {
     super(props)
     this.props.resetState()
+  }
+
+  onProductAdded = () => {
+    if (!this.state.flashOpened) {
+      this.setState({
+        flashOpened: true
+      })
+      setTimeout(() => {
+        this.setState({
+          flashOpened: null
+        })
+      }, 5000)
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -161,9 +182,14 @@ class ProductContainer extends Component {
                 )}
               </div>
             </div>
+            <div className="row">
+              {console.log(this.state.flashOpened)}
+              <FlashMessage open={this.state.flashOpened} />
+            </div>
             <div className="row product-buttons bottom-spacing-xl">
               {available && (
                 <Mutation
+                  onCompleted={this.onProductAdded}
                   mutation={AddToCart}
                   update={(cache, { data }) => {
                     if (data && data.addToCart) {
