@@ -18,6 +18,23 @@ module.exports = (db, cartService) => ({
   verify: token => {
     return verify(token, secret)
   },
+  register: async ({ email, password, name, lastname, consent, cart }) => {
+    const hashedPassword = await bcrypt.hash(password, 1)
+    const result = await db.collection('users').insertOne({
+      email,
+      password: hashedPassword,
+      cart,
+      name,
+      lastname,
+      consent
+    })
+    return {
+      token: sign({ email: result.ops[0].email }, secret, {
+        expiresIn: '6h'
+      }),
+      user: result.ops[0]
+    }
+  },
   login: async (email, password, currentCartId) => {
     const user = await db.collection('users').findOne({
       email
@@ -66,7 +83,7 @@ module.exports = (db, cartService) => ({
         return false
       }
       return {
-        token: sign(user, secret, {
+        token: sign({ email: user.email }, secret, {
           expiresIn: '6h'
         }),
         user

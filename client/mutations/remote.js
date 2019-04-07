@@ -97,7 +97,14 @@ export const Register = gql`
     $lastname: String!
     $email: String!
     $consent: Boolean!
+    $register: String!
   ) {
-    register(name: $name, lastname: $lastname, email: $email, consent: $consent)
+    register(
+      name: $name
+      lastname: $lastname
+      email: $email
+      consent: $consent
+      register: $register
+    )
   }
 `

@@ -15,10 +15,10 @@ const {
   queries: cartQueries,
   mutations: cartMutations
 } = require('./resolvers/cart')
-const { executeWithAuthorization } = require('./resolvers/middlewares')
+const { executeWithAuthentication } = require('./resolvers/middlewares')
 const { mutations: orderMutations } = require('./resolvers/order')
 const { getProductFeed } = require('./resolvers/helpers/product')
-
+const { AUTH_COOKIE } = require('./controllers/authController')
 const productsCollection = getProductsCollection()
 const categoriesCollection = getCategoriesCollection()
 module.exports = {
@@ -80,7 +80,7 @@ module.exports = {
     viewer: () => {
       return { name: 'Simeon' }
     },
-    loggedInUser: executeWithAuthorization(
+    loggedInUser: executeWithAuthentication(
       (_parent, _args, { req: { user } }) => {
         return user || null
       }
@@ -160,9 +160,21 @@ module.exports = {
         .delete(`http://localhost:3000/users/${id}`)
         .then(res => res.data)
     },
-    register: (parent, args, req) => {
-      console.log(args)
-      return null
+    register: async (parent, args, { req, res }) => {
+      try {
+        const DAY = 24 * 60 * 60 * 1000
+        const { user, token } = await req.getAuthenticationService().register({
+          ...args,
+          cart: req.cart
+        })
+        res.cookie(AUTH_COOKIE, token, {
+          maxAge: DAY,
+          httpOnly: true
+        })
+        return user
+      } catch (error) {
+        return null
+      }
     },
     ...cartMutations,
     ...orderMutations

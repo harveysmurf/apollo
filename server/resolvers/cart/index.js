@@ -3,7 +3,7 @@ const ObjectID = require('mongodb').ObjectID
 const R = require('ramda')
 const { UserInputError } = require('apollo-server')
 const { getCustomerCart, createCart } = require('../../services/cartProvider')
-const { executeWithAuthorization } = require('../middlewares/index')
+const { executeWithAuthentication } = require('../middlewares/index')
 
 const withUserCart = callback => (root, args, context, info) => {
   const { req, res } = context
@@ -21,7 +21,7 @@ const withUserCart = callback => (root, args, context, info) => {
   return callback(root, args, context, info)
 }
 const executeWithUserCart = R.compose(
-  executeWithAuthorization,
+  executeWithAuthentication,
   withUserCart
 )
 
@@ -36,6 +36,7 @@ const modifyQuantity = (quantity, model) =>
 module.exports = {
   queries: {
     cart: executeWithUserCart(async (_parent, _args, { req: { cart } }) => {
+      console.log(cart)
       try {
         if (!cart) {
           return null

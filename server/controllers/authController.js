@@ -23,4 +23,17 @@ router.post('/login', async (req, res) => {
   }
 })
 
+router.get('/logout', async (req, res) => {
+  const cookieCartId = await req.getCartService().createNewCart()
+
+  res.cookie('cart', cookieCartId, {
+    maxAge: 86400 * 30 * 1000,
+    httpOnly: true
+  })
+  ;[('cart', 'auth')].forEach(cookie => {
+    res.clearCookie(cookie)
+  })
+  res.json({ message: 'You have successfully logged out' })
+})
+
 module.exports = { router, AUTH_COOKIE }
