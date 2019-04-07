@@ -17,6 +17,11 @@ import RouteResolver from './components/routeresolver'
 import Cart from './components/cart/cart'
 import Checkout from './components/checkout/checkout'
 import ProductContainer from './components/product/product_container'
+import TermsComponent from './components/terms.jsx'
+import DeliveryComponent from './components/delivery.jsx'
+import ReklamaciiComponent from './components/reklamacii.jsx'
+import PrivacyComponent from './components/privacy.jsx'
+import HowToOrderComponent from './components/howtoorder.jsx'
 
 class App extends React.Component {
   constructor(props) {
@@ -52,32 +57,35 @@ class App extends React.Component {
     let size = this.state.screen
     return (
       <div>
-        <div className="app-container">
-          <Router>
-            <div>
-              {size != 's' && <Header size={size} />}
-              <div className="container main-container">
-                <Switch>
-                  <Route exact path="/" component={HomeComponent} />
-                  <Route path="/about" component={AboutComponent} />
-                  <Route path="/login" component={LoginComponent} />
-                  <Route path="/register" component={RegistrationComponent} />
-                  <Route path="/cart" component={Cart} />
-                  <Route path="/checkout" component={Checkout} />
-                  <Route path="/search" component={SearchComponent} />
-                  <Route
-                    path="/:seoSlug/:model([a-zA-Z]{2}[0-9]{4})"
-                    component={ProductContainer}
-                  />
-                  <Route path="/:param*" component={RouteResolver} />
-                </Switch>
-                {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}
-              </div>
-              <Footer />
-              {size == 's' && <MobileNav size={size} />}
+        <Router>
+          <div className="app-container">
+            {size != 's' && <Header size={size} />}
+            <div className="container main-container">
+              <Switch>
+                <Route exact path="/" component={HomeComponent} />
+                <Route path="/about" component={AboutComponent} />
+                <Route path="/terms" component={TermsComponent} />
+                <Route path="/delivery" component={DeliveryComponent} />
+                <Route path="/reklamacii" component={ReklamaciiComponent} />
+                <Route path="/privacy" component={PrivacyComponent} />
+                <Route path="/howtoorder" component={HowToOrderComponent} />
+                <Route path="/login" component={LoginComponent} />
+                <Route path="/register" component={RegistrationComponent} />
+                <Route path="/cart" component={Cart} />
+                <Route path="/checkout" component={Checkout} />
+                <Route path="/search" component={SearchComponent} />
+                <Route
+                  path="/:seoSlug/:model([a-zA-Z]{2}[0-9]{4})"
+                  component={ProductContainer}
+                />
+                <Route path="/:param*" component={RouteResolver} />
+              </Switch>
+              {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}
             </div>
-          </Router>
-        </div>
+            <Footer />
+            {size == 's' && <MobileNav size={size} />}
+          </div>
+        </Router>
       </div>
     )
   }

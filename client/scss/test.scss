@@ -11,8 +11,14 @@ body {
     padding: 0;
 }
 
+.app-container {
+    min-height: 100vh;
+    display:flex;
+    flex-direction: column;
+}
 .main-container {
     background-color:white;
+    flex-grow: 1;
 }
 
 .confined-container {

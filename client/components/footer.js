@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import { featuresQuery } from '../queries/local'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
@@ -55,13 +56,10 @@ const Footer = () => {
                       <a href="#">Моят акаунт</a>
                     </li>
                     <li>
-                      <a href="#">Как да поръчам онлайн</a>
+                      <Link to="/howtoorder">Как да поръчам онлайн</Link>
                     </li>
                     <li>
-                      <a href="#">Доставка на прочъките</a>
-                    </li>
-                    <li>
-                      <a href="#">Проверка на пратката</a>
+                      <Link to="/delivery">Доставка на прочъките</Link>
                     </li>
                   </ul>
                 </div>
@@ -72,13 +70,10 @@ const Footer = () => {
                       <a href="#">Контакт</a>
                     </li>
                     <li>
-                      <a href="#">Лоялни клиенти</a>
-                    </li>
-                    <li>
                       <a href="#">Връщане на продукт</a>
                     </li>
                     <li>
-                      <a href="#">Рекламации и жалби</a>
+                      <Link to="/reklamacii">Рекламации и жалби</Link>
                     </li>
                   </ul>
                 </div>
@@ -86,16 +81,13 @@ const Footer = () => {
                   <h4>Damskichanti.com</h4>
                   <ul>
                     <li>
-                      <a href="#">Връзка с нас</a>
+                      <Link to="/about">За нас</Link>
                     </li>
                     <li>
-                      <a href="#">Условия за ползване</a>
+                      <Link to="/terms">Условия за ползване</Link>
                     </li>
                     <li>
-                      <a href="#">Лични данни</a>
-                    </li>
-                    <li>
-                      <a href="#">Често задавани въпроси</a>
+                      <Link to="/privacy">Лични данни</Link>
                     </li>
                   </ul>
                 </div>
