@@ -11,6 +11,10 @@ body {
     padding: 0;
 }
 
+ul.circle {
+    list-style: circle;
+}
+
 .app-container {
     min-height: 100vh;
     display:flex;

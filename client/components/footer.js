@@ -47,23 +47,24 @@ const Footer = () => {
             )}
           </div>
           <div className="footer-nav">
-            <div className="container">
-              <div className="row">
-                <div className="col-sm-12 col-md-4 col-lg-4">
-                  <h4>Поръчки и доставка</h4>
-                  <ul>
-                    <li>
+            <div>
+              <h4>Поръчки и доставка</h4>
+              <ul>
+                {/* <li>
                       <a href="#">Моят акаунт</a>
-                    </li>
-                    <li>
-                      <Link to="/howtoorder">Как да поръчам онлайн</Link>
-                    </li>
-                    <li>
-                      <Link to="/delivery">Доставка на прочъките</Link>
-                    </li>
-                  </ul>
-                </div>
-                <div className="col-sm-12 col-md-4 col-lg-4">
+                    </li> */}
+                <li>
+                  <Link to="/howtoorder">Как да поръчам онлайн</Link>
+                </li>
+                <li>
+                  <Link to="/delivery">Доставка на прочъките</Link>
+                </li>
+                <li>
+                  <Link to="/reklamacii">Рекламации и жалби</Link>
+                </li>
+              </ul>
+            </div>
+            {/* <div className="col-sm-12 col-md-4 col-lg-4">
                   <h4>Връзка с нас</h4>
                   <ul>
                     <li>
@@ -72,26 +73,21 @@ const Footer = () => {
                     <li>
                       <a href="#">Връщане на продукт</a>
                     </li>
-                    <li>
-                      <Link to="/reklamacii">Рекламации и жалби</Link>
-                    </li>
                   </ul>
-                </div>
-                <div className="col-sm-12 col-md-4 col-lg-4">
-                  <h4>Damskichanti.com</h4>
-                  <ul>
-                    <li>
-                      <Link to="/about">За нас</Link>
-                    </li>
-                    <li>
-                      <Link to="/terms">Условия за ползване</Link>
-                    </li>
-                    <li>
-                      <Link to="/privacy">Лични данни</Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+                </div> */}
+            <div>
+              <h4>Полезна информация</h4>
+              <ul>
+                <li>
+                  <Link to="/about">За нас</Link>
+                </li>
+                <li>
+                  <Link to="/terms">Условия за ползване</Link>
+                </li>
+                <li>
+                  <Link to="/privacy">Лични данни</Link>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
