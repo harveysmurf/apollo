@@ -1,6 +1,20 @@
 const { getOrdersCollection } = require('../db/mongodb')
-const { getCartId, getCustomerCart } = require('./cartProvider')
+const { getCustomerCart } = require('./cartProvider')
 const ordersCollection = getOrdersCollection()
+
+const getDeliveryMethodString = type => (type ? 'До Адрес' : 'До офис')
+const deliveryPrice = (type, amount) => {
+  return type ? (amount > 90 ? 0 : 6) : amount > 50 ? 0 : 4
+}
+const getLastOrderId = async () => {
+  const lastOrder = await ordersCollection
+    .find({})
+    .sort({ _id: -1 })
+    .limit(1)
+    .next()
+
+  return lastOrder.orderNo || 0
+}
 const adaptCartToOrder = cart => {
   const orderItems = cart.products.map(cartItem => {
     return {
@@ -17,7 +31,7 @@ const adaptCartToOrder = cart => {
   }
 }
 const createOrder = async (req, data) => {
-  const cartId = getCartId(req)
+  const cartId = req.cart
   const cart = await getCustomerCart(cartId)
   const customerDetails = {
     name: data.name,
@@ -27,12 +41,20 @@ const createOrder = async (req, data) => {
     city: data.city,
     telephone: data.telephone
   }
-  await ordersCollection.insertOne({
+
+  const lastOrderId = await getLastOrderId()
+
+  const { insertedId } = await ordersCollection.insertOne({
     ...adaptCartToOrder(cart),
+    deliveryPrice: deliveryPrice(data.delivery, cart.price),
+    deliveryMethod: getDeliveryMethodString(data.delivery),
     customer_details: customerDetails,
     delivery: data.delivery,
-    customer_id: req.user && req.user._id
+    customer_id: req.user && req.user._id,
+    orderNo: lastOrderId + 1,
+    createdAt: new Date().toISOString()
   })
+  return ordersCollection.findOne({ _id: insertedId })
 }
 
 module.exports = {

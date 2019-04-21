@@ -11,9 +11,11 @@ const { ApolloServer } = require('apollo-server-express')
 const resolvers = require('./resolvers')
 const withServices = require('./middlewares/services')
 const authController = require('./controllers/authController')
+const config = require('../.config.json')
 
 const app = express()
 app.use(async (req, _res, next) => {
+  req.config = config
   if (!req.db) {
     req.db = await getDb()
   }

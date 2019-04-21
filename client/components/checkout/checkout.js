@@ -18,7 +18,7 @@ const validationRules = {
       error: requiredFieldError
     }
   ],
-  last_name: [
+  lastname: [
     {
       test: x => !!x,
       error: requiredFieldError
@@ -123,7 +123,7 @@ const CheckoutForm = ({ cart, mutationData, checkout }) => (
                 <label>Фамилия</label>
               </div>
               <div className="col-sm col-md">
-                <Field name="last_name" component={TextInput} />
+                <Field name="lastname" component={TextInput} />
               </div>
             </div>
             <div className="row horizontal-align-center bottom-spacing-m">
@@ -162,10 +162,10 @@ const CheckoutForm = ({ cart, mutationData, checkout }) => (
               <div className="col-sm-3 col-md-3 text-right">
                 <Field
                   checked
-                  name="stooge"
+                  name="delivery"
                   component="input"
                   type="radio"
-                  value="larry"
+                  value="0"
                 />
               </div>
               <div className="col-sm col-md">До Офис</div>
@@ -173,10 +173,10 @@ const CheckoutForm = ({ cart, mutationData, checkout }) => (
             <label className="row horizontal-align-center bottom-spacing-m">
               <div className="col-sm-3 col-md-3 text-right">
                 <Field
-                  name="stooge"
+                  name="delivery"
                   component="input"
                   type="radio"
-                  value="moe"
+                  value="1"
                 />
               </div>
               <div className="col-sm col-md">До Адрес</div>
