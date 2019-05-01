@@ -1,40 +1,52 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { userQuery, cartQuery } from '../../queries/remote'
+import { Query } from 'react-apollo'
 
-const MobileNav = props => {
+const MobileNav = () => {
   return (
-    <div className="mobile-nav text-center">
-      <Link to="/" className="mobile-nav-link">
-        <div>
-          <i className="fa fa-home" aria-hidden="true" />
-        </div>
-        Начало
-      </Link>
-      <Link to="/damski-chanti" className="mobile-nav-link">
-        <div>
-          <i className="fa fa-shopping-bag" aria-hidden="true" />
-        </div>
-        Продукти
-      </Link>
-      <Link to="/damski-chanti" className="mobile-nav-link">
-        <div>
-          <i className="fa fa-user" aria-hidden="true" />
-        </div>
-        Профил
-      </Link>
-      <Link to="/" className="mobile-nav-link">
-        <div>
-          <i className="fa fa-heart" aria-hidden="true" />
-        </div>
-        Любими
-      </Link>
-      <Link to="/cart" className="mobile-nav-link">
-        <div>
-          <i className="fa fa-shopping-cart" aria-hidden="true" />
-        </div>
-        Количка
-      </Link>
-    </div>
+    <Query query={userQuery}>
+      {props => {
+        const user = props.data.loggedInUser
+        return (
+          <div className="mobile-nav text-center">
+            <Link to="/" className="mobile-nav-link">
+              <div>
+                <FontAwesomeIcon icon="home" />
+              </div>
+              Начало
+            </Link>
+            <Link to="/damski-chanti" className="mobile-nav-link">
+              <div>
+                <FontAwesomeIcon icon="shopping-bag" />
+              </div>
+              Продукти
+            </Link>
+            {user && (
+              <Link to="/damski-chanti" className="mobile-nav-link">
+                <div>
+                  <FontAwesomeIcon icon="user" />
+                  Профил
+                </div>
+              </Link>
+            )}
+            <Link to="/" className="mobile-nav-link">
+              <div>
+                <FontAwesomeIcon icon="heart" />
+              </div>
+              Любими
+            </Link>
+            <Link to="/checkout" className="mobile-nav-link">
+              <div>
+                <FontAwesomeIcon icon="shopping-cart" />
+              </div>
+              Количка
+            </Link>
+          </div>
+        )
+      }}
+    </Query>
   )
 }
 
