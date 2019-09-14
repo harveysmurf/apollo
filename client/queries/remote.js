@@ -57,6 +57,7 @@ export const userQuery = gql`
   query {
     loggedInUser {
       name
+      lastname
       email
     }
   }

@@ -1,9 +1,6 @@
-input PriceInput {
-    max: Float
-    min: Float
-}
-
-type ColorType {
+const gql = require('graphql-tag')
+module.exports = gql`
+  type ColorType {
     slug: String
     group: String
     color: String
@@ -16,26 +13,27 @@ type ColorType {
     model: String
     name: String
     similar: [ProductType]
-}
+  }
 
-type AttributeProductType {
+  type AttributeProductType {
     attribute_id: String
     product_id: String
     value: String
-}
+  }
 
-type AddressType {
+  type AddressType {
     street: String
     city: String
     state: String
-}
+    courier: String
+  }
 
-type Breadcrumb {
+  type Breadcrumb {
     name: String
     href: String
     last: Boolean
-}
-type CategoryType {
+  }
+  type CategoryType {
     id: String
     name: String
     description: String
@@ -43,25 +41,30 @@ type CategoryType {
     meta_description: String
     parent_id: String
     slug: String
-    productFeed(cursor: String, colors: [String], material: String, price: PriceInput): ProductFeed
+    productFeed(
+      cursor: String
+      colors: [String]
+      material: String
+      price: PriceInput
+    ): ProductFeed
     products: [ProductType]
     subcategories: [CategoryType]
     parent: CategoryType
     breadcrumbs: [Breadcrumb]
-}
+  }
 
-type OptionType {
+  type OptionType {
     name: String
     description: String
     picture_id: String
-}
+  }
 
-type ImageType {
+  type ImageType {
     color: String
-    image: String 
-}
+    image: String
+  }
 
-type ProductType {
+  type ProductType {
     _id: String
     breadcrumbs: [Breadcrumb]
     name: String
@@ -83,89 +86,149 @@ type ProductType {
     variations: [ColorType]
     similar: [ProductType]
     images: [String]
-}
+  }
 
-type ProductFeed {
+  type ProductFeed {
     cursor: String
     products: [ProductType]
     hasMore: Boolean
-}
+  }
 
-type OrderItemType {
+  type OrderItemType {
     model: String
     quantity: Int
     price: Float
     amount: Float
     discount: Float
-}
+  }
 
-type CustomerDetailsType {
+  type CustomerDetailsType {
     name: String
     lastname: String
     email: String
     address: String
     city: String
     telephone: String
-}
+  }
 
-type OrderType {
+  enum Courier {
+    ECONT
+    SPEEDY
+  }
+
+  enum DeliveryMethod {
+    OFFICE
+    ADDRESS
+  }
+
+  type delivery {
+    courier: Courier
+    method: DeliveryMethod
+  }
+
+  type OrderType {
     order_items: [OrderItemType]
     customer_details: CustomerDetailsType
     comment: String
-    delivery: String
+    delivery: delivery
     amount: Float
     createdAt: String
     customer_id: String
-}
+    address: AddressType
+  }
 
-type CartType {
-    products: [CartProductType],
+  type CartType {
+    products: [CartProductType]
     price: Float
     quantity: Int
-}
+  }
 
-type CartProductType {
+  type CartProductType {
     product: ProductType
     quantity: Int
     price: String
-}
+  }
 
-type UserType {
+  type UserType {
     id: String
     name: String
+    lastname: String
     email: String
     password: String
     level: Int
     attribute_ids: [String]
     attributes: [AttributeProductType]
     orders: [OrderType]
-    addresses: [AddressType],
+    addresses: [AddressType]
     cart: CartType
-}
+  }
 
-type ViewerType {
+  type ViewerType {
     allCategories: [CategoryType]
-}
+  }
 
-type Query {
+  type Query {
     viewer: ViewerType
     loggedInUser: UserType
     users: [UserType]
     cart: CartType
     allCategories: [CategoryType]
-    getCategory(slug: String!, colors: [String], cursor: String, material: String, price: PriceInput): CategoryType
+    getCategory(
+      slug: String!
+      colors: [String]
+      cursor: String
+      material: String
+      price: PriceInput
+    ): CategoryType
     getProduct(model: String!, referer: String): ProductType
-    getProducts(colors: [String], cursor: String, material: String, price: PriceInput, search: String): ProductFeed
+    getProducts(
+      colors: [String]
+      cursor: String
+      material: String
+      price: PriceInput
+      search: String
+    ): ProductFeed
     getRouteType(slug: String!): String
-}
+  }
 
-type Mutation {
-    register(name: String!, lastname: String!, email: String!, consent: Boolean!, password: String!): UserType
+  input AddressInput {
+    street: String
+    city: String
+    state: String
+    fullname: String
+    instructions: String
+  }
+  input UserInputType {
+    firstname: String
+  }
+
+  type Mutation {
+    register(
+      name: String!
+      lastname: String!
+      email: String!
+      consent: Boolean!
+      password: String!
+    ): UserType
     addUser(firstname: String!, age: Int!, companyId: String): UserType
+    addAddress(adress: AddressInput): AddressType
     modifyCart(model: String, quantity: Int): CartType
     addToCart(model: String, quantity: Int): CartType
     removeItemFromCart(model: String): CartType
     deleteUser(id: String!): UserType
-    checkout(name: String, lastname: String, email: String, address: String, city: String, telephone: String, comment: String, consent: String, delivery: String): Boolean
+    checkout(
+      email: String
+      address: AddressInput
+      comment: String
+      consent: String
+      delivery: String
+      courier: String
+    ): Boolean
     logout: Boolean
-}
+  }
+
+  input PriceInput {
+    max: Float
+    min: Float
+  }
+`

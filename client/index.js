@@ -53,8 +53,7 @@ const stateLink = withClientState({
   defaults: defaultState,
   resolvers: {
     Mutation: mutationResolvers
-  },
-  typeDefs
+  }
 })
 
 const client = new ApolloClient({

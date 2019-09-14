@@ -66,7 +66,7 @@ const validate = (data, rules) => {
 
 const EmptyBasket = () => <p>Вашата кошница е празна</p>
 
-const TextInput = ({
+export const TextInput = ({
   input,
   type,
   required,

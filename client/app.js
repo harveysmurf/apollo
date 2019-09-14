@@ -74,6 +74,7 @@ class App extends React.Component {
                 <Route path="/cart" component={Cart} />
                 <Route path="/checkout" component={Checkout} />
                 <Route path="/search" component={SearchComponent} />
+                <Route path="/profile" component={() => <h3>Profile</h3>} />
                 <Route
                   path="/:seoSlug/:model([a-zA-Z]{2}[0-9]{4})"
                   component={ProductContainer}

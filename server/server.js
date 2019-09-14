@@ -12,6 +12,7 @@ const resolvers = require('./resolvers')
 const withServices = require('./middlewares/services')
 const authController = require('./controllers/authController')
 const config = require('../.config.json')
+const typeDefs = require('../schema/typeDefs')
 
 const app = express()
 app.use(async (req, _res, next) => {
@@ -68,7 +69,6 @@ app.get('/logout', async function(req, res) {
   res.json({ message: 'You have successfully logged out' })
 })
 
-const typeDefs = fs.readFileSync('./schema/typeDefs.graphql', 'UTF-8')
 const server = new ApolloServer({
   typeDefs,
   resolvers,
