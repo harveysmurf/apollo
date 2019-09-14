@@ -45,7 +45,9 @@ const ProductVariationThumb = ({
 
 const FlashMessage = ({ open = null }) =>
   open && (
-    <span className="toast">Продуктът беше успешно добавен в кошницата</span>
+    <span className="toast" style={{ top: '50%' }}>
+      Продуктът беше успешно добавен в кошницата
+    </span>
   )
 
 class ProductContainer extends Component {

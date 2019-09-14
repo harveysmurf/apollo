@@ -22,6 +22,7 @@ import DeliveryComponent from './components/delivery.jsx'
 import ReklamaciiComponent from './components/reklamacii.jsx'
 import PrivacyComponent from './components/privacy.jsx'
 import HowToOrderComponent from './components/howtoorder.jsx'
+import CheckoutSuccess from './components/checkout/checkoutsuccess.jsx'
 
 class App extends React.Component {
   constructor(props) {
@@ -64,6 +65,7 @@ class App extends React.Component {
               <Switch>
                 <Route exact path="/" component={HomeComponent} />
                 <Route path="/about" component={AboutComponent} />
+                <Route path="/checkoutsuccess" component={CheckoutSuccess} />
                 <Route path="/terms" component={TermsComponent} />
                 <Route path="/delivery" component={DeliveryComponent} />
                 <Route path="/reklamacii" component={ReklamaciiComponent} />

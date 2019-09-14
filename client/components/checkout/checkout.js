@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Query, Mutation } from 'react-apollo'
 import { cartQuery } from '../../queries/remote'
@@ -103,11 +104,10 @@ const CheckoutForm = ({ cart, mutationData, checkout }) => (
         variables: values
       })
     }}
-    validate={values => {
-      return validate(values, validationRules)
-    }}
+    validate={values => validate(values, validationRules)}
     render={({ handleSubmit }) => (
       <div className="row limit-page">
+        {console.log(mutationData)}
         <div className="col-sm-12 col-md-6">
           <form onSubmit={handleSubmit}>
             <div className="row horizontal-align-center bottom-spacing-m">
@@ -195,7 +195,13 @@ const CheckoutForm = ({ cart, mutationData, checkout }) => (
           <CartProductsList products={cart.products} />
           <CartSummary hideSubmit cart={cart} />
           <button
-            onClick={handleSubmit}
+            onClick={e => {
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              })
+              handleSubmit(e)
+            }}
             className="full-width col-sm-12 button"
             type="button"
           >
@@ -218,11 +224,17 @@ export default props => (
             <h3>Доставка</h3>
             <Mutation mutation={Checkout}>
               {(checkout, { data: mutationData }) => (
-                <CheckoutForm
-                  cart={cart}
-                  checkout={checkout}
-                  mutationData={mutationData}
-                />
+                <React.Fragment>
+                  {mutationData && mutationData.checkout ? (
+                    <Redirect to="/checkoutsuccess" />
+                  ) : (
+                    <CheckoutForm
+                      cart={cart}
+                      checkout={checkout}
+                      mutationData={mutationData}
+                    />
+                  )}
+                </React.Fragment>
               )}
             </Mutation>
           </Fragment>
