@@ -1,16 +1,18 @@
 import React from 'react'
-import gql from 'graphql-tag'
 import { Query, Mutation, withApollo } from 'react-apollo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
+import { WithLoadingCheck } from '../shared/withQuery'
 import Dropdown from '../utilities/dropdown'
 import { userQuery, cartQuery } from '../../queries/remote'
+import { featuresQuery } from '../../queries/local'
 import { Logout } from '../../mutations/remote'
+import { compose } from 'recompose'
 
 const UserTop = props => {
-  if (props.loading) return <div>Loading...</div>
-
   const user = props.data.loggedInUser
+  const loginIsEnabled =
+    props.getFeatures && props.getFeatures.features.LOGIN_ENABLED
   return (
     <div>
       <Dropdown
@@ -28,26 +30,26 @@ const UserTop = props => {
           </div>
         }
       />
-      {!user && (
+      {!user && loginIsEnabled && (
         <Link to="/register" className="user-link">
           <FontAwesomeIcon icon="user-plus" />
           Регистрация
         </Link>
       )}
-      {!user && (
+      {!user && loginIsEnabled && (
         <Link to="/login" className="user-link">
           <FontAwesomeIcon icon="sign-in-alt" />
           Вход
         </Link>
       )}
-      {user && (
+      {user && loginIsEnabled && (
         <Link to="/profile" className="user-link">
           <FontAwesomeIcon icon="user" />
           <span>Профил</span>
         </Link>
       )}
 
-      {user && (
+      {user && loginIsEnabled && (
         <a href="#" className="favorites user-link">
           <FontAwesomeIcon icon="heart" />
           Любими
@@ -61,7 +63,7 @@ const UserTop = props => {
           </Link>
         )}
       </Query>
-      {user && (
+      {user && loginIsEnabled && (
         <Mutation
           onCompleted={data => {
             if (data && data.logout) {
@@ -90,8 +92,23 @@ const UserTop = props => {
   )
 }
 
-export default withApollo(props => (
-  <Query query={userQuery} {...props}>
-    {UserTop}
-  </Query>
-))
+const withFeaturesQuery = WithLoadingCheck(featuresQuery, {
+  name: 'getFeatures'
+})
+const withUserQuery = WrappedComponent => props => {
+  const loginIsEnabled =
+    props.getFeatures && props.getFeatures.features.LOGIN_ENABLED
+
+  if (loginIsEnabled) {
+    const Comp = WithLoadingCheck(userQuery)(WrappedComponent)
+    return <Comp {...props} />
+  } else {
+    return <WrappedComponent data={{ loggedInUser: null }} {...props} />
+  }
+}
+
+export default compose(
+  withFeaturesQuery,
+  withUserQuery,
+  withApollo
+)(UserTop)

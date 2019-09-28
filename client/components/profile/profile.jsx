@@ -1,5 +1,6 @@
 import React from 'react'
 import * as R from 'ramda'
+import { Query } from 'react-apollo'
 import { Form, Field } from 'react-final-form'
 import { userQuery } from '../../queries/remote'
 import { TextInput } from '../checkout/checkout'
@@ -36,7 +37,7 @@ const validate = (data, rules) => {
   }
   return R.pickBy(Boolean, R.mapObjIndexed(getError, rules))
 }
-export const profieForm = ({ profile }) => {
+export const ProfileForm = ({ profile }) => {
   return (
     <Form
       initialValues={profile}
@@ -92,7 +93,9 @@ export const profieForm = ({ profile }) => {
 export default props => (
   <Query query={userQuery}>
     {({ data: { user, loading } }) => (
-      <div className="confined-container">)}</div>
+      <div className="confined-container">
+        <ProfileForm profile={user} />
+      </div>
     )}
   </Query>
 )

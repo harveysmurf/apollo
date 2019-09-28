@@ -23,7 +23,7 @@ import ReklamaciiComponent from './components/reklamacii.jsx'
 import PrivacyComponent from './components/privacy.jsx'
 import HowToOrderComponent from './components/howtoorder.jsx'
 import CheckoutSuccess from './components/checkout/checkoutsuccess.jsx'
-
+import Profile from './components/profile/profile.jsx'
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -76,7 +76,7 @@ class App extends React.Component {
                 <Route path="/cart" component={Cart} />
                 <Route path="/checkout" component={Checkout} />
                 <Route path="/search" component={SearchComponent} />
-                <Route path="/profile" component={() => <h3>Profile</h3>} />
+                <Route path="/profile" component={Profile} />
                 <Route
                   path="/:seoSlug/:model([a-zA-Z]{2}[0-9]{4})"
                   component={ProductContainer}

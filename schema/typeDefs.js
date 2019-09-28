@@ -25,7 +25,8 @@ module.exports = gql`
     street: String
     city: String
     state: String
-    courier: String
+    fullname: String
+    instructions: String
   }
 
   type Breadcrumb {
@@ -76,6 +77,7 @@ module.exports = gql`
     description_short: String
     description: String
     discount: Float
+    material: String
     meta_title: String
     meta_description: String
     slug: String
@@ -155,7 +157,6 @@ module.exports = gql`
     lastname: String
     email: String
     password: String
-    level: Int
     attribute_ids: [String]
     attributes: [AttributeProductType]
     orders: [OrderType]

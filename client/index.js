@@ -11,7 +11,6 @@ import { ApolloProvider } from 'react-apollo'
 import { withClientState } from 'apollo-link-state'
 import { ApolloLink } from 'apollo-link'
 import mutationResolvers from './resolvers/mutations'
-import typeDefs from './typeDefs'
 
 import App from './app'
 library.add(far, fas, fab)
@@ -22,7 +21,8 @@ export const defaultState = {
     PDP_LAST_VIEWED: false,
     PDP_VIEW_COUNT: false,
     NEWSLETTER_SUBSCRIBE: false,
-    PDP_NOTIFY_AVAILABLE: false
+    PDP_NOTIFY_AVAILABLE: false,
+    LOGIN_ENABLED: false
   },
   filters: {
     search: '',
