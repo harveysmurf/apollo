@@ -1,12 +1,12 @@
 const { productPipeline } = require('../../../models/product')
 const { getProductsCollection } = require('../../db/mongodb')
-const createFilterObject = ({ colors, material, category, price, search }) => {
+const createFilterObject = ({ colors, materials, category, price, search }) => {
   return {
     ...(colors && colors.length > 0 && { color_group: { $in: colors } }),
     ...(category && {
       categories: category
     }),
-    ...(material && { material }),
+    ...(materials && materials.length > 0 && { material: { $in: materials } }),
     ...(search && {
       $or: [
         { slug: { $regex: search } },
@@ -25,7 +25,7 @@ const productsCollection = getProductsCollection()
 const getProductFeed = async ({
   cursor,
   colors,
-  material,
+  materials,
   price,
   category,
   search
@@ -34,7 +34,7 @@ const getProductFeed = async ({
   let hasMore = true
   const find = createFilterObject({
     colors,
-    material,
+    materials,
     category,
     price,
     search

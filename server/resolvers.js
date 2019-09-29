@@ -23,11 +23,11 @@ const productsCollection = getProductsCollection()
 const categoriesCollection = getCategoriesCollection()
 module.exports = {
   CategoryType: {
-    productFeed: (parentValue, { cursor, colors, material, price }) => {
+    productFeed: (parentValue, { cursor, colors, materials, price }) => {
       return getProductFeed({
         cursor,
         colors,
-        material,
+        materials,
         price,
         category: parentValue._id
       })
@@ -178,7 +178,6 @@ module.exports = {
         })
         return user
       } catch (error) {
-        console.log('registe error', error)
         return null
       }
     },
@@ -189,7 +188,6 @@ module.exports = {
         })
         return true
       } catch (error) {
-        console.log('logout error', error.message)
         return false
       }
     },

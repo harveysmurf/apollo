@@ -1,7 +1,12 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+import Latest from './home/latest'
 
 export default class HomeComponent extends Component {
-    render() {
-        return <h3>Home component</h3>
-    }
+  render() {
+    return (
+      <>
+        <Latest />
+      </>
+    )
+  }
 }

@@ -81,7 +81,7 @@ class ColorFilter extends Component {
       <ul className="color-filter">
         <div className="row">
           <div className="col-sm-6">
-            <b>Цвят</b>
+            <h4 className="bottom-spacing-s">Цвят</h4>
           </div>
           <div className="col-sm-6 text-right">
             <span onClick={_e => this.clearFilter()}>Изчисти</span>
@@ -106,5 +106,4 @@ const withColorMutation = WrappedComponent => ({ selected }) => (
     )}
   </Mutation>
 )
-withColorMutation.displayName = 'hi'
 export default withColorMutation(ColorFilter)

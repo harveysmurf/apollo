@@ -4,7 +4,7 @@ export const filtersQuery = gql`
   query getFiltersQuery {
     filters @client {
       search
-      material
+      materials
       colors
       styles
       price {

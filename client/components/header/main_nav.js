@@ -8,7 +8,7 @@ export default class MainNav extends Component {
         <div className="row row-center">
           <div className="col-lg-5 text-right">
             <Link to="/damski-chanti">Дамски Чанти</Link>
-            <Link to="/damski-chanti">Естествена Кожа</Link>
+            <Link to="/damski-chanti/koja">Естествена Кожа</Link>
           </div>
           <div className="col-lg-2">
             <div className="logo text-center">

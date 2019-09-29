@@ -26,7 +26,7 @@ export const defaultState = {
   },
   filters: {
     search: '',
-    material: '',
+    materials: [],
     styles: [],
     colors: [],
     price: {

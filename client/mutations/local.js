@@ -12,6 +12,11 @@ export const UpdatePrice = gql`
   }
 `
 
+export const UpdateMaterials = gql`
+  mutation updateMaterials($materials: [string]) {
+    updateMaterials(materials: $materials) @client
+  }
+`
 export const updateSelectedImage = gql`
   mutation updateSelectedImage($index: Int) {
     updateSelectedImage(index: $index) @client

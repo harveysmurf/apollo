@@ -1,0 +1,15 @@
+@import '../../scss/mixins';
+.material-filter {
+  cursor: pointer;
+  & > div {
+    display: inline-block;
+    font-size: 1.2rem;
+  }
+  & > span {
+    margin-right: 15px;
+    font-size: 1.2rem;
+    @include respond-to(desktop) {
+      margin-right: 25px;
+    }
+  }
+}

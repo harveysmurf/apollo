@@ -5,7 +5,7 @@ export const categoryQuery = gql`
     $slug: String!
     $colors: [String] = []
     $cursor: String
-    $material: String
+    $materials: [String] = []
     $price: PriceInput
   ) {
     getCategory(slug: $slug) {
@@ -23,7 +23,7 @@ export const categoryQuery = gql`
       productFeed(
         cursor: $cursor
         colors: $colors
-        material: $material
+        materials: $materials
         price: $price
       )
         @connection(

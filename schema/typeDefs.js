@@ -45,7 +45,7 @@ module.exports = gql`
     productFeed(
       cursor: String
       colors: [String]
-      material: String
+      materials: [String]
       price: PriceInput
     ): ProductFeed
     products: [ProductType]
@@ -178,7 +178,7 @@ module.exports = gql`
       slug: String!
       colors: [String]
       cursor: String
-      material: String
+      materials: [String]
       price: PriceInput
     ): CategoryType
     getProduct(model: String!, referer: String): ProductType
