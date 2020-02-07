@@ -8,6 +8,7 @@ import ApolloClient from 'apollo-client'
 import { BatchHttpLink } from 'apollo-link-batch-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from 'react-apollo'
+import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks'
 import { withClientState } from 'apollo-link-state'
 import { ApolloLink } from 'apollo-link'
 import mutationResolvers from './resolvers/mutations'
@@ -62,8 +63,10 @@ const client = new ApolloClient({
 })
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>,
+  <ApolloHooksProvider client={client}>
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  </ApolloHooksProvider>,
   document.getElementById('root')
 )
