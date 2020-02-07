@@ -188,6 +188,7 @@ module.exports = gql`
       material: String
       price: PriceInput
       search: String
+      limit: Int
     ): ProductFeed
     getRouteType(slug: String!): String
   }

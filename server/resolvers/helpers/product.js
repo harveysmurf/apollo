@@ -28,7 +28,8 @@ const getProductFeed = async ({
   materials,
   price,
   category,
-  search
+  search,
+  limit = 15
 }) => {
   let cursorpromise
   let hasMore = true
@@ -110,7 +111,7 @@ const getProductFeed = async ({
         $sort: { createdAt: -1 }
       },
       {
-        $limit: 15
+        $limit: limit
       }
     ])
     .toArray()
