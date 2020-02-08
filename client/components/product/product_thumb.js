@@ -1,39 +1,27 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-export default class ProductThumb extends Component {
-  constructor(props) {
-    super(props)
-  }
-  getDisplayImage(product, color) {
-    if (!color) return product.main_img
-    else {
-      let colorObj = _.find(product.colors, c => {
-        return c.group == color
-      })
-      return colorObj.images.length > 0 ? colorObj.images[0] : product.main_img
-    }
-  }
-  render() {
-    const { categoryId, product } = this.props
-    const referer = categoryId ? `?referer=${categoryId}` : ''
-    return (
-      <div className="text-center product-thumb">
+const ProductThumb = ({ categoryId, product }) => {
+  const referer = categoryId ? `?referer=${categoryId}` : ''
+  const [mainImg, setMainImg] = useState(product.images[0])
+  return (
+    <div className="text-center product-thumb">
+      <div>
+        <Link to={`/${product.slug}/${product.model}${referer}`}>
+          <img width={150} height={150} src={product.images[0]} />
+        </Link>
+      </div>
+      <div className="product-details">
         <div>
-          <Link to={`/${product.slug}/${product.model}${referer}`}>
-            <img width={150} height={150} src={product.images[0]} />
-          </Link>
+          <a href="#">{`${product.name} | ${product.model}`}</a>
         </div>
-        <div className="product-details">
-          <div>
-            <a href="#">{`${product.name} | ${product.model}`}</a>
-          </div>
-          <div className="text-left">{product.description}</div>
-          <div className="text-left">
-            <b>{product.price.toFixed(2)} лв.</b>
-          </div>
+        <div className="text-left">{product.description}</div>
+        <div className="text-left">
+          <b>{product.price.toFixed(2)} лв.</b>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
 }
+
+export default ProductThumb
