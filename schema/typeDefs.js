@@ -13,6 +13,7 @@ module.exports = gql`
     model: String
     name: String
     similar: [ProductType]
+    description_short: String
   }
 
   type AttributeProductType {

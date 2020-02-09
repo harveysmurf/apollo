@@ -59,7 +59,8 @@ const stateLink = withClientState({
 
 const client = new ApolloClient({
   cache,
-  link: ApolloLink.from([stateLink, batchlink])
+  link: ApolloLink.from([stateLink, batchlink]),
+  resolvers: {}
 })
 
 ReactDOM.render(
