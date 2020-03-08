@@ -25,11 +25,7 @@ export const categoryQuery = gql`
         colors: $colors
         materials: $materials
         price: $price
-      )
-        @connection(
-          key: "productFeed"
-          filter: ["cursor", "colors", "materials", "price"]
-        ) {
+      ) {
         cursor
         hasMore
         products {

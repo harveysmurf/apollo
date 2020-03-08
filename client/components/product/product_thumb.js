@@ -30,7 +30,7 @@ const ProductThumb = ({ categoryId, product }) => {
     <div className="product-thumb">
       <div className="text-center">
         <Link to={`/${selected.slug}/${selected.model}${referer}`}>
-          <img width={150} height={150} src={selected.images[0]} />
+          <img src={getImageCachedSizePath(selected.images[0], 'm')} />
         </Link>
       </div>
       <div className="product-details">
