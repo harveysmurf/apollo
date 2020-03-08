@@ -28,6 +28,7 @@ module.exports = gql`
     state: String
     fullname: String
     instructions: String
+    address: String
   }
 
   type Breadcrumb {
@@ -196,6 +197,7 @@ module.exports = gql`
 
   input AddressInput {
     street: String
+    address: String
     city: String
     state: String
     fullname: String
@@ -223,9 +225,9 @@ module.exports = gql`
       email: String
       address: AddressInput
       comment: String
-      consent: String
       delivery: String
       courier: String
+      telephone: String
     ): Boolean
     logout: Boolean
   }

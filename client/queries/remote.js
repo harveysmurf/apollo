@@ -81,6 +81,7 @@ export const cartQuery = gql`
           available
           quantity
           model
+          slug
         }
         quantity
         price

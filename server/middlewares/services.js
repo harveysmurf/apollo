@@ -2,8 +2,8 @@ const services = require('../services')
 const getSendgridConnection = require('../connections/sendGridConnection')
 const R = require('ramda')
 module.exports = (req, _res, next) => {
-  const { sendgridToken } = req.config
-  const sendGridConnection = getSendgridConnection(sendgridToken)
+  const { sendGridToken } = req.config
+  const sendGridConnection = getSendgridConnection(sendGridToken)
   const getCartService = R.once(() =>
     services.getCartService(services.cartProvider, req.db, req.cookies.cart)
   )

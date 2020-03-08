@@ -2,9 +2,10 @@ const { getOrdersCollection } = require('../db/mongodb')
 const { getCustomerCart } = require('./cartProvider')
 const ordersCollection = getOrdersCollection()
 
-const getDeliveryMethodString = type => (type ? 'До Адрес' : 'До офис')
+const getDeliveryMethodString = type =>
+  type === 'toAddress' ? 'До Адрес' : 'До офис'
 const deliveryPrice = (type, amount) => {
-  return type ? (amount > 90 ? 0 : 6) : amount > 50 ? 0 : 4
+  return type === 'toAddress' ? (amount > 90 ? 0 : 6.5) : amount > 50 ? 0 : 5.5
 }
 const getLastOrderId = async () => {
   const lastOrder = await ordersCollection
@@ -34,8 +35,7 @@ const createOrder = async (req, data) => {
   const cartId = req.cart
   const cart = await getCustomerCart(cartId)
   const customerDetails = {
-    name: data.name,
-    lastname: data.lastname,
+    fullname: data.address.fullname,
     email: data.email,
     address: data.address,
     city: data.city,

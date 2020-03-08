@@ -146,14 +146,15 @@ div.product {
     border: 1px solid lightgray;
     margin-bottom: 10px;
     div.product-details {
-        padding: 5px;
+        padding: 0 20px;
     }
     & > img {
         width: 100%;
     }
     a {
         font-weight: bold;
-        margin-bottom: 10px;
+        font-size: 0.8rem; 
+        min-height: 40px;
         display: block;
     }
     img.selected {

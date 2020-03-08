@@ -1,6 +1,9 @@
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
+import { featuresQuery } from '../../queries/local'
+import { useQuery } from '@apollo/react-hooks'
+import { formatPrice } from '../../localization/price'
 
 const getSelectedVariation = (variations = [], selectedModel) => {
   return variations.find(({ model }) => model === selectedModel)
@@ -22,6 +25,7 @@ const ProductThumb = ({ categoryId, product }) => {
   const [selected, setSelected] = useState(
     getSelectedVariation(variations, model)
   )
+  const { THUMB_CAROUSEL_ENABLED } = useQuery(featuresQuery)
   return (
     <div className="product-thumb">
       <div className="text-center">
@@ -30,24 +34,25 @@ const ProductThumb = ({ categoryId, product }) => {
         </Link>
       </div>
       <div className="product-details">
-        <div className="text-center">
+        <div>
           <a href="#">{`${selected.name} | ${selected.model}`}</a>
         </div>
-        <div className="text-left">{selected.description_short}</div>
-        <div className="text-left">
-          <b>{product.price.toFixed(2)} лв.</b>
+        <div>
+          <b>{formatPrice(product.price)}</b>
         </div>
       </div>
-      <div>
-        {variations.map(variation => (
-          <ProductVariation
-            key={variation.model}
-            variation={variation}
-            isSelected={variation.model === selected.model}
-            selectVariation={() => setSelected(variation)}
-          />
-        ))}
-      </div>
+      {THUMB_CAROUSEL_ENABLED && (
+        <div>
+          {variations.map(variation => (
+            <ProductVariation
+              key={variation.model}
+              variation={variation}
+              isSelected={variation.model === selected.model}
+              selectVariation={() => setSelected(variation)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

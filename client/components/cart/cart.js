@@ -27,7 +27,8 @@ const CartRow = ({
     name,
     quantity: productQuantity,
     color,
-    price: productPrice
+    price: productPrice,
+    slug
   },
   quantity,
   price
@@ -67,7 +68,7 @@ const CartRow = ({
               <img src={getImageCachedSizePath(images[0], 's')} />
               <div className={css(['cart-row__cart-item-description'])}>
                 <div className={css('cart-row__cart-line-item')}>
-                  <a href="#">{name}</a>
+                  <Link to={`/${slug}/${model}`}>{name}</Link>
                   <div className="hidden-sm">{productPrice} лв.</div>
                 </div>
                 <div>
@@ -109,13 +110,18 @@ const CartRow = ({
   </Mutation>
 )
 
+export const pluralize = (word, num, singleChar, pluralChar) => {
+  const char = num > 1 ? pluralChar : singleChar
+  return word + char
+}
+
 export const CartSummary = ({ cart: { quantity, price }, hideSubmit }) => (
   <Fragment>
     <div className="row">
       <div className="col-sm-12">
         <h3>Общо кошница</h3>
         <br />
-        {quantity} ПРОДУКТА
+        {quantity} {pluralize('ПРОДУКТ', quantity, '', 'А')}
       </div>
     </div>
     <div className="row">

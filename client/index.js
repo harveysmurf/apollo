@@ -23,7 +23,8 @@ export const defaultState = {
     PDP_VIEW_COUNT: false,
     NEWSLETTER_SUBSCRIBE: false,
     PDP_NOTIFY_AVAILABLE: false,
-    LOGIN_ENABLED: false
+    LOGIN_ENABLED: false,
+    THUMB_CAROUSEL_ENABLED: false
   },
   filters: {
     search: '',
@@ -51,16 +52,15 @@ const cache = new InMemoryCache({
 
 const stateLink = withClientState({
   cache,
-  defaults: defaultState,
-  resolvers: {
-    Mutation: mutationResolvers
-  }
+  defaults: defaultState
 })
 
 const client = new ApolloClient({
   cache,
   link: ApolloLink.from([stateLink, batchlink]),
-  resolvers: {}
+  resolvers: {
+    Mutation: mutationResolvers
+  }
 })
 
 ReactDOM.render(

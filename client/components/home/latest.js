@@ -13,9 +13,11 @@ export default () => {
   }
   return (
     <div className="row">
-      <div className="col-sm-12">Нови</div>
+      <div className="col-sm-12 bottom-spacing-m">
+        <h3>Нови</h3>
+      </div>
       {data.getProducts.products.map((product, key) => (
-        <div key={key} className="col-sm-3">
+        <div key={key} className="col-sm-12 col-md-3">
           <ProductThumb product={product} />
         </div>
       ))}

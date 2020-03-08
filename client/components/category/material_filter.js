@@ -40,7 +40,7 @@ const Material = ({ name, isSelected, toggle }) => {
       <span>
         {<FontAwesomeIcon icon={isSelected ? 'check-square' : 'square'} />}
       </span>
-      <div>{name}</div>
+      <span>{name}</span>
     </div>
   )
 }

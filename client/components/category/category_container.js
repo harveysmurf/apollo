@@ -26,16 +26,16 @@ let CategoryContainer = ({ slug, url }) => (
                   <Breadcrumbs breadcrumbs={getCategory.breadcrumbs} />
                 </div>
                 <Sidebar
-                  className="col-sm-12 col-lg-4"
+                  className="col-sm-12 col-md-3"
                   url={url}
                   category={getCategory}
                   filters={filters}
                 />
-                <div className="col-sm-12 col-lg-8">
+                <div className="col-sm-12 col-md-9">
                   <h3>{getCategory.name}</h3>
                   <div className="row">
                     {getCategory.productFeed.products.map((p, index) => (
-                      <div key={index} className="col-sm-3">
+                      <div key={index} className="col-sm-6 col-md-4 col-lg-3">
                         <ProductThumb categoryId={getCategory.id} product={p} />
                       </div>
                     ))}
