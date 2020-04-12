@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node server.js",
-    "server-dev": "nodemon -e js,graphql,jsx server/index.js --ignore client/ --ignore dist/",
+    "server-dev": "nodemon --inspect=9223 -e js,graphql,jsx server/index.js --ignore client/ --ignore dist/ ",
     "dev": "concurrently \"npm run server-dev\" \"webpack --watch\"",
     "start": "concurrently \"npm run server-dev\" \"npm run webpack\"",
     "webpack": "webpack --watch"

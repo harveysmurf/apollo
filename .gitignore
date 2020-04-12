@@ -2,5 +2,6 @@ dist/index_bundle.js
 dist/styles.css
 dist/fonts
 dist/images/*
+.vscode
 node_modules
 .config.json

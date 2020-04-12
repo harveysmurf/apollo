@@ -4,7 +4,7 @@ export const categoryQuery = gql`
   query getCategory(
     $slug: String!
     $colors: [String] = []
-    $cursor: String
+    $cursor: CursorInput
     $materials: [String] = []
     $price: PriceInput
   ) {
@@ -26,11 +26,16 @@ export const categoryQuery = gql`
         materials: $materials
         price: $price
       ) {
-        cursor
+        cursor {
+          model
+          createdAt
+        }
         hasMore
         products {
           model
           images
+          discount
+          sellPrice
           name
           price
           available
@@ -42,6 +47,7 @@ export const categoryQuery = gql`
             color
             images
             quantity
+            discount
           }
           variations {
             name
@@ -49,6 +55,7 @@ export const categoryQuery = gql`
             model
             description_short
             slug
+            discount
           }
         }
       }
@@ -71,6 +78,7 @@ export const cartQuery = gql`
       products {
         product {
           name
+          sellPrice
           price
           color
           images
@@ -101,6 +109,8 @@ export const getProductQuery = gql`
       description_short
       model
       slug
+      discount
+      sellPrice
       variations {
         slug
         color
@@ -108,15 +118,18 @@ export const getProductQuery = gql`
         quantity
         main_image
         model
+        discount
       }
       availableColors {
         name
         images
         quantity
+        discount
       }
       similar {
         name
         slug
+        discount
       }
       images
       color
@@ -127,7 +140,7 @@ export const getProductQuery = gql`
 export const getProductsFeedQuery = gql`
   query getProducts(
     $colors: [String] = []
-    $cursor: String
+    $cursor: CursorInput
     $material: String
     $price: PriceInput
     $search: String
@@ -145,7 +158,10 @@ export const getProductsFeedQuery = gql`
         key: "productFeedSearch"
         filter: ["colors", "material", "price", "search"]
       ) {
-      cursor
+      cursor {
+        model
+        createdAt
+      }
       hasMore
       products {
         model
@@ -156,18 +172,22 @@ export const getProductsFeedQuery = gql`
         main_image
         description
         slug
+        discount
+        sellPrice
         variations {
           name
           images
           model
           description_short
           slug
+          discount
         }
         colors {
           group
           color
           images
           quantity
+          discount
         }
       }
     }

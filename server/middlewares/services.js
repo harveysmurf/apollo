@@ -1,4 +1,5 @@
 const services = require('../services')
+const productProvider = require('../services/productProvider')
 const getSendgridConnection = require('../connections/sendGridConnection')
 const R = require('ramda')
 module.exports = (req, _res, next) => {
@@ -15,8 +16,14 @@ module.exports = (req, _res, next) => {
   const getEmailService = R.once(() =>
     services.getEmailService(sendGridConnection)
   )
+
+  const getProductProvider = R.once(() => productProvider(req.db))
+  const getProductService = R.once(() =>
+    services.getProductService(getProductProvider())
+  )
   req.getCartService = getCartService
   req.getAuthenticationService = getAuthenticationService
   req.getEmailService = getEmailService
+  req.getProductService = getProductService
   next()
 }

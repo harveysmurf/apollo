@@ -118,6 +118,7 @@ const getProductFeed = async ({
 
   let products = res.map(s => {
     s.createdAt = s.createdAt.toISOString()
+    s.discountedPrice = s.discount ? (s.discount / 100) * s.price : s.price
     return s
   })
 

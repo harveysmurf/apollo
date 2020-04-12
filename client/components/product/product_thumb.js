@@ -26,20 +26,18 @@ const ProductThumb = ({ categoryId, product }) => {
     getSelectedVariation(variations, model)
   )
   const { THUMB_CAROUSEL_ENABLED } = useQuery(featuresQuery)
+
   return (
     <div className="product-thumb">
+      {selected.discount && (
+        <div className="ribbon">
+          <div className="ribbon-rectangle">{`${selected.discount}%`}</div>
+        </div>
+      )}
       <div className="text-center">
         <Link to={`/${selected.slug}/${selected.model}${referer}`}>
           <img src={getImageCachedSizePath(selected.images[0], 'm')} />
         </Link>
-      </div>
-      <div className="product-details">
-        <div>
-          <a href="#">{`${selected.name} | ${selected.model}`}</a>
-        </div>
-        <div>
-          <b>{formatPrice(product.price)}</b>
-        </div>
       </div>
       {THUMB_CAROUSEL_ENABLED && (
         <div>
@@ -53,6 +51,18 @@ const ProductThumb = ({ categoryId, product }) => {
           ))}
         </div>
       )}
+      <div className="product-details">
+        <div>
+          <a href="#">{`${selected.name} | ${selected.model}`}</a>
+        </div>
+        <div>
+          <b>
+            {formatPrice(
+              product.discount ? product.price : product.discountedPrice
+            )}
+          </b>
+        </div>
+      </div>
     </div>
   )
 }
