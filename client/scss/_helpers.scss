@@ -7,6 +7,11 @@
 .no-gutters {
     padding: 0;
 }
+.no-gutters-xs {
+    @include respond-to(small-mobile) {
+        padding: 0;
+    }
+}
 .row-center {
     align-items: center;
     justify-content: center
@@ -52,4 +57,9 @@
 }
 .full-width {
     width: 100%;
+}
+.full-width-xs {
+    @include respond-to(small-mobile) {
+        width: 100%;
+    }
 }

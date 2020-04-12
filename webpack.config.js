@@ -101,13 +101,13 @@ module.exports = {
   },
   devtool: 'eval-source-map',
   plugins: [
-    new ExtractTextPlugin('styles.css'),
-    new BrowserSyncPlugin({
-      // browse to http://localhost:3000/ during development,
-      // ./public directory is being served
-      host: 'localhost',
-      port: 3000,
-      proxy: 'http://localhost:4000'
-    })
+    new ExtractTextPlugin('styles.css')
+    // new BrowserSyncPlugin({
+    //   // browse to http://localhost:3000/ during development,
+    //   // ./public directory is being served
+    //   host: 'localhost',
+    //   port: 3000,
+    //   proxy: 'http://localhost:4000'
+    // })
   ]
 }

@@ -13,7 +13,6 @@ import RegistrationComponent from './components/auth/signup'
 import Header from './components/header'
 import Footer from './components/footer'
 import MobileNav from './components/header/mobile_nav'
-import RouteResolver from './components/routeresolver'
 import Cart from './components/cart/cart'
 import Checkout from './components/checkout/checkout'
 import ProductContainer from './components/product/product_container'
@@ -24,6 +23,7 @@ import PrivacyComponent from './components/privacy.jsx'
 import HowToOrderComponent from './components/howtoorder.jsx'
 import CheckoutSuccess from './components/checkout/checkoutsuccess.jsx'
 import Profile from './components/profile/profile.jsx'
+import CategoryContainer from './components/category/category_container'
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -81,7 +81,7 @@ class App extends React.Component {
                   path="/:seoSlug/:model([a-zA-Z]{2}[0-9]{4})"
                   component={ProductContainer}
                 />
-                <Route path="/:param*" component={RouteResolver} />
+                <Route path="/:categorySlug" component={CategoryContainer} />
               </Switch>
               {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}
             </div>

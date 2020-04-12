@@ -28,18 +28,15 @@ const ProductThumb = ({ categoryId, product }) => {
   const { THUMB_CAROUSEL_ENABLED } = useQuery(featuresQuery)
   return (
     <div className="product-thumb">
+      {selected.discount && (
+        <div className="ribbon">
+          <div className="ribbon-rectangle">{`${selected.discount}%`}</div>
+        </div>
+      )}
       <div className="text-center">
         <Link to={`/${selected.slug}/${selected.model}${referer}`}>
           <img src={getImageCachedSizePath(selected.images[0], 'm')} />
         </Link>
-      </div>
-      <div className="product-details">
-        <div>
-          <a href="#">{`${selected.name} | ${selected.model}`}</a>
-        </div>
-        <div>
-          <b>{formatPrice(product.price)}</b>
-        </div>
       </div>
       {THUMB_CAROUSEL_ENABLED && (
         <div>
@@ -53,6 +50,17 @@ const ProductThumb = ({ categoryId, product }) => {
           ))}
         </div>
       )}
+      <div className="product-details">
+        <div>
+          <a href="#">{`${selected.name} | ${selected.model}`}</a>
+        </div>
+      </div>
+      <div className="product-price">
+        <b>{formatPrice(selected.sellPrice)}</b>
+        {selected.discount && (
+          <span className="original-price">{formatPrice(selected.price)}</span>
+        )}
+      </div>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 import * as R from 'ramda'
 import Sidebar from './sidebar'
 import _ from 'lodash'
@@ -10,7 +10,12 @@ import { categoryQuery } from '../../queries/remote'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-list.jsx'
 import { useQuery } from '@apollo/react-hooks'
 
-const CategoryContainer = ({ slug, url }) => {
+const CategoryContainer = ({
+  match: {
+    params: { categorySlug: slug }
+  }
+}) => {
+  const [fetchMoreLoading, setFetchMoreLoading] = useState(false)
   const {
     loading: filtersLoading,
     data: { filters }
@@ -18,6 +23,7 @@ const CategoryContainer = ({ slug, url }) => {
   if (filtersLoading) {
     return null
   }
+
   const { loading, data, fetchMore } = useQuery(categoryQuery, {
     variables: {
       slug,
@@ -26,6 +32,8 @@ const CategoryContainer = ({ slug, url }) => {
   })
   if (loading) {
     return <div>Loading...</div>
+  } else if (!data) {
+    return <h1>Page not found</h1>
   } else {
     const getCategory = data.getCategory
     return (
@@ -35,39 +43,38 @@ const CategoryContainer = ({ slug, url }) => {
         </div>
         <Sidebar
           className="col-sm-12 col-md-3"
-          url={url}
           category={getCategory}
           filters={filters}
         />
-        <div className="col-sm-12 col-md-9">
+        <div className="col-sm-12 col-md-9 no-gutters-xs">
           <h3>{getCategory.name}</h3>
           <div className="row">
             {getCategory.productFeed.products.map((p, index) => (
               <div
                 key={[index, p.model].join('|')}
-                className="col-sm-6 col-md-4 col-lg-3"
+                className="col-sm-12 col-md-4 col-lg-3 no-gutters-xs"
               >
                 <ProductThumb categoryId={getCategory.id} product={p} />
               </div>
             ))}
           </div>
-          <div className="row">
-            {getCategory.productFeed.hasMore ? (
-              <button
-                onClick={() =>
-                  fetchMoreProducts(
-                    filters,
-                    getCategory.productFeed.cursor,
-                    fetchMore
-                  )
-                }
-              >
-                Зареди още
-              </button>
-            ) : (
-              ''
-            )}
-          </div>
+          {getCategory.productFeed.hasMore ? (
+            <button
+              className="full-width-xs"
+              onClick={() => {
+                setFetchMoreLoading(true)
+                fetchMoreProducts(
+                  filters,
+                  getCategory.productFeed.cursor,
+                  fetchMore
+                ).finally(() => setFetchMoreLoading(false))
+              }}
+            >
+              {fetchMoreLoading ? '...' : 'Зареди още'}
+            </button>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     )

@@ -1,8 +1,7 @@
 .sidebar {
-    border-bottom: 1px solid lightgray;
+    margin-bottom: 20px;
     @include respond-to(desktop) {
-        border: 1px solid lightgray;
-        border-radius: 10px;
+        margin-bottom: 0px;
     }
     ul {
         background-color: white;

@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
 import BagType from './bagtype'
 import ColorFilter from './color_filter'
 import PriceFilter from './price_filter'
 import MaterialFilter from './material_filter'
-
-export default ({ className, filters, category, url }) => (
+// TODO hide filters on mobile
+// TODO sidebar fixed on desktop
+export default ({ className, filters, category }) => (
   <div className={`${className} sidebar`}>
     {category && (
       <div>
-        <BagType category={category} url={url} />
+        <BagType category={category} />
       </div>
     )}
     <div>

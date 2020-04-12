@@ -1,6 +1,8 @@
 const gql = require('graphql-tag')
 module.exports = gql`
   type ColorType {
+    discount: Int
+    sellPrice: Float
     slug: String
     group: String
     color: String
@@ -45,7 +47,7 @@ module.exports = gql`
     parent_id: String
     slug: String
     productFeed(
-      cursor: String
+      cursor: CursorInput
       colors: [String]
       materials: [String]
       price: PriceInput
@@ -78,7 +80,8 @@ module.exports = gql`
     main_image: String
     description_short: String
     description: String
-    discount: Float
+    discount: Int
+    sellPrice: Float
     material: String
     meta_title: String
     meta_description: String
@@ -93,7 +96,7 @@ module.exports = gql`
   }
 
   type ProductFeed {
-    cursor: String
+    cursor: Cursor
     products: [ProductType]
     hasMore: Boolean
   }
@@ -170,6 +173,15 @@ module.exports = gql`
     allCategories: [CategoryType]
   }
 
+  type Cursor {
+    model: String
+    createdAt: String
+  }
+  input CursorInput {
+    model: String
+    createdAt: String
+  }
+
   type Query {
     viewer: ViewerType
     loggedInUser: UserType
@@ -179,14 +191,14 @@ module.exports = gql`
     getCategory(
       slug: String!
       colors: [String]
-      cursor: String
+      cursor: CursorInput
       materials: [String]
       price: PriceInput
     ): CategoryType
     getProduct(model: String!, referer: String): ProductType
     getProducts(
       colors: [String]
-      cursor: String
+      cursor: CursorInput
       material: String
       price: PriceInput
       search: String

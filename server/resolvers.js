@@ -1,7 +1,6 @@
 const axios = require('axios')
 const ObjectId = require('mongodb').ObjectId
 const R = require('ramda')
-const { productPipeline } = require('../models/product')
 const {
   categoryPipeline,
   createBreadCrumbs,
@@ -17,21 +16,23 @@ const {
 } = require('./resolvers/cart')
 const { executeWithAuthentication } = require('./resolvers/middlewares')
 const { mutations: orderMutations } = require('./resolvers/order')
-const { getProductFeed } = require('./resolvers/helpers/product')
 const { AUTH_COOKIE } = require('./controllers/authController')
 const productsCollection = getProductsCollection()
 const categoriesCollection = getCategoriesCollection()
 module.exports = {
   CategoryType: {
-    productFeed: (parentValue, { cursor, colors, materials, price }) => {
-      return getProductFeed({
+    productFeed: (
+      parentValue,
+      { cursor, colors, materials, price },
+      { req: { getProductService } }
+    ) =>
+      getProductService().getProducts({
         cursor,
         colors,
         materials,
         price,
         category: parentValue._id
-      })
-    },
+      }),
     products: (parentValue, { colors }) => {
       let find = {}
       find.categories = parentValue.id
@@ -103,38 +104,12 @@ module.exports = {
       category.id = category._id.toString()
       return category
     },
-    getProducts: (_parent, args) => {
-      return getProductFeed(args)
+    getProducts: (_parent, args, { req: { getProductService } }) => {
+      return getProductService().getProducts(args)
     },
-    getProduct: async (_parent, args) => {
+    getProduct: async (_parent, args, { req }) => {
       const model = args.model
-      const product = await productsCollection
-        .aggregate([
-          ...productPipeline,
-          {
-            $match: {
-              model
-            }
-          }
-        ])
-        .next()
-
-      if (!product) {
-        return null
-      }
-
-      if (Array.isArray(product.similar) && product.similar.length) {
-        product.similar = await productsCollection
-          .aggregate([
-            ...productPipeline,
-            {
-              $match: {
-                'color.model': { $in: product.similar }
-              }
-            }
-          ])
-          .toArray()
-      }
+      const product = await req.getProductService().getProduct(model)
       product.referer = args.referer
       return product
     },

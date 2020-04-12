@@ -27,12 +27,14 @@ export const AddToCart = gql`
       products {
         product {
           name
+          sellPrice
           price
           color
           images
           available
           quantity
           model
+          slug
         }
         quantity
         price

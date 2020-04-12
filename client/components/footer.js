@@ -12,7 +12,7 @@ const Footer = () => {
         }
       }) => (
         <div className="footer">
-          <div className="container">
+          <div className="container no-gutters">
             <div className="row row-center text-center information">
               <div className="col-lg-6 col-md-6 col-sm-12">
                 <i className="fa fa-truck" aria-hidden="true" />

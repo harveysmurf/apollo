@@ -1,11 +1,9 @@
 const express = require('express')
-const fs = require('fs')
 const path = require('path')
 const session = require('express-session')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
-// require('./services/mongoose')
 const { getDb } = require('./db/mongodb')
 const { ApolloServer } = require('apollo-server-express')
 const resolvers = require('./resolvers')
@@ -18,7 +16,11 @@ const app = express()
 app.use(async (req, _res, next) => {
   req.config = config
   if (!req.db) {
-    req.db = await getDb()
+    try {
+      req.db = await getDb()
+    } catch (error) {
+      next(error)
+    }
   }
   next()
 })

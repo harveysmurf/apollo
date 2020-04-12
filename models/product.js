@@ -61,6 +61,7 @@ const ProductPipeline = [
                   $ifNull: ['$$color.description_short', '$description_short']
                 },
                 price: { $ifNull: ['$$color.price', '$price'] },
+                discount: { $ifNull: ['$$color.discount', '$discount'] },
                 slug: {
                   $ifNull: [
                     '$$color.slug',

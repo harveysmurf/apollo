@@ -3,9 +3,9 @@ import qs from 'query-string'
 import { compose } from 'recompose'
 import { Mutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
+import { formatPrice } from '../../localization/price'
 import InformationTabs from './information_tabs'
 import ProductSlideshow from './products_slideshow'
-import _ from 'lodash'
 import ProductGallery from './gallery/gallery'
 import { WithLoadingCheck } from '../shared/withQuery'
 import { withMutation } from '../shared/withQuery'
@@ -174,9 +174,7 @@ class ProductContainer extends Component {
             <hr />
             <div className="row">
               <div className="col-sm-6 text-left">
-                <span className="price">
-                  {price.toFixed(2).replace('.', ',')} лв
-                </span>
+                <span className="price">{formatPrice(price)}</span>
               </div>
               <div className="col-sm-6 text-right">
                 {!available && (
@@ -185,7 +183,6 @@ class ProductContainer extends Component {
               </div>
             </div>
             <div className="row">
-              {console.log(this.state.flashOpened)}
               <FlashMessage open={this.state.flashOpened} />
             </div>
             <div className="row product-buttons bottom-spacing-xl">

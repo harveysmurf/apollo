@@ -1,6 +1,5 @@
 .footer {
     margin-top: 10px;
-    padding-bottom: 20px;
     @media (min-width: $grid-large-breakpoint) {
         padding-bottom: 0;
     }
@@ -10,11 +9,10 @@
 
     .information {
         background-color: lightgray;
-        padding: 7px 0 7px 0;
+        padding: 25px 0 25px 0;
         i {
             margin-right: 5px;
         }
-        margin-bottom: 20px;
     }
 
     .newsletter {
