@@ -32,8 +32,8 @@ export const defaultState = {
     styles: [],
     colors: [],
     price: {
-      min: 16,
-      max: 55
+      min: 10,
+      max: 140
     },
     lastcolor: null
   },

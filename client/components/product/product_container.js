@@ -148,13 +148,8 @@ class ProductContainer extends Component {
         <div className="col-sm-12 col-lg-5">
           <div className="product-main">
             <div className="bottom-spacing-m">
-              <h1>{name}</h1>
+              <h1>{`${color} ${name}`}</h1>
             </div>
-            {description_short && (
-              <div className="short-description bottom-spacing-s">
-                {description_short}
-              </div>
-            )}
             <div>
               {variations.map((c, idx) => {
                 const selected = c.model === model
@@ -248,10 +243,17 @@ class ProductContainer extends Component {
               {features.PDP_NOTIFY_AVAILABLE && this.notifyMe(available)}
             </div>
           </div>
-          <div className="information-tabs">
-            <InformationTabs />
+          <div>
+            <h3>Описание</h3>
+            {description_short && (
+              <div className="bottom-spacing-s">{description_short}</div>
+            )}
           </div>
+          {/* <div className="information-tabs">
+            <InformationTabs />
+          </div> */}
         </div>
+        <div>{description && <p1>{description}</p1>}</div>
         {features.PDP_SIMILAR_PRODUCTS && (
           <div className="col-sm-12 similar">
             <ProductSlideshow

@@ -4,6 +4,9 @@ div.product {
     padding-left: 0;
     margin-left: 0;
   }
+  h1::first-letter {
+    text-transform: capitalize;
+  }
 
   @include respond-to(desktop) {
     .product-main,
@@ -11,11 +14,7 @@ div.product {
       padding: 15px;
     }
   }
-
   .product-main {
-    .short-description {
-      color: gray;
-    }
     .color-thumbnail {
       display: inline-block;
       position: relative;
@@ -34,7 +33,9 @@ div.product {
       margin-right: 10px;
     }
     .price {
-      font-size: 1.3rem;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      font-size: 1.5rem;
       color: rgb(22, 22, 109);
       font-weight: bold;
     }

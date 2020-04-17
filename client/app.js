@@ -78,7 +78,7 @@ class App extends React.Component {
                 <Route path="/search" component={SearchComponent} />
                 <Route path="/profile" component={Profile} />
                 <Route
-                  path="/:seoSlug/:model([a-zA-Z]{2}[0-9]{4})"
+                  path="/:seoSlug/:model([0-9]{4}[a-zA-Z]{2})"
                   component={ProductContainer}
                 />
                 <Route path="/:categorySlug" component={CategoryContainer} />
