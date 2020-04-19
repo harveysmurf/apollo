@@ -3,9 +3,8 @@ import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Query, Mutation } from 'react-apollo'
 import { cartQuery } from '../../queries/remote'
-import { getImageCachedSizePath } from '../../../utils/image_utils'
 import { Form, Field } from 'react-final-form'
-import { CartProductsList, CartSummary } from '../cart/cart'
+import { CartProductsList } from '../cart/cart'
 import * as R from 'ramda'
 import { Checkout } from '../../mutations/remote'
 import { pluralize } from '../cart/cart'
@@ -119,7 +118,6 @@ export const Checkbox = ({
 export const TextInput = ({
   input,
   type,
-  required,
   meta: { error, touched, active }
 }) => {
   const showValidation = touched || (!!input.value && !active)
@@ -131,12 +129,7 @@ export const TextInput = ({
   )
 }
 
-const TextArea = ({
-  input,
-  type,
-  required,
-  meta: { error, touched, active }
-}) => {
+const TextArea = ({ input, meta: { error, touched, active } }) => {
   const showValidation = touched || (!!input.value && !active)
   return (
     <div>
@@ -146,7 +139,7 @@ const TextArea = ({
   )
 }
 
-const CheckoutForm = ({ cart, mutationData, checkout }) => (
+const CheckoutForm = ({ cart, checkout }) => (
   <Form
     initialValues={{
       delivery: deliveryMethods.toOffice
@@ -309,7 +302,7 @@ const CheckoutForm = ({ cart, mutationData, checkout }) => (
   />
 )
 
-export default props => (
+export default () => (
   <Query query={cartQuery}>
     {({ data: { cart, loading } }) => (
       <div className="confined-container">

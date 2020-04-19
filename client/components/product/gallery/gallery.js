@@ -1,7 +1,7 @@
 import React from 'react'
 import { getImageCachedSizePath } from '../../../../utils/image_utils'
 import { updateSelectedImage } from '../../../mutations/local'
-import { mainImageQuery, featuresQuery } from '../../../queries/local'
+import { mainImageQuery } from '../../../queries/local'
 import { WithLoadingCheck, withMutation } from '../../shared/withQuery'
 import { compose } from 'recompose'
 import styles from './gallery.scss'

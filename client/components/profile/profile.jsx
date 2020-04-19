@@ -41,9 +41,7 @@ export const ProfileForm = ({ profile }) => {
   return (
     <Form
       initialValues={profile}
-      onSubmit={values => {
-        console.log(values)
-      }}
+      onSubmit={_values => {}}
       validate={values => validate(values, validationRules)}
       render={({ handleSubmit }) => (
         <div className="row limit-page">
@@ -90,9 +88,9 @@ export const ProfileForm = ({ profile }) => {
   )
 }
 
-export default props => (
+export default () => (
   <Query query={userQuery}>
-    {({ data: { user, loading } }) => (
+    {({ data: { user, _loading } }) => (
       <div className="confined-container">
         <ProfileForm profile={user} />
       </div>

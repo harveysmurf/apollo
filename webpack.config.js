@@ -1,6 +1,6 @@
 const path = require('path')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+// const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 
 module.exports = {
   entry: './client/index.js',

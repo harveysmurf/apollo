@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react'
-import * as R from 'ramda'
 import { Link } from 'react-router-dom'
 import { Query, Mutation } from 'react-apollo'
 import classNames from 'classnames/bind'
@@ -174,7 +173,7 @@ export const CartMiniSummary = ({ cart: { price, quantity } }) => (
   </div>
 )
 
-export default props => (
+export default () => (
   <Query query={cartQuery}>
     {({ data: { cart, loading } }) => (
       <Fragment>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import { featuresQuery } from '../queries/local'
 import { Link } from 'react-router-dom'

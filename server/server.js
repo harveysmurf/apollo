@@ -88,5 +88,6 @@ app.use('/', (req, res) => {
 })
 
 app.listen(4000, () => {
+  // eslint-disable-next-line no-console
   console.log('listening to 4000')
 })

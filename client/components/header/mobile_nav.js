@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { userQuery, cartQuery } from '../../queries/remote'
+import { userQuery } from '../../queries/remote'
 import { Query } from 'react-apollo'
 
 const MobileNav = () => {
