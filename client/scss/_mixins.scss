@@ -1,5 +1,6 @@
 // Define Breakpoints
 $mobile: 500px;
+$small: 767px;
 $tablet: 960px;
 $desktop: 1280px;
 
@@ -9,6 +10,9 @@ $desktop: 1280px;
   }
   @else if $media == mobile {
     @media (min-width: $mobile ) { @content; }
+  }
+  @else if $media == small {
+    @media (min-width: $small ) { @content; }
   }
   @else if $media == tablet {
     @media (min-width: $tablet ){ @content; }

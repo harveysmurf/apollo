@@ -1,15 +1,37 @@
 .main-nav {
     padding-top: 15px;
+    @include respond-to(tablet) {
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
     background-color: white;
     a {
         margin-right: 16px;
         padding: 5px;
         color:black;
-        font-size: 1.2rem;
+        font-size: 0.8rem;
         font-weight: bold;
+        @include respond-to(small) {
+            font-size: 1rem;
+        }
+        @include respond-to(tablet) {
+            font-size: 1.2rem;
+        }
+    }
+    .logo {
+        display: none;
+        @include respond-to(mobile) {
+            display: block;
+        }
     }
     .logo img {
-        height: 140px;
-        width: 200px;
+        @include respond-to(mobile) {
+            height: 70px;
+            width: 100px;
+        }
+        @include respond-to(tablet) {
+            height: 140px;
+            width: 200px;
+        }
     }
 }

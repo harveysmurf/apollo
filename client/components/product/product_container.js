@@ -170,8 +170,8 @@ class ProductContainer extends Component {
                 )
               })}
             </div>
-            <hr className="bottom-spacing-s" />
-            <div className="row bottom-spacing-s">
+            <hr className="bottom-spacing-m" />
+            <div className="row bottom-spacing-m">
               <div className="col-sm-6 text-left no-gutters">
                 <span className="price">{formatPrice(price)}</span>
               </div>

@@ -22,10 +22,10 @@ export default ({ material, style, dimensions }) => {
         </thead>
         <tbody>
           <tr>
-            {height && <td data-label="Височина">{height}</td>}
-            {width && <td data-label="Широчина">{width}</td>}
-            {bottom && <td data-label="Дъно">{bottom}</td>}
-            {handle && <td data-label="Дръжка">{handle}</td>}
+            {height && <td data-label="Височина">{height}см</td>}
+            {width && <td data-label="Широчина">{width}см</td>}
+            {bottom && <td data-label="Дъно">{bottom}см</td>}
+            {handle && <td data-label="Дръжка">{handle}см</td>}
             {material && <td data-label="Материал">{material}</td>}
             {style && <td data-label="Стил">{style}</td>}
           </tr>

@@ -1,7 +1,6 @@
 div.product {
-  table tr {
+  table thead, table tbody {
     flex: unset;
-    white-space: nowrap;
   }
   h1 {
     @include respond-to(small-mobile) {
