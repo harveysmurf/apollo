@@ -160,7 +160,6 @@ const CheckoutForm = ({ cart, mutationData, checkout }) => (
         }),
         R.omit(['name', 'lastname', 'terms', 'ageConfirmation'])
       )(values)
-      console.log(data)
       checkout({
         variables: data
       })
@@ -170,8 +169,8 @@ const CheckoutForm = ({ cart, mutationData, checkout }) => (
       const deliveryMethod = form.getState().values.delivery
       const deliveryPrice = deliveryPrices[deliveryMethod]
       return (
-        <div className="row limit-page">
-          <div className="col-sm-12 col-md-6">
+        <div className="row">
+          <div className="col-sm-12 col-md-6 col-lg-7">
             <form onSubmit={handleSubmit}>
               <div className="row horizontal-align-center bottom-spacing-m">
                 <div className="col-sm-3 col-md-3 text-right">
@@ -263,11 +262,11 @@ const CheckoutForm = ({ cart, mutationData, checkout }) => (
               />
             </form>
           </div>
-          <div className="col-sm-12 col-md-6">
+          <div className="col-sm-12 col-md-6 col-lg-5">
             <CartProductsList products={cart.products} />
 
             <div className="row bottom-spacing-m">
-              <h3>Поръчка</h3>
+              <h3 className="col-sm-12">Поръчка</h3>
             </div>
             <div className="row">
               <div className="col-sm-6">
@@ -318,7 +317,7 @@ export default props => (
           <EmptyBasket />
         ) : (
           <Fragment>
-            <h3>Доставка</h3>
+            <h3 className="col-sm-12">Доставка</h3>
             <Mutation mutation={Checkout}>
               {(checkout, { data: mutationData }) => (
                 <React.Fragment>

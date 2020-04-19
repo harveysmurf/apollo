@@ -1,3 +1,4 @@
+const { adaptProduct } = require('./productAdapter')
 const productPipelines = [
   {
     $addFields: {
@@ -38,6 +39,7 @@ const productPipelines = [
         $ifNull: ['$color.available', { $ifNull: ['$available', true] }]
       },
       model: '$color.model',
+      dimensions: 1,
       categories: 1,
       description_short: {
         $ifNull: ['$color.description_short', '$description_short']
@@ -64,6 +66,7 @@ const productPipelines = [
       color_group: '$color.group',
       discount: { $ifNull: ['$color.discount', '$discount'] },
       material: 1,
+      style: 1,
       origin: 1,
       weight: 1,
       tags: 1,
@@ -219,17 +222,7 @@ module.exports = db => {
       ])
       .toArray()
 
-    let products = res.map(s => {
-      s.sellPrice = s.discount ? ((100 - s.discount) / 100) * s.price : s.price
-      s.createdAt = s.createdAt.toISOString()
-      s.variations = s.variations.map(variation => {
-        variation.sellPrice = variation.discount
-          ? ((100 - variation.discount) / 100) * variation.price
-          : variation.price
-        return variation
-      })
-      return s
-    })
+    let products = res.map(adaptProduct)
 
     if (!products.length)
       return {

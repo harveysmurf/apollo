@@ -1,4 +1,8 @@
 div.product {
+  table tr {
+    flex: unset;
+    white-space: nowrap;
+  }
   h1 {
     @include respond-to(small-mobile) {
       font-size: 1.3rem;

@@ -16,6 +16,7 @@ import { similarProducts, lastViewed } from '../../../data/fixtures'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-list.jsx'
+import Characteristics from './characteristics'
 
 const ProductVariationThumb = ({
   name,
@@ -121,13 +122,12 @@ class ProductContainer extends Component {
       data: {
         getProduct: {
           breadcrumbs,
-          slug,
+          dimensions,
+          material,
+          style,
           name,
           images,
-          colors,
           available,
-          availableColors,
-          main_image,
           description_short,
           description,
           variations,
@@ -246,11 +246,17 @@ class ProductContainer extends Component {
             </div>
           </div>
           <div>
-            <h3>Описание</h3>
+            <h4>Описание</h4>
             {description_short && (
-              <div className="bottom-spacing-s">{description_short}</div>
+              <div className="bottom-spacing-m">{description_short}</div>
             )}
           </div>
+          <Characteristics
+            material={material}
+            style={style}
+            dimensions={dimensions}
+          />
+
           {/* <div className="information-tabs">
             <InformationTabs />
           </div> */}

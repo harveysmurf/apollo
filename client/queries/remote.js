@@ -100,8 +100,13 @@ export const cartQuery = gql`
 export const getProductQuery = gql`
   query getProduct($model: String!, $referer: String) {
     getProduct(model: $model, referer: $referer) {
+      images
+      color
       main_image
       name
+      dimensions
+      material
+      style
       breadcrumbs {
         name
         href
@@ -133,8 +138,6 @@ export const getProductQuery = gql`
         slug
         discount
       }
-      images
-      color
     }
   }
 `

@@ -10,8 +10,6 @@ export default () => {
             className="img-responsive"
             src="images/bags-home-2.jpg"
             alt="Дамски Чанти"
-            width="550px"
-            height="550px"
           />
           <div className={styles['crap-caption']}>
             <h2 id="cat">Дамски Чанти</h2>
@@ -26,8 +24,6 @@ export default () => {
             className="img-responsive"
             src="images/bags-home-3.jpg"
             alt="Дамски чанти от естествена кожа"
-            width="550px"
-            height="550px"
           />
           <div className={styles['crap-caption']}>
             <h2 id="cat">Естествена Кожа</h2>
@@ -43,8 +39,6 @@ export default () => {
             className="img-responsive"
             src="images/bags-home-1.jpg"
             alt="Намаления на дамски чанти"
-            width="550px"
-            height="550px"
           />
           <div className={styles['crap-caption']}>
             <h2 id="cat">Намаления</h2>

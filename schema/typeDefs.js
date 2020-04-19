@@ -76,6 +76,7 @@ module.exports = gql`
     available: Boolean
     quantity: Int
     availableColors: [ColorType]
+    dimensions: [Int]
     model: String
     main_image: String
     description_short: String
@@ -83,6 +84,7 @@ module.exports = gql`
     discount: Int
     sellPrice: Float
     material: String
+    style: String
     meta_title: String
     meta_description: String
     slug: String

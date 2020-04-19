@@ -5,6 +5,16 @@ $button-hover-back-color: #79847d;
 $back-color: white;
 @import 'node_modules/mini.css/src/flavors/mini-default.scss';
 @import 'node_modules/react-input-range/src/scss/input-range/input-range.scss';
+@import 'mixins';
+@import 'helpers';
+@import 'top_nav' ;
+@import 'main_nav';
+@import 'mobile_nav';
+@import 'footer';
+@import 'product_page';
+@import 'sidebar';
+@import 'cart';
+@import 'form';
 // Fix SCSS webpack stuff
 body {
     margin: 0;
@@ -24,7 +34,7 @@ ul.circle {
 }
 
 .confined-container {
-    max-width: 950px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -50,14 +60,3 @@ a {
     background-color: white;
     color:black;
 }
-
-@import 'mixins';
-@import 'helpers';
-@import 'top_nav' ;
-@import 'main_nav';
-@import 'mobile_nav';
-@import 'footer';
-@import 'product_page';
-@import 'sidebar';
-@import 'cart';
-@import 'form';
