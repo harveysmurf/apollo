@@ -1,12 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Latest from './home/latest'
+import Presentation from './home/presentation'
 
-export default class HomeComponent extends Component {
-  render() {
-    return (
-      <>
-        <Latest />
-      </>
-    )
-  }
-}
+export default () => (
+  <>
+    <Presentation />
+    <Latest />
+  </>
+)

@@ -23,6 +23,9 @@ const MobileNav = () => {
               </div>
               Продукти
             </Link>
+            <Link to="/">
+              <img src="/images/log_white.png" />
+            </Link>
             {user && (
               <Link to="/damski-chanti" className="mobile-nav-link">
                 <div>

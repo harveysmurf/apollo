@@ -12,9 +12,11 @@ import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks'
 import { withClientState } from 'apollo-link-state'
 import { ApolloLink } from 'apollo-link'
 import mutationResolvers from './resolvers/mutations'
+import { subscribeClientToScreenSizeChange, getScreenSize } from './screen'
 
 import App from './app'
 library.add(far, fas, fab)
+
 export const defaultState = {
   features: {
     PDP_SIMILAR_PRODUCTS: false,
@@ -39,7 +41,8 @@ export const defaultState = {
   },
   pdp: {
     mainImage: 0
-  }
+  },
+  screenSize: getScreenSize()
 }
 
 const batchlink = new BatchHttpLink({
@@ -62,6 +65,7 @@ const client = new ApolloClient({
     Mutation: mutationResolvers
   }
 })
+subscribeClientToScreenSizeChange(client)
 
 ReactDOM.render(
   <ApolloHooksProvider client={client}>

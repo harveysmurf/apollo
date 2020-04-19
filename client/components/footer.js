@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import { featuresQuery } from '../queries/local'
 import { Link } from 'react-router-dom'
+import { useScreenSize } from '../hooks'
 
 const Footer = () => {
+  const { isMobile } = useScreenSize()
   return (
     <Query query={featuresQuery}>
       {({
@@ -13,17 +15,19 @@ const Footer = () => {
       }) => (
         <div className="footer">
           <div className="container no-gutters">
-            <div className="row row-center text-center information">
-              <div className="col-lg-6 col-md-6 col-sm-12">
-                <i className="fa fa-truck" aria-hidden="true" />
-                <b className="uppercase">Безплатна доставка</b> за поръчки над
-                50лв
+            {!isMobile && (
+              <div className="row row-center text-center information">
+                <div className="col-lg-6 col-md-6 col-sm-12">
+                  <i className="fa fa-truck" aria-hidden="true" />
+                  <b className="uppercase">Безплатна доставка</b> за поръчки над
+                  50лв
+                </div>
+                <div className="col-lg-6 col-md-6 col-sm-12">
+                  <i className="fa fa-dropbox" aria-hidden="true" />
+                  <b className="uppercase">Проверка на пратката</b>
+                </div>
               </div>
-              <div className="col-lg-6 col-md-6 col-sm-12">
-                <i className="fa fa-dropbox" aria-hidden="true" />
-                <b className="uppercase">Проверка на пратката</b>
-              </div>
-            </div>
+            )}
             {NEWSLETTER_SUBSCRIBE && (
               <div className="row newsletter">
                 <h4 className="col-sm-12">Абонирай се за бюлетина ни </h4>
@@ -46,25 +50,26 @@ const Footer = () => {
               </div>
             )}
           </div>
-          <div className="footer-nav">
-            <div>
-              <h4>Поръчки и доставка</h4>
-              <ul>
-                {/* <li>
+          {!isMobile && (
+            <div className="footer-nav">
+              <div>
+                <h4>Поръчки и доставка</h4>
+                <ul>
+                  {/* <li>
                       <a href="#">Моят акаунт</a>
                     </li> */}
-                <li>
-                  <Link to="/howtoorder">Как да поръчам онлайн</Link>
-                </li>
-                <li>
-                  <Link to="/delivery">Доставка на прочъките</Link>
-                </li>
-                <li>
-                  <Link to="/reklamacii">Рекламации и жалби</Link>
-                </li>
-              </ul>
-            </div>
-            {/* <div className="col-sm-12 col-md-4 col-lg-4">
+                  <li>
+                    <Link to="/howtoorder">Как да поръчам онлайн</Link>
+                  </li>
+                  <li>
+                    <Link to="/delivery">Доставка на прочъките</Link>
+                  </li>
+                  <li>
+                    <Link to="/reklamacii">Рекламации и жалби</Link>
+                  </li>
+                </ul>
+              </div>
+              {/* <div className="col-sm-12 col-md-4 col-lg-4">
                   <h4>Връзка с нас</h4>
                   <ul>
                     <li>
@@ -75,21 +80,22 @@ const Footer = () => {
                     </li>
                   </ul>
                 </div> */}
-            <div>
-              <h4>Полезна информация</h4>
-              <ul>
-                <li>
-                  <Link to="/about">За нас</Link>
-                </li>
-                <li>
-                  <Link to="/terms">Условия за ползване</Link>
-                </li>
-                <li>
-                  <Link to="/privacy">Лични данни</Link>
-                </li>
-              </ul>
+              <div>
+                <h4>Полезна информация</h4>
+                <ul>
+                  <li>
+                    <Link to="/about">За нас</Link>
+                  </li>
+                  <li>
+                    <Link to="/terms">Условия за ползване</Link>
+                  </li>
+                  <li>
+                    <Link to="/privacy">Лични данни</Link>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </Query>

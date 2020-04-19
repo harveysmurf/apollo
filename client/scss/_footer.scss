@@ -23,16 +23,13 @@
     }
 
     .footer-nav {
-        display: none;
-        @media (min-width: $grid-large-breakpoint) {
-            display: flex;
-            justify-content: space-around;
-            background-color: black;
-            padding: 10px 0 10px 0;
+        display: flex;
+        justify-content: space-around;
+        background-color: black;
+        padding: 10px 0 10px 0;
+        color: white;
+        a {
             color: white;
-            a {
-                color: white;
-            }
         }
     }
 

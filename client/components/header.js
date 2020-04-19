@@ -1,12 +1,10 @@
-import React, { Component } from 'react'
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import React from 'react'
 import Social from './header/social'
 import TopSearch from './header/search'
 import UserTop from './header/user_top'
 import MainNav from './header/main_nav'
 
-const Header = props => {
+const Header = () => {
   return (
     <div className="header">
       <div className="top-nav">

@@ -5,7 +5,7 @@ $button-hover-back-color: #79847d;
 $back-color: white;
 @import 'node_modules/mini.css/src/flavors/mini-default.scss';
 @import 'node_modules/react-input-range/src/scss/input-range/input-range.scss';
-
+// Fix SCSS webpack stuff
 body {
     margin: 0;
     padding: 0;

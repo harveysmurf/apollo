@@ -61,15 +61,23 @@ const CartRow = ({
         }}
       >
         {removeItemFromCart => (
-          <div className={css(['row', 'cart-row'])}>
-            <div
-              className={css(['col-sm-10 no-gutters', 'cart-row__cart-item'])}
-            >
+          <div className={css(['cart-row'])}>
+            <div className={css(['no-gutters', 'cart-row__cart-item'])}>
               <img src={getImageCachedSizePath(images[0], 's')} />
               <div className={css(['cart-row__cart-item-description'])}>
                 <div className={css('cart-row__cart-line-item')}>
                   <Link to={`/${slug}/${model}`}>{name}</Link>
                   <div className="hidden-sm">{productPrice} лв.</div>
+                  <div className={css(['cart-row__item-actions'])}>
+                    <div
+                      onClick={() =>
+                        removeItemFromCart({ variables: { model } })
+                      }
+                      className={css(['cart-row__cart-icon'])}
+                    >
+                      <FontAwesomeIcon icon="times" />
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <b>{color}</b>
@@ -90,16 +98,6 @@ const CartRow = ({
                 </div>
                 <div>
                   <b>{price}лв.</b>
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-2">
-              <div className={css(['cart-row__item-actions'])}>
-                <div
-                  onClick={() => removeItemFromCart({ variables: { model } })}
-                  className={css(['cart-row__cart-icon'])}
-                >
-                  <FontAwesomeIcon icon="times" />
                 </div>
               </div>
             </div>

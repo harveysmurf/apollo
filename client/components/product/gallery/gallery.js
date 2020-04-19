@@ -58,7 +58,7 @@ class Gallery extends React.Component {
     } = this.props
     return (
       <div>
-        <div>
+        <div className="text-center">
           <img
             className={styles['main-image']}
             src={getImageCachedSizePath(images[mainImage], 'l')}

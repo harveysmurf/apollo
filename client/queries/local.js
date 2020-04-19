@@ -46,3 +46,8 @@ export const featuresQuery = gql`
     }
   }
 `
+export const screenSizeQuery = gql`
+  query getScreenSizeQuery {
+    screenSize @client
+  }
+`

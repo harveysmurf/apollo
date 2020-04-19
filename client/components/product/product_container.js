@@ -4,7 +4,6 @@ import { compose } from 'recompose'
 import { Mutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
 import { formatPrice } from '../../localization/price'
-import InformationTabs from './information_tabs'
 import ProductSlideshow from './products_slideshow'
 import ProductGallery from './gallery/gallery'
 import { WithLoadingCheck } from '../shared/withQuery'
@@ -57,6 +56,11 @@ class ProductContainer extends Component {
   constructor(props) {
     super(props)
     this.props.resetState()
+  }
+
+  componentDidMount() {
+    document.body.scrollTop = 0 // For Safari
+    document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
   }
 
   onProductAdded = () => {
@@ -140,12 +144,12 @@ class ProductContainer extends Component {
             <Breadcrumbs breadcrumbs={breadcrumbs} />
           </div>
         )}
-        <div className="col-sm-12 col-lg-7">
+        <div className="col-sm-12 col-lg-8">
           <div className="product-gallery">
             <ProductGallery images={images} selected={0} model={model} />
           </div>
         </div>
-        <div className="col-sm-12 col-lg-5">
+        <div className="col-sm-12 col-lg-4">
           <div className="product-main">
             <div className="bottom-spacing-m">
               <h1>{`${color} ${name}`}</h1>
@@ -166,12 +170,12 @@ class ProductContainer extends Component {
                 )
               })}
             </div>
-            <hr />
-            <div className="row">
-              <div className="col-sm-6 text-left">
+            <hr className="bottom-spacing-s" />
+            <div className="row bottom-spacing-s">
+              <div className="col-sm-6 text-left no-gutters">
                 <span className="price">{formatPrice(price)}</span>
               </div>
-              <div className="col-sm-6 text-right">
+              <div className="col-sm-6 text-right no-gutters">
                 {!available && (
                   <span className="availability">Няма в наличност</span>
                 )}
@@ -234,12 +238,10 @@ class ProductContainer extends Component {
               </div>
             )}
             <br />
-            <div className="row bottom-spacing-m">
-              <div className="col-sm-6 col-md-5 product-social">
-                <FontAwesomeIcon icon={['fab', 'facebook']} />
-                <FontAwesomeIcon icon={['fab', 'instagram']} />
-                <FontAwesomeIcon icon={['fab', 'twitter']} />
-              </div>
+            <div className="bottom-spacing-m product-social">
+              <FontAwesomeIcon icon={['fab', 'facebook']} />
+              <FontAwesomeIcon icon={['fab', 'instagram']} />
+              <FontAwesomeIcon icon={['fab', 'twitter']} />
               {features.PDP_NOTIFY_AVAILABLE && this.notifyMe(available)}
             </div>
           </div>

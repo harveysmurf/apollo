@@ -1,0 +1,77 @@
+.crap-container {
+    display: block;
+    padding: 0px;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    & > img {
+      width:100%;
+      -webkit-transition:all 0.25s ease-in-out;
+      -moz-transition:all 0.25s ease-in-out;
+      -o-transition:all 0.25s ease-in-out;
+      -ms-transition:all 0.25s ease-in-out;
+      transition:all 0.25s ease-in-out;
+      padding: 0px;
+      float: left;
+      z-index: 4;
+    }
+    & .blur {
+      opacity: 0;
+      background-color: rgba(0,0,0,0.65);
+      height: 100%;
+      width: 100%;
+      z-index: 5;
+      position: absolute;
+    }
+    & .crap-caption {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+      z-index: 10;
+      color: #fff;
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      & > h2 {
+        text-transform: uppercase;
+        width: 100%;
+        background-color: rgba(0,0,0,0.65);
+        color: white;
+      }
+      & > p {
+        background-color: rgba(147, 40, 40,0.5);
+        width: 100%;
+      }
+    }
+  &:hover .blur {
+    opacity: 1;
+  }
+  &:hover img {
+		opacity: 1;
+		transform: scale(1.5,1.5) rotate(10deg);
+		-webkit-transform:scale(1.5,1.5) rotate(10deg);
+		-moz-transform:scale(1.5,1.5) rotate(10deg);
+		-ms-transform:scale(1.5,1.5) rotate(10deg);
+		-o-transform:scale(1.5,1.5) rotate(10deg);
+  }
+
+	&:hover .crap-caption>h2, &:hover .crap-caption>p{
+		background-color: transparent;
+	}
+}
