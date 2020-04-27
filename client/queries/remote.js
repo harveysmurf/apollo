@@ -65,6 +65,34 @@ export const categoryQuery = gql`
   }
 `
 
+export const getCities = gql`
+  query($search: String, $withOffices: Boolean) {
+    getCities(search: $search, withOffices: $withOffices) {
+      id
+      name
+      region
+      presentation
+      offices {
+        id
+        presentation
+        name
+      }
+    }
+  }
+`
+
+export const getOffices = gql`
+  query getOffices($cityId: Int!, $search: String) {
+    getOffices(cityId: $cityId, search: $search) {
+      id
+      name
+      cityId
+      address
+      presentation
+    }
+  }
+`
+
 export const userQuery = gql`
   query {
     loggedInUser {

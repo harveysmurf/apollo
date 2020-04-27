@@ -1,12 +1,8 @@
 const { getOrdersCollection } = require('../db/mongodb')
 const { getCustomerCart } = require('./cartProvider')
+const { getDeliveryPrice } = require('../../utils/delivery')
 const ordersCollection = getOrdersCollection()
 
-const getDeliveryMethodString = type =>
-  type === 'toAddress' ? 'До Адрес' : 'До офис'
-const deliveryPrice = (type, amount) => {
-  return type === 'toAddress' ? (amount > 90 ? 0 : 6.5) : amount > 50 ? 0 : 5.5
-}
 const getLastOrderId = async () => {
   const lastOrder = await ordersCollection
     .find({})
@@ -35,21 +31,19 @@ const createOrder = async (req, data) => {
   const cartId = req.cart
   const cart = await getCustomerCart(cartId)
   const customerDetails = {
-    fullname: data.address.fullname,
+    fullname: `${data.name} ${data.lastname}`,
     email: data.email,
-    address: data.address,
-    city: data.city,
     telephone: data.telephone
   }
 
   const lastOrderId = await getLastOrderId()
-
   const { insertedId } = await ordersCollection.insertOne({
     ...adaptCartToOrder(cart),
-    deliveryPrice: deliveryPrice(data.delivery, cart.price),
-    deliveryMethod: getDeliveryMethodString(data.delivery),
+    delivery: {
+      ...data.delivery,
+      price: getDeliveryPrice(cart.price, data.delivery.method)
+    },
     customer_details: customerDetails,
-    delivery: data.delivery,
     customer_id: req.user && req.user._id,
     orderNo: lastOrderId + 1,
     createdAt: new Date().toISOString()

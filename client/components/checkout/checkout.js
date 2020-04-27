@@ -9,20 +9,34 @@ import * as R from 'ramda'
 import { Checkout } from '../../mutations/remote'
 import { pluralize } from '../cart/cart'
 import { formatPrice } from '../../localization/price'
+import styles from './checkout.scss'
+import {
+  CityDropdown,
+  OfficeDropDown
+} from './checkout-dropdown/checkout-dropdown'
 
-const requiredFieldError = 'Задължително поле'
+const requiredFieldError = 'Задължително поле.'
 const REGEX_EMAIL = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 export const deliveryMethods = {
   toAddress: 'toAddress',
   toOffice: 'toOffice'
 }
 export const deliveryPrices = {
-  [deliveryMethods.toAddress]: 6.5,
+  [deliveryMethods.toAddress]: 7.5,
   [deliveryMethods.toOffice]: 5.5
 }
 
+export const getDeliveryPrice = (cartPrice, deliveryMethod) =>
+  cartPrice > 60 ? 0 : deliveryPrices[deliveryMethod]
+
 const validationRules = {
   name: [
+    {
+      test: x => !!x,
+      error: requiredFieldError
+    }
+  ],
+  address: [
     {
       test: x => !!x,
       error: requiredFieldError
@@ -49,19 +63,13 @@ const validationRules = {
   city: [
     {
       test: x => !!x,
-      error: 'Моля въведете населено място'
-    }
-  ],
-  address: [
-    {
-      test: x => !!x,
-      error: 'Моля въведете адрес за доставка'
+      error: 'Моля, въведете населено място.'
     }
   ],
   telephone: [
     {
       test: x => !!x,
-      error: 'Моля въведете телефонен номер'
+      error: 'Моля, въведете телефонен номер.'
     }
   ],
   email: [
@@ -71,25 +79,20 @@ const validationRules = {
     },
     {
       test: x => REGEX_EMAIL.test(x),
-      error: 'Моля въведете валиден имейл'
+      error: 'Моля, въведете валиден имейл.'
     }
   ]
 }
 
 const TermsLabel = () => (
   <>
-    Съгласен съм с <Link to="/terms">Условията за ползване на сайта</Link>
+    Съгласен съм с <Link to="/terms">Условията за ползване на сайта.</Link>
   </>
 )
 
-const validate = (data, rules) => {
-  const getError = (fieldRules, field) => {
-    const failedRule = fieldRules.find(
-      rule => !rule.test(R.path([field], data), data)
-    )
-    return failedRule ? failedRule.error : undefined
-  }
-  return R.pickBy(Boolean, R.mapObjIndexed(getError, rules))
+const validateField = fieldRules => value => {
+  const failedRule = fieldRules.find(rule => !rule.test(value))
+  return failedRule ? failedRule.error : undefined
 }
 
 const EmptyBasket = () => <p>Вашата кошница е празна</p>
@@ -129,16 +132,6 @@ export const TextInput = ({
   )
 }
 
-const TextArea = ({ input, meta: { error, touched, active } }) => {
-  const showValidation = touched || (!!input.value && !active)
-  return (
-    <div>
-      <textarea {...input} className="input" />
-      {showValidation && error && <span className="input-error">{error}</span>}
-    </div>
-  )
-}
-
 const CheckoutForm = ({ cart, checkout }) => (
   <Form
     initialValues={{
@@ -146,47 +139,63 @@ const CheckoutForm = ({ cart, checkout }) => (
     }}
     onSubmit={values => {
       const data = R.map(
-        R.assoc('address', {
-          city: values.city,
-          fullname: `${values.name} ${values.lastname}`,
-          address: values.address
+        R.assoc('delivery', {
+          cityId: values.city.id,
+          cityName: values.city.name,
+          address: values.address,
+          method: values.delivery,
+          ...(values.office && {
+            officeId: values.office.id,
+            address: values.office.presentation
+          })
         }),
-        R.omit(['name', 'lastname', 'terms', 'ageConfirmation'])
+        R.omit(['terms', 'ageConfirmation', 'office', 'city', 'address'])
       )(values)
       checkout({
         variables: data
       })
     }}
-    validate={values => validate(values, validationRules)}
     render={({ handleSubmit, form }) => {
       const deliveryMethod = form.getState().values.delivery
-      const deliveryPrice = deliveryPrices[deliveryMethod]
+      const city = form.getState().values.city
+      const deliveryPrice = getDeliveryPrice(cart.price, deliveryMethod)
+      const toOffice = deliveryMethod === deliveryMethods.toOffice
       return (
         <div className="row">
           <div className="col-sm-12 col-md-6 col-lg-7">
             <form onSubmit={handleSubmit}>
-              <div className="row horizontal-align-center bottom-spacing-m">
-                <div className="col-sm-3 col-md-3 text-right">
-                  <label>Име</label>
+              <div className={`row ${styles['delivery-section']}`}>
+                <div className="col-sm-12 col-md-6 bottom-spacing-s">
+                  <label>
+                    <Field
+                      name="delivery"
+                      component="input"
+                      type="radio"
+                      value={deliveryMethods.toOffice}
+                    />
+                    <div>
+                      До Офис Еконт -{' '}
+                      {formatPrice(
+                        getDeliveryPrice(cart.price, deliveryMethods.toOffice)
+                      )}
+                    </div>
+                  </label>
                 </div>
-                <div className="col-sm col-md">
-                  <Field name="name" type="text" component={TextInput} />
-                </div>
-              </div>
-              <div className="row horizontal-align-center bottom-spacing-m">
-                <div className="col-sm-3 col-md-3 text-right">
-                  <label>Фамилия</label>
-                </div>
-                <div className="col-sm col-md">
-                  <Field name="lastname" component={TextInput} />
-                </div>
-              </div>
-              <div className="row horizontal-align-center bottom-spacing-m">
-                <div className="col-sm-3 col-md-3 text-right">
-                  <label>Имейл</label>
-                </div>
-                <div className="col-sm col-md">
-                  <Field name="email" type="email" component={TextInput} />
+                <div className="col-sm-12 col-md-6 bottom-spacing-s">
+                  <label>
+                    <Field
+                      name="delivery"
+                      component="input"
+                      type="radio"
+                      value={deliveryMethods.toAddress}
+                    />
+                    <div>
+                      До Адрес -{' '}
+                      {formatPrice(
+                        getDeliveryPrice(cart.price, deliveryMethods.toAddress)
+                      )}
+                    </div>
+                  </label>
                 </div>
               </div>
               <div className="row horizontal-align-center bottom-spacing-m">
@@ -194,7 +203,82 @@ const CheckoutForm = ({ cart, checkout }) => (
                   <label>Град</label>
                 </div>
                 <div className="col-sm col-md">
-                  <Field name="city" component={TextInput} />
+                  <Field
+                    placeholder="Избери Град"
+                    name="city"
+                    component={CityDropdown}
+                    changeField={form.change}
+                    withOffices={toOffice}
+                  />
+                </div>
+              </div>
+              {toOffice && (
+                <div className="row horizontal-align-center bottom-spacing-m">
+                  <div className="col-sm-3 col-md-3 text-right">
+                    <label>Офис</label>
+                  </div>
+                  <div className="col-sm col-md">
+                    <Field
+                      placeholder="Избери Офис"
+                      name="office"
+                      component={OfficeDropDown}
+                      changeField={form.change}
+                      city={city}
+                    />
+                  </div>
+                </div>
+              )}
+              {!toOffice && (
+                <div className="row horizontal-align-center bottom-spacing-m">
+                  <div className="col-sm-3 col-md-3 text-right">
+                    <label>Адрес</label>
+                  </div>
+                  <div className="col-sm col-md">
+                    <Field
+                      validate={validateField(validationRules.address)}
+                      name="address"
+                      type="text"
+                      component={TextInput}
+                    />
+                  </div>
+                </div>
+              )}
+              <div className="row horizontal-align-center bottom-spacing-m">
+                <div className="col-sm-3 col-md-3 text-right">
+                  <label>Име</label>
+                </div>
+                <div className="col-sm col-md">
+                  <Field
+                    validate={validateField(validationRules.name)}
+                    name="name"
+                    type="text"
+                    component={TextInput}
+                  />
+                </div>
+              </div>
+              <div className="row horizontal-align-center bottom-spacing-m">
+                <div className="col-sm-3 col-md-3 text-right">
+                  <label>Фамилия</label>
+                </div>
+                <div className="col-sm col-md">
+                  <Field
+                    validate={validateField(validationRules.lastname)}
+                    name="lastname"
+                    component={TextInput}
+                  />
+                </div>
+              </div>
+              <div className="row horizontal-align-center bottom-spacing-m">
+                <div className="col-sm-3 col-md-3 text-right">
+                  <label>Имейл</label>
+                </div>
+                <div className="col-sm col-md">
+                  <Field
+                    validate={validateField(validationRules.email)}
+                    name="email"
+                    type="email"
+                    component={TextInput}
+                  />
                 </div>
               </div>
               <div className="row horizontal-align-center bottom-spacing-m">
@@ -202,54 +286,24 @@ const CheckoutForm = ({ cart, checkout }) => (
                   <label>Телефон</label>
                 </div>
                 <div className="col-sm col-md">
-                  <Field name="telephone" component={TextInput} />
-                </div>
-              </div>
-              <div className="row horizontal-align-center bottom-spacing-m">
-                <div className="col-sm-3 col-md-3 text-right">
-                  <label>Адрес</label>
-                </div>
-                <div className="col-sm col-md">
-                  <Field name="address" component={TextArea} />
-                </div>
-              </div>
-              <label className="row horizontal-align-center">
-                <div className="col-sm-3 col-md-3 text-right">
                   <Field
-                    name="delivery"
-                    component="input"
-                    type="radio"
-                    value={deliveryMethods.toOffice}
+                    validate={validateField(validationRules.telephone)}
+                    name="telephone"
+                    component={TextInput}
                   />
                 </div>
-                <div className="col-sm col-md">
-                  До Офис Еконт -{' '}
-                  {formatPrice(deliveryPrices[deliveryMethods.toOffice])}
-                </div>
-              </label>
-              <label className="row horizontal-align-center bottom-spacing-m">
-                <div className="col-sm-3 col-md-3 text-right">
-                  <Field
-                    name="delivery"
-                    component="input"
-                    type="radio"
-                    value={deliveryMethods.toAddress}
-                  />
-                </div>
-                <div className="col-sm col-md">
-                  До Адрес -{' '}
-                  {formatPrice(deliveryPrices[deliveryMethods.toAddress])}
-                </div>
-              </label>
+              </div>
               <Field
+                validate={validateField(validationRules.terms)}
                 type="checkbox"
                 label={<TermsLabel />}
                 name="terms"
                 component={Checkbox}
               />
               <Field
+                validate={validateField(validationRules.ageConfirmation)}
                 type="checkbox"
-                label="Потвърждавам че имам навършени 14 години"
+                label="Потвърждавам, че имам навършени 14 години."
                 name="ageConfirmation"
                 component={Checkbox}
               />
@@ -257,7 +311,6 @@ const CheckoutForm = ({ cart, checkout }) => (
           </div>
           <div className="col-sm-12 col-md-6 col-lg-5">
             <CartProductsList products={cart.products} />
-
             <div className="row bottom-spacing-m">
               <h3 className="col-sm-12">Поръчка</h3>
             </div>

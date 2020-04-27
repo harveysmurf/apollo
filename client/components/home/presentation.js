@@ -13,7 +13,7 @@ export default () => {
           />
           <div className={styles['crap-caption']}>
             <h2 id="cat">Дамски Чанти</h2>
-            <p>Ежедневни, официални, вечерни, раници</p>
+            <p>Ежедневни, официални, вечерни, раници.</p>
           </div>
           <div className={styles['blur']} />
         </a>
@@ -28,7 +28,6 @@ export default () => {
           <div className={styles['crap-caption']}>
             <h2 id="cat">Естествена Кожа</h2>
             <p>Дамски чанти от естествена кожа произведени в Италия.</p>
-            <p>Безплатна Доставка !</p>
           </div>
           <div className={styles['blur']} />
         </a>

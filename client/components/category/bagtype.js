@@ -4,16 +4,18 @@ export default class BagType extends Component {
   render() {
     if (this.props.category.subcategories.length < 1) return null
     return (
-      <ul>
+      <div>
         <b>Тип</b>
-        {this.props.category.subcategories.map((t, i) => {
-          return (
-            <li key={i}>
-              <Link to={t.slug}>{t.name}</Link>
-            </li>
-          )
-        })}
-      </ul>
+        <div className="filter-content">
+          {this.props.category.subcategories.map((t, i) => {
+            return (
+              <div key={i}>
+                <Link to={t.slug}>{t.name}</Link>
+              </div>
+            )
+          })}
+        </div>
+      </div>
     )
   }
 }

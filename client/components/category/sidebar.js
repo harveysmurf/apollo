@@ -9,17 +9,23 @@ export default ({ className, filters, category }) => (
   <div className={`${className} sidebar`}>
     {category && (
       <div>
-        <BagType category={category} />
+        <div className="bottom-spacing-m">
+          <BagType category={category} />
+        </div>
+        <div className="devider bottom-spacing-m" />
       </div>
     )}
-    <div>
+    <div className="bottom-spacing-m">
       <ColorFilter selected={filters.colors} />
     </div>
-    <div>
+    <div className="devider bottom-spacing-m" />
+    <div className="bottom-spacing-m">
       <PriceFilter price={filters.price} />
     </div>
-    <div>
+    <div className="devider bottom-spacing-m" />
+    <div className="bottom-spacing-m">
       <MaterialFilter selectedMaterials={filters.materials} />
     </div>
+    <div className="devider" />
   </div>
 )

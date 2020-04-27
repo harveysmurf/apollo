@@ -37,9 +37,11 @@ const withMaterialMutation = WrappedComponent => props => (
 const Material = ({ name, isSelected, toggle }) => {
   return (
     <div className={styles['material-filter']} onClick={toggle}>
-      <span>
-        {<FontAwesomeIcon icon={isSelected ? 'check-square' : 'square'} />}
-      </span>
+      {
+        <FontAwesomeIcon
+          icon={isSelected ? ['far', 'check-square'] : ['far', 'square']}
+        />
+      }
       <span>{name}</span>
     </div>
   )
@@ -57,19 +59,21 @@ const MaterialFilter = ({ selectedMaterials, updateMaterials }) => {
   }
   return (
     <div className={styles['material-filter-container']}>
-      <h4 className="bottom-spacing-s">Материал</h4>
-      {materialsList.map(({ slug, name }, i) => {
-        const isSelected = selectedMaterials.find(m => m === slug)
-        return (
-          <Material
-            toggle={toggleSelected({ slug, isSelected })}
-            key={i}
-            slug={slug}
-            name={name}
-            isSelected={isSelected}
-          />
-        )
-      })}
+      <b className="bottom-spacing-s">Материал</b>
+      <div className="filter-content">
+        {materialsList.map(({ slug, name }, i) => {
+          const isSelected = selectedMaterials.find(m => m === slug)
+          return (
+            <Material
+              toggle={toggleSelected({ slug, isSelected })}
+              key={i}
+              slug={slug}
+              name={name}
+              isSelected={isSelected}
+            />
+          )
+        })}
+      </div>
     </div>
   )
 }

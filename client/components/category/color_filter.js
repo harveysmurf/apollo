@@ -40,32 +40,20 @@ class ColorFilter extends Component {
     if (_.includes(this.props.selected, color.slug)) active = true
 
     return (
-      <li
+      <div
+        className="color-link"
         key={i}
         onClick={e => {
           e.preventDefault()
           this.selectColor(color.slug)
         }}
         style={{
-          backgroundColor: color.hex
+          backgroundColor: color.hex,
+          color: check_color
         }}
       >
-        <a
-          onClick={_e => console.log('clicked1')}
-          href="#"
-          style={{
-            display: 'flex',
-            height: '100%',
-            textAlign: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: check_color
-          }}
-          className={active ? 'active' : ''}
-        >
-          <FontAwesomeIcon icon="check" />
-        </a>
-      </li>
+        <FontAwesomeIcon icon="check" />
+      </div>
     )
   }
 
@@ -78,19 +66,13 @@ class ColorFilter extends Component {
   }
   render() {
     return (
-      <ul className="color-filter">
-        <div className="row">
-          <div className="col-sm-6">
-            <h4 className="bottom-spacing-s">Цвят</h4>
-          </div>
-          <div className="col-sm-6 text-right">
-            <span onClick={_e => this.clearFilter()}>Изчисти</span>
-          </div>
+      <div className="color-filter">
+        <div className="title-row">
+          <b className="bottom-spacing-s">Цвят</b>
+          <span onClick={_e => this.clearFilter()}>Изчисти</span>
         </div>
-        <div className="row">
-          {colors.map((color, i) => this.renderLink(color, i))}
-        </div>
-      </ul>
+        <div>{colors.map((color, i) => this.renderLink(color, i))}</div>
+      </div>
     )
   }
 }

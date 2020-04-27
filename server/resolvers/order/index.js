@@ -2,8 +2,9 @@ const { createOrder } = require('../../services/orderRequester')
 const mustache = require('mustache')
 const fs = require('fs')
 const { formatPrice } = require('../../../client/localization/price')
+const { getDeliveryMethodString } = require('../../../utils/delivery')
 
-const getEmailBody = (customerData, order) => {
+const getEmailBody = (checkoutData, order) => {
   const emailTemplate = fs.readFileSync('./email_template.mustache', {
     encoding: 'UTF-8'
   })
@@ -13,24 +14,24 @@ const getEmailBody = (customerData, order) => {
     amount: formatPrice(item.amount)
   }))
   return mustache.render(emailTemplate, {
-    customer_email: customerData.email,
-    customer_name: customerData.address.fullname,
+    customer_email: checkoutData.email,
+    customer_name: order.customer_details.fullname,
     order_id: order.orderNo,
     date_added: new Date(order.createdAt).toLocaleString('bg-BG', {
       timeZone: 'Europe/Sofia'
     }),
     payment_method: 'Наложен платеж',
-    shipping_method: order.deliveryMethod,
-    telephone: customerData.telephone,
+    shipping_method: getDeliveryMethodString(checkoutData.delivery.method),
+    telephone: checkoutData.telephone,
     order_status: 'Обработване',
-    comment: customerData.comment,
-    shipping_city: customerData.address.city,
-    shipping_address: customerData.address.address,
+    comment: checkoutData.comment,
+    shipping_city: checkoutData.delivery.cityName,
+    shipping_address: checkoutData.delivery.address,
     products,
     totals: [
       {
         title: 'Доставка',
-        text: formatPrice(order.deliveryPrice)
+        text: formatPrice(order.delivery.price)
       },
       {
         title: 'Продукти',
@@ -38,7 +39,7 @@ const getEmailBody = (customerData, order) => {
       },
       {
         title: 'Сума',
-        text: formatPrice(order.deliveryPrice + order.amount)
+        text: formatPrice(order.delivery.price + order.amount)
       }
     ]
   })
@@ -48,11 +49,10 @@ module.exports = {
   mutations: {
     checkout: async (_parent, data, { req }) => {
       try {
-        console.log(data)
         const order = await createOrder(req, data)
         const emailBody = getEmailBody(data, order)
         await req.getEmailService().sendEmail({
-          recipient_name: data.address.fullname,
+          recipient_name: order.customer_details.fullname,
           recipient_email: data.email,
           subject: `Дамски Чанти - Поръчка ${order.orderNo}`,
           body: emailBody

@@ -1,13 +1,12 @@
 @import '../../scss/mixins';
 .material-filter {
+  background-color: white;
   cursor: pointer;
-  & > div {
-    display: inline-block;
-    font-size: 1.2rem;
-  }
-  & > span {
+  display: flex;
+  align-items: center;
+  & > svg {
+    font-size: 1.3rem;
     margin-right: 15px;
-    font-size: 1.2rem;
     @include respond-to(desktop) {
       margin-right: 25px;
     }

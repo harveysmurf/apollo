@@ -1,5 +1,21 @@
 const gql = require('graphql-tag')
 module.exports = gql`
+  type OfficeType {
+    id: Int
+    name: String
+    cityId: Int
+    address: String
+    presentation: String
+  }
+
+  type CityType {
+    id: Int
+    name: String
+    region: String
+    presentation: String
+    offices: [OfficeType]
+  }
+
   type ColorType {
     discount: Int
     sellPrice: Float
@@ -185,11 +201,8 @@ module.exports = gql`
   }
 
   type Query {
-    viewer: ViewerType
-    loggedInUser: UserType
-    users: [UserType]
-    cart: CartType
     allCategories: [CategoryType]
+    cart: CartType
     getCategory(
       slug: String!
       colors: [String]
@@ -197,6 +210,8 @@ module.exports = gql`
       materials: [String]
       price: PriceInput
     ): CategoryType
+    getCities(search: String, withOffices: Boolean): [CityType]
+    getOffices(cityId: Int!, search: String): [OfficeType]
     getProduct(model: String!, referer: String): ProductType
     getProducts(
       colors: [String]
@@ -207,6 +222,9 @@ module.exports = gql`
       limit: Int
     ): ProductFeed
     getRouteType(slug: String!): String
+    loggedInUser: UserType
+    users: [UserType]
+    viewer: ViewerType
   }
 
   input AddressInput {
@@ -236,16 +254,23 @@ module.exports = gql`
     removeItemFromCart(model: String): CartType
     deleteUser(id: String!): UserType
     checkout(
+      name: String
+      lastname: String
       email: String
-      address: AddressInput
+      delivery: DeliveryInput
       comment: String
-      delivery: String
-      courier: String
       telephone: String
     ): Boolean
     logout: Boolean
   }
 
+  input DeliveryInput {
+    cityId: Int
+    cityName: String
+    officeId: Int
+    address: String
+    method: String
+  }
   input PriceInput {
     max: Float
     min: Float

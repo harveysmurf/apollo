@@ -14,6 +14,7 @@ const {
   queries: cartQueries,
   mutations: cartMutations
 } = require('./resolvers/cart')
+const { queries: econtQueries } = require('./resolvers/econt')
 const { executeWithAuthentication } = require('./resolvers/middlewares')
 const { mutations: orderMutations } = require('./resolvers/order')
 const { AUTH_COOKIE } = require('./controllers/authController')
@@ -78,6 +79,7 @@ module.exports = {
   },
   Query: {
     ...cartQueries,
+    ...econtQueries,
     viewer: () => {
       return { name: 'Simeon' }
     },

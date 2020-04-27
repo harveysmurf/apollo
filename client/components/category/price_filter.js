@@ -17,18 +17,20 @@ class PriceFilter extends Component {
   render() {
     const { updatePrice } = this.props
     return (
-      <div className="slider">
+      <div>
         <b>Цена</b>
-        <InputRange
-          formatLabel={value => `${value}лв`}
-          maxValue={150}
-          minValue={10}
-          value={this.state}
-          onChange={this.onChange}
-          onChangeComplete={values =>
-            updatePrice({ variables: { price: values } })
-          }
-        />
+        <div className="slider">
+          <InputRange
+            formatLabel={value => `${value}лв`}
+            maxValue={150}
+            minValue={10}
+            value={this.state}
+            onChange={this.onChange}
+            onChangeComplete={values =>
+              updatePrice({ variables: { price: values } })
+            }
+          />
+        </div>
       </div>
     )
   }

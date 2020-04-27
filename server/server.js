@@ -61,6 +61,17 @@ app.use(async (req, res, next) => {
 })
 app.use(authController.router)
 
+app.get('/fetchCities', async function(req, res) {
+  const offices = await req.getEcontService().getOffices()
+  const allCities = (await req.getEcontService().getCities()).map(city => {
+    return {
+      ...city,
+      offices: offices.filter(office => office.cityId === city.id)
+    }
+  })
+
+  return res.json(allCities)
+})
 app.get('/logout', async function(req, res) {
   req.logout()
   const cookieCartId = await req.getCartService().createNewCart()

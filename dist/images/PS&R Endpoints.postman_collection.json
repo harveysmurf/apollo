@@ -1,0 +1,1008 @@
+{
+	"info": {
+		"_postman_id": "a21012d8-de17-46ce-af7c-c03decded547",
+		"name": "PS&R Endpoints",
+		"description": "This collection contains requests for the .com PS&R area.\nThe goal is to have a complete set of all endpoints, and all used endpoints of the dependencies.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Basic Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea54fcdd-39b6-4976-beda-3ab7256ceff4",
+								"exec": [
+									"pm.test(\"Response was retrieved successfully\", () => {",
+									"   pm.expect(pm.response.to.have.status(200));",
+									"   pm.expect(pm.response.to.be.json);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct data\", () => {",
+									"    const responseBody = pm.response.json();",
+									"    pm.expect(responseBody).to.have.property('acid');",
+									"    pm.expect(responseBody.acid).to.be.a('string');",
+									"",
+									"    pm.expect(responseBody).to.have.property('firstName');",
+									"    pm.expect(responseBody.firstName).to.be.a('string');",
+									"",
+									"    pm.expect(responseBody).to.have.property('lastName');",
+									"    pm.expect(responseBody.lastName).to.be.a('string');",
+									"",
+									"    pm.expect(responseBody).to.have.property('userName');",
+									"    pm.expect(responseBody.userName).to.be.a('string');",
+									"",
+									"    const accessToken = pm.cookies.get('account.grant.accessToken');",
+									"    pm.expect(accessToken).to.be.a('string');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{PS-R-Access-Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "x-original-host",
+								"type": "text",
+								"value": "{{market}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{glass-api}}/account/basic-profile",
+							"host": [
+								"{{glass-api}}"
+							],
+							"path": [
+								"account",
+								"basic-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea54fcdd-39b6-4976-beda-3ab7256ceff4",
+								"exec": [
+									"pm.test(\"Response was retrieved successfully\", () => {",
+									"   pm.expect(pm.response.to.have.status(200));",
+									"   pm.expect(pm.response.to.be.json);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct data\", () => {",
+									"    const responseBody = pm.response.json();",
+									"    pm.expect(responseBody).to.have.property('profile');",
+									"    pm.expect(responseBody.profile).to.be.an('object');",
+									"    ",
+									"    const profile = responseBody.profile",
+									"",
+									"    pm.expect(profile).to.have.property('email');",
+									"    pm.expect(profile.email).to.be.a('string');",
+									"",
+									"    pm.expect(profile).to.have.property('firstName');",
+									"    pm.expect(profile.firstName).to.be.a('string');",
+									"",
+									"    pm.expect(profile).to.have.property('lastName');",
+									"    pm.expect(profile.lastName).to.be.a('string');",
+									"",
+									"    pm.expect(profile).to.have.property('userName');",
+									"    pm.expect(profile.userName).to.be.a('string');",
+									"    ",
+									"    pm.expect(responseBody).to.have.property('newsletterTopics');",
+									"    pm.expect(responseBody.newsletterTopics).to.be.an('array');",
+									"",
+									"    pm.expect(responseBody).to.have.property('consents');",
+									"    pm.expect(responseBody.consents).to.be.an('object');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{PS-R-Access-Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "x-original-host",
+								"type": "text",
+								"value": "{{market}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{glass-api}}/account/profile",
+							"host": [
+								"{{glass-api}}"
+							],
+							"path": [
+								"account",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Consent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea54fcdd-39b6-4976-beda-3ab7256ceff4",
+								"exec": [
+									"pm.test(\"Response was retrieved successfully\", () => {",
+									"   pm.expect(pm.response.to.have.status(200));",
+									"   pm.expect(pm.response.to.be.json);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct data\", () => {",
+									"    const responseBody = pm.response.json();",
+									"    pm.expect(responseBody).to.have.property('consents');",
+									"    pm.expect(responseBody.consents).to.be.an('array');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{PS-R-Access-Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "x-original-host",
+								"type": "text",
+								"value": "{{market}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{glass-api}}/account/consent",
+							"host": [
+								"{{glass-api}}"
+							],
+							"path": [
+								"account",
+								"consent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[ORIGIN] Available Consents",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5ed30237-8309-4e0c-847b-11f8690f96cb",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Application-Country",
+								"type": "text",
+								"value": "{{country}}"
+							},
+							{
+								"key": "Touchpoint-Source-Id",
+								"type": "text",
+								"value": "40"
+							},
+							{
+								"key": "X-Client-Id",
+								"value": "{{aic-client-id}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Client-Secret",
+								"value": "{{aic-client-secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{aic-api}}/api/consents/definitions?country={{country}}&locale={{language}}&consentTypes=amf",
+							"host": [
+								"{{aic-api}}"
+							],
+							"path": [
+								"api",
+								"consents",
+								"definitions"
+							],
+							"query": [
+								{
+									"key": "country",
+									"value": "{{country}}"
+								},
+								{
+									"key": "locale",
+									"value": "{{language}}"
+								},
+								{
+									"key": "consentTypes",
+									"value": "amf"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[ORIGIN] User Consent",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5ed30237-8309-4e0c-847b-11f8690f96cb",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{PS-R-Access-Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/hal+json",
+								"type": "text"
+							},
+							{
+								"key": "Application-Country",
+								"value": "{{country}}",
+								"type": "text"
+							},
+							{
+								"key": "Touchpoint-Source-Id",
+								"value": "40",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{aic-api}}/api/accounts/{{PS-R-EUCI}}/consents/{{country}}",
+							"host": [
+								"{{aic-api}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"{{PS-R-EUCI}}",
+								"consents",
+								"{{country}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Membership",
+			"item": [
+				{
+					"name": "Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea54fcdd-39b6-4976-beda-3ab7256ceff4",
+								"exec": [
+									"pm.test(\"Response was retrieved successfully\", () => {",
+									"   pm.expect(pm.response.to.have.status(200));",
+									"   pm.expect(pm.response.to.be.json);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct data\", () => {",
+									"    const responseBody = pm.response.json();",
+									"",
+									"    pm.expect(responseBody).to.have.property('isMember');",
+									"    pm.expect(responseBody.isMember).to.be.a('boolean');",
+									"",
+									"    pm.expect(responseBody).to.have.property('isPremium');",
+									"    pm.expect(responseBody.isPremium).to.be.a('boolean');",
+									"",
+									"    pm.expect(responseBody).to.have.property('progress');",
+									"    pm.expect(responseBody.progress).to.be.an('object');",
+									"",
+									"    pm.expect(responseBody).to.have.property('rewards');",
+									"    pm.expect(responseBody.rewards).to.be.an('array');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{PS-R-Access-Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "x-original-host",
+								"type": "text",
+								"value": "{{market}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{glass-api}}/account/loyalty/details",
+							"host": [
+								"{{glass-api}}"
+							],
+							"path": [
+								"account",
+								"loyalty",
+								"details"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea54fcdd-39b6-4976-beda-3ab7256ceff4",
+								"exec": [
+									"pm.test(\"Response was retrieved successfully\", () => {",
+									"   pm.expect(pm.response.to.have.status(200));",
+									"   pm.expect(pm.response.to.be.json);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct data\", () => {",
+									"    const responseBody = pm.response.json();",
+									"    pm.expect(responseBody).to.have.property('lastPointDate');",
+									"    pm.expect(responseBody.lastPointDate).to.be.a('string');",
+									"",
+									"    pm.expect(responseBody).to.have.property('nextLevelCompletionPercentage');",
+									"    pm.expect(responseBody.nextLevelCompletionPercentage).to.be.a('number');",
+									"",
+									"    pm.expect(responseBody).to.have.property('nextLevelPoints');",
+									"    pm.expect(responseBody.nextLevelPoints).to.be.a('number');",
+									"",
+									"    pm.expect(responseBody).to.have.property('nextRewardPoints');",
+									"    pm.expect(responseBody.nextRewardPoints).to.be.a('number');",
+									"",
+									"    pm.expect(responseBody).to.have.property('tierId');",
+									"    pm.expect(responseBody.tierId).to.be.a('number');",
+									"",
+									"    pm.expect(responseBody).to.have.property('totalPoints');",
+									"    pm.expect(responseBody.totalPoints).to.be.a('number');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{PS-R-Access-Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "x-original-host",
+								"type": "text",
+								"value": "{{market}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{glass-api}}/account/loyalty/status",
+							"host": [
+								"{{glass-api}}"
+							],
+							"path": [
+								"account",
+								"loyalty",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[ORIGIN] Get Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea54fcdd-39b6-4976-beda-3ab7256ceff4",
+								"exec": [
+									"pm.test(\"Response was retrieved successfully\", () => {",
+									"   pm.expect(pm.response.to.have.status(200));",
+									"   pm.expect(pm.response.to.be.json);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct data\", () => {",
+									"    const responseBody = pm.response.json();",
+									"",
+									"    pm.expect(responseBody).to.have.property('countryId');",
+									"    pm.expect(responseBody.countryId).to.be.a('string');",
+									"    pm.expect(responseBody.countryId).to.equal(pm.environment.get('country'));",
+									"",
+									"    pm.expect(responseBody).to.have.property('emailId');",
+									"    pm.expect(responseBody.emailId).to.be.a('string');",
+									"",
+									"    pm.expect(responseBody).to.have.property('engagements');",
+									"    pm.expect(responseBody.engagements).to.be.an('array');",
+									"",
+									"    pm.expect(responseBody).to.have.property('memberId');",
+									"    pm.expect(responseBody.memberId).to.be.a('string');",
+									"",
+									"    pm.expect(responseBody).to.have.property('tiers');",
+									"    pm.expect(responseBody.tiers).to.be.an('array');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905112ee-5d36-495b-a5b7-ca16dd7df176",
+								"exec": [
+									"var date = Math.floor((new Date()).getTime() / 1000);",
+									"var apiKey = pm.environment.get('loyalty-api-key');",
+									"var apiSecret = pm.environment.get('loyalty-api-secret');",
+									"var hash = CryptoJS.SHA256(apiKey+apiSecret+date);",
+									"var signature = CryptoJS.enc.Hex.stringify(hash);",
+									"postman.setEnvironmentVariable(\"PS-R-Loyalty-Signature\", signature);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{PS-R-Access-Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/vnd.adidas.membership.api.v5+json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/vnd.adidas.membership.api.v5+json"
+							},
+							{
+								"key": "Program-Type",
+								"value": "GLOBAL",
+								"type": "text"
+							},
+							{
+								"key": "X-Api-Key",
+								"value": "{{loyalty-api-key}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Signature",
+								"value": "{{PS-R-Loyalty-Signature}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{loyalty-api}}/MemberServices/members?brandcode={{brand}}&countrycode={{country}}",
+							"host": [
+								"{{loyalty-api}}"
+							],
+							"path": [
+								"MemberServices",
+								"members"
+							],
+							"query": [
+								{
+									"key": "brandcode",
+									"value": "{{brand}}"
+								},
+								{
+									"key": "countrycode",
+									"value": "{{country}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[ORIGIN] RCA Get Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea54fcdd-39b6-4976-beda-3ab7256ceff4",
+								"exec": [
+									"pm.test(\"Response was retrieved successfully\", () => {",
+									"   pm.expect(pm.response.to.have.status(200));",
+									"   pm.expect(pm.response.to.be.json);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct data\", () => {",
+									"    const responseBody = pm.response.json();",
+									"",
+									"    pm.expect(responseBody).to.have.property('countryId');",
+									"    pm.expect(responseBody.countryId).to.be.a('string');",
+									"    pm.expect(responseBody.countryId).to.equal(pm.environment.get('locale'));",
+									"",
+									"    pm.expect(responseBody).to.have.property('emailId');",
+									"    pm.expect(responseBody.emailId).to.be.a('string');",
+									"",
+									"    pm.expect(responseBody).to.have.property('engagements');",
+									"    pm.expect(responseBody.engagements).to.be.an('array');",
+									"",
+									"    pm.expect(responseBody).to.have.property('memberId');",
+									"    pm.expect(responseBody.memberId).to.be.a('string');",
+									"",
+									"    pm.expect(responseBody).to.have.property('tiers');",
+									"    pm.expect(responseBody.tiers).to.be.an('array');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905112ee-5d36-495b-a5b7-ca16dd7df176",
+								"exec": [
+									"var date = Math.floor((new Date()).getTime() / 1000);",
+									"var apiKey = pm.environment.get('loyalty-api-key');",
+									"var apiSecret = pm.environment.get('loyalty-api-secret');",
+									"var hash = CryptoJS.SHA256(apiKey+apiSecret+date);",
+									"var signature = CryptoJS.enc.Hex.stringify(hash);",
+									"postman.setEnvironmentVariable(\"PS-R-Loyalty-Signature\", signature);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{PS-R-Access-Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/hal+json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Program-Type",
+								"type": "text",
+								"value": "GLOBAL"
+							},
+							{
+								"key": "X-Api-Key",
+								"type": "text",
+								"value": "{{loyalty-api-key}}"
+							},
+							{
+								"key": "X-Signature",
+								"type": "text",
+								"value": "{{PS-R-Loyalty-Signature}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{loyalty-api}}/membership/{{brand}}/{{country}}/members/{{PS-R-EUCI}}?embed=tiers,status,rewards",
+							"host": [
+								"{{loyalty-api}}"
+							],
+							"path": [
+								"membership",
+								"{{brand}}",
+								"{{country}}",
+								"members",
+								"{{PS-R-EUCI}}"
+							],
+							"query": [
+								{
+									"key": "embed",
+									"value": "tiers,status,rewards"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[ORIGIN] RCA Get Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea54fcdd-39b6-4976-beda-3ab7256ceff4",
+								"exec": [
+									"pm.test(\"Response was retrieved successfully\", () => {",
+									"   pm.expect(pm.response.to.have.status(200));",
+									"   pm.expect(pm.response.to.be.json);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct data\", () => {",
+									"    const responseBody = pm.response.json();",
+									"    pm.expect(responseBody).to.have.property('lastPointDate');",
+									"    pm.expect(responseBody.lastPointDate).to.be.a('string');",
+									"",
+									"    pm.expect(responseBody).to.have.property('nextLevelCompletionPercentage');",
+									"    pm.expect(responseBody.nextLevelCompletionPercentage).to.be.a('number');",
+									"",
+									"    pm.expect(responseBody).to.have.property('nextLevelPoints');",
+									"    pm.expect(responseBody.nextLevelPoints).to.be.a('number');",
+									"",
+									"    pm.expect(responseBody).to.have.property('nextRewardPoints');",
+									"    pm.expect(responseBody.nextRewardPoints).to.be.a('number');",
+									"",
+									"    pm.expect(responseBody).to.have.property('tierId');",
+									"    pm.expect(responseBody.tierId).to.be.a('number');",
+									"",
+									"    pm.expect(responseBody).to.have.property('totalPoints');",
+									"    pm.expect(responseBody.totalPoints).to.be.a('number');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905112ee-5d36-495b-a5b7-ca16dd7df176",
+								"exec": [
+									"var date = Math.floor((new Date()).getTime() / 1000);",
+									"var apiKey = pm.environment.get('loyalty-api-key');",
+									"var apiSecret = pm.environment.get('loyalty-api-secret');",
+									"var hash = CryptoJS.SHA256(apiKey+apiSecret+date);",
+									"var signature = CryptoJS.enc.Hex.stringify(hash);",
+									"postman.setEnvironmentVariable(\"PS-R-Loyalty-Signature\", signature);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{PS-R-Access-Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/hal+json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Program-Type",
+								"type": "text",
+								"value": "GLOBAL"
+							},
+							{
+								"key": "X-Api-Key",
+								"type": "text",
+								"value": "{{loyalty-api-key}}"
+							},
+							{
+								"key": "X-Signature",
+								"type": "text",
+								"value": "{{PS-R-Loyalty-Signature}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{loyalty-api}}/membership/{{brand}}/{{country}}/members/{{PS-R-EUCI}}/status",
+							"host": [
+								"{{loyalty-api}}"
+							],
+							"path": [
+								"membership",
+								"{{brand}}",
+								"{{country}}",
+								"members",
+								"{{PS-R-EUCI}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ea54fcdd-39b6-4976-beda-3ab7256ceff4",
+						"exec": [
+							"pm.test(\"Response was retrieved successfully\", () => {",
+							"   pm.expect(pm.response.to.have.status(200));",
+							"   pm.expect(pm.response.to.be.json);",
+							"});",
+							"",
+							"pm.test(\"Response contains correct data\", () => {",
+							"    const responseBody = pm.response.json();",
+							"    pm.expect(responseBody).to.have.property('acid');",
+							"    pm.expect(responseBody.acid).to.be.a('string');",
+							"",
+							"    pm.expect(responseBody).to.have.property('firstName');",
+							"    pm.expect(responseBody.firstName).to.be.a('string');",
+							"",
+							"    pm.expect(responseBody).to.have.property('lastName');",
+							"    pm.expect(responseBody.lastName).to.be.a('string');",
+							"",
+							"    pm.expect(responseBody).to.have.property('userName');",
+							"    pm.expect(responseBody.userName).to.be.a('string');",
+							"",
+							"    const accessToken = pm.cookies.get('account.grant.accessToken');",
+							"    pm.expect(accessToken).to.be.a('string');",
+							"    ",
+							"    pm.environment.set('PS-R-Access-Token', accessToken);",
+							"    pm.environment.set('PS-R-EUCI', responseBody.acid);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "x-original-host",
+						"value": "{{market}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user\": \"postman-test-user@yopmail.com\",\n\t\"password\": \"Adidas123!\"\n}"
+				},
+				"url": {
+					"raw": "{{glass-api}}/account/login",
+					"host": [
+						"{{glass-api}}"
+					],
+					"path": [
+						"account",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

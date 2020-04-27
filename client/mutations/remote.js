@@ -69,18 +69,20 @@ export const RemoveItemFromCart = gql`
 
 export const Checkout = gql`
   mutation checkout(
+    $name: String
+    $lastname: String
     $email: String
-    $address: AddressInput
-    $telephone: String
+    $delivery: DeliveryInput
     $comment: String
-    $delivery: String
+    $telephone: String
   ) {
     checkout(
+      name: $name
+      lastname: $lastname
       email: $email
-      address: $address
-      telephone: $telephone
-      comment: $comment
       delivery: $delivery
+      comment: $comment
+      telephone: $telephone
     )
   }
 `

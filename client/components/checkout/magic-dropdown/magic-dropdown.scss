@@ -1,0 +1,48 @@
+div.modal-autocomplete-input {
+  display: flex;
+  align-items: center;
+  & > div.back-button {
+    padding: 25px;
+    padding-right: 35px;
+    cursor: pointer;
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+  }
+  & > input.borderless-input {
+    background-color: transparent;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    height: auto;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+  }
+}
+.dropdown {
+  display: block;
+  position: absolute;
+  background-color: white;
+  border-radius: 0 0 10px 10px;
+  border: 1px solid lightgray;
+  z-index: 2;
+  & > input {
+    width: 100%;
+  }
+  & > div {
+    overflow-y: auto;
+    max-height: 250px;
+  }
+  .dropdown-item {
+    padding: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-top: 1px solid lightgray;
+    cursor: pointer;
+    &:hover {
+      background-color: lightgray;
+    }
+  }
+}
