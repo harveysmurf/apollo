@@ -27,6 +27,7 @@ const CartRow = ({
     quantity: productQuantity,
     color,
     price: productPrice,
+    sellPrice,
     slug
   },
   quantity,
@@ -66,7 +67,7 @@ const CartRow = ({
               <div className={css(['cart-row__cart-item-description'])}>
                 <div className={css('cart-row__cart-line-item')}>
                   <Link to={`/${slug}/${model}`}>{name}</Link>
-                  <div className="hidden-sm">{productPrice} лв.</div>
+                  <div className="hidden-sm">{sellPrice} лв.</div>
                   <div className={css(['cart-row__item-actions'])}>
                     <div
                       onClick={() =>

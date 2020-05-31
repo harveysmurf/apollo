@@ -52,14 +52,18 @@ const ProductThumb = ({ categoryId, product }) => {
       )}
       <div className="product-details">
         <div>
-          <a href="#">{`${selected.name} | ${selected.model}`}</a>
+          <Link to={`/${selected.slug}/${selected.model}${referer}`}>
+            {`${selected.name} | ${selected.model}`}
+          </Link>
         </div>
-      </div>
-      <div className="product-price">
-        <b>{formatPrice(selected.sellPrice)}</b>
-        {selected.discount && (
-          <span className="original-price">{formatPrice(selected.price)}</span>
-        )}
+        <div className="product-price">
+          <b>{formatPrice(selected.sellPrice)}</b>
+          {selected.discount && (
+            <span className="original-price">
+              {formatPrice(selected.price)}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   )

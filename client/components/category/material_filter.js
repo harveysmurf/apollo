@@ -4,28 +4,12 @@ import { UpdateMaterials } from '../../mutations/local'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './material_filter.scss'
 
-const materialsList = [
-  {
-    slug: 'estestvena-koja',
-    name: 'ествествена кожа'
-  },
-  {
-    slug: 'izkustvena-koja',
-    name: 'Еко кожа'
-  },
-  {
-    slug: 'textil',
-    name: 'плат'
-  },
-  {
-    slug: 'silikon',
-    name: 'силикон'
-  },
-  {
-    slug: 'poliester',
-    name: 'полиестер'
-  }
-]
+export const materials = {
+  estestvena_koja: 'естествена кожа',
+  izkustvena_koja: 'изкуствена кожа',
+  textil: 'плат',
+  polyester: 'полиестер'
+}
 
 const withMaterialMutation = WrappedComponent => props => (
   <Mutation mutation={UpdateMaterials}>
@@ -61,12 +45,12 @@ const MaterialFilter = ({ selectedMaterials, updateMaterials }) => {
     <div className={styles['material-filter-container']}>
       <b className="bottom-spacing-s">Материал</b>
       <div className="filter-content">
-        {materialsList.map(({ slug, name }, i) => {
+        {Object.entries(materials).map(([slug, name]) => {
           const isSelected = selectedMaterials.find(m => m === slug)
           return (
             <Material
               toggle={toggleSelected({ slug, isSelected })}
-              key={i}
+              key={slug}
               slug={slug}
               name={name}
               isSelected={isSelected}

@@ -36,6 +36,12 @@ const validationRules = {
       error: requiredFieldError
     }
   ],
+  office: [
+    {
+      test: x => !!x,
+      error: 'Моля въведете офис'
+    }
+  ],
   address: [
     {
       test: x => !!x,
@@ -204,6 +210,7 @@ const CheckoutForm = ({ cart, checkout }) => (
                 </div>
                 <div className="col-sm col-md">
                   <Field
+                    validate={validateField(validationRules.city)}
                     placeholder="Избери Град"
                     name="city"
                     component={CityDropdown}
@@ -219,6 +226,7 @@ const CheckoutForm = ({ cart, checkout }) => (
                   </div>
                   <div className="col-sm col-md">
                     <Field
+                      validate={validateField(validationRules.office)}
                       placeholder="Избери Офис"
                       name="office"
                       component={OfficeDropDown}

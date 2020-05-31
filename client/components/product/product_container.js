@@ -17,6 +17,7 @@ import { getImageCachedSizePath } from '../../../utils/image_utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-list.jsx'
 import Characteristics from './characteristics'
+import { materials } from '../category/material_filter'
 
 const ProductVariationThumb = ({
   name,
@@ -133,7 +134,9 @@ class ProductContainer extends Component {
           variations,
           model,
           color,
-          price
+          price,
+          sellPrice,
+          discount
         }
       }
     } = this.props
@@ -152,7 +155,7 @@ class ProductContainer extends Component {
         <div className="col-sm-12 col-lg-4">
           <div className="product-main">
             <div className="bottom-spacing-m">
-              <h1>{`${color} ${name}`}</h1>
+              <h1>{`${name}`}</h1>
             </div>
             <div>
               {variations.map((c, idx) => {
@@ -173,7 +176,12 @@ class ProductContainer extends Component {
             <hr className="bottom-spacing-m" />
             <div className="row bottom-spacing-m">
               <div className="col-sm-6 text-left no-gutters">
-                <span className="price">{formatPrice(price)}</span>
+                <div className="product-price">
+                  <b>{formatPrice(sellPrice)}</b>
+                  {discount && (
+                    <span className="original-price">{formatPrice(price)}</span>
+                  )}
+                </div>
               </div>
               <div className="col-sm-6 text-right no-gutters">
                 {!available && (
@@ -239,9 +247,15 @@ class ProductContainer extends Component {
             )}
             <br />
             <div className="bottom-spacing-m product-social">
-              <FontAwesomeIcon icon={['fab', 'facebook']} />
-              <FontAwesomeIcon icon={['fab', 'instagram']} />
-              <FontAwesomeIcon icon={['fab', 'twitter']} />
+              <a href="https://www.facebook.com/DamskiChantiCom">
+                <FontAwesomeIcon size="lg" icon={['fab', 'facebook']} />
+              </a>
+              <a href="www.instagram.com">
+                <FontAwesomeIcon size="lg" icon={['fab', 'instagram']} />
+              </a>
+              <a href="https://www.youtube.com/channel/UCSR0CNfEt_LMwYSxv1Ecrxw">
+                <FontAwesomeIcon size="lg" icon={['fab', 'youtube']} />
+              </a>
               {features.PDP_NOTIFY_AVAILABLE && this.notifyMe(available)}
             </div>
           </div>
@@ -252,7 +266,7 @@ class ProductContainer extends Component {
             )}
           </div>
           <Characteristics
-            material={material}
+            material={materials[material]}
             style={style}
             dimensions={dimensions}
           />

@@ -216,6 +216,7 @@ export const getProductsFeedQuery = gql`
           description_short
           slug
           discount
+          price
         }
         colors {
           group

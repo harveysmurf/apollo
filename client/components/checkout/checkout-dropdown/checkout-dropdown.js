@@ -70,7 +70,11 @@ export const CityDropdown = ({
           }
         }, 1000)}
       />
-      {showValidation && error && <span className="input-error">{error}</span>}
+      {showValidation && error && (
+        <div>
+          <span className="input-error">{error}</span>
+        </div>
+      )}
     </>
   )
 }
@@ -114,7 +118,11 @@ export const OfficeDropDown = ({
         search={search}
         onSearchChange={setSearch}
       />
-      {showValidation && error && <span className="input-error">{error}</span>}
+      {showValidation && error && (
+        <div>
+          <span className="input-error">{error}</span>
+        </div>
+      )}
     </>
   )
 }

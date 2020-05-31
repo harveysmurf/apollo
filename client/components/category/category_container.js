@@ -30,7 +30,7 @@ const CategoryContainer = ({
     }
   })
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Зареждане...</div>
   } else if (!data) {
     return <h1>Page not found</h1>
   } else {
@@ -40,13 +40,9 @@ const CategoryContainer = ({
         <div className="col-sm-12 bottom-spacing-m">
           <Breadcrumbs breadcrumbs={getCategory.breadcrumbs} />
         </div>
-        <Sidebar
-          className="col-sm-12 col-md-3"
-          category={getCategory}
-          filters={filters}
-        />
+        <Sidebar category={getCategory} filters={filters} />
         <div className="col-sm-12 col-md-9 no-gutters-xs">
-          <h3>{getCategory.name}</h3>
+          <h3 className="col-sm-12 bottom-spacing-m">{getCategory.name}</h3>
           <div className="row">
             {getCategory.productFeed.products.map((p, index) => (
               <div

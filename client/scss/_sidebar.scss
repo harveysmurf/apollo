@@ -1,5 +1,12 @@
 .sidebar {
   margin-bottom: 20px;
+  .collapsible {
+    & > .title {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
   .filter-content {
     @include respond-to(tablet) {
       margin-left: 15px;
@@ -22,6 +29,7 @@
       justify-content: space-between;
     }
     .color-link {
+      cursor: pointer;
       margin-bottom: 10px;
       display: inline-block;
       border: 1px solid #d6d6d6;

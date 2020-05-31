@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { userQuery } from '../../queries/remote'
+import { userQuery, cartQuery } from '../../queries/remote'
 import { Query } from 'react-apollo'
 
 const MobileNav = () => {
@@ -40,12 +40,24 @@ const MobileNav = () => {
               </div>
               Любими
             </Link>
-            <Link to="/checkout" className="mobile-nav-link">
-              <div>
-                <FontAwesomeIcon icon="shopping-cart" />
-              </div>
-              Количка
-            </Link>
+            <Query query={cartQuery}>
+              {({ data: { cart } }) => {
+                const quantity = (cart && cart.quantity) || 0
+                return (
+                  <Link to="/checkout" className="mobile-nav-link">
+                    <div>
+                      <div
+                        value={quantity}
+                        className={quantity ? 'cart-badge' : null}
+                      >
+                        <FontAwesomeIcon icon="shopping-cart" value="5" />
+                      </div>
+                    </div>
+                    Количка
+                  </Link>
+                )
+              }}
+            </Query>
           </div>
         )
       }}

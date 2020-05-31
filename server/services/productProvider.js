@@ -10,7 +10,12 @@ const productPipelines = [
             $mergeObjects: [
               '$$color',
               {
-                name: { $ifNull: ['$$color.name', '$name'] },
+                name: {
+                  $ifNull: [
+                    '$$color.name',
+                    { $concat: ['$$color.color', '  ', '$name'] }
+                  ]
+                },
                 description_short: {
                   $ifNull: ['$$color.description_short', '$description_short']
                 },
@@ -34,7 +39,9 @@ const productPipelines = [
   {
     $project: {
       price: { $ifNull: ['$color.price', '$price'] },
-      name: { $ifNull: ['$color.name', '$name'] },
+      name: {
+        $ifNull: ['$color.name', { $concat: ['$color.color', '  ', '$name'] }]
+      },
       available: {
         $ifNull: ['$color.available', { $ifNull: ['$available', true] }]
       },
@@ -142,7 +149,6 @@ module.exports = db => {
     if (!product) {
       return null
     }
-
     if (Array.isArray(product.similar) && product.similar.length) {
       product.similar = await productsCollection
         .aggregate([
@@ -160,7 +166,7 @@ module.exports = db => {
         ])
         .toArray()
     }
-    return product
+    return adaptProduct(product)
   }
 
   const getProducts = async ({

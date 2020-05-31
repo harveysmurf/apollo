@@ -13,7 +13,8 @@ const colors = [
   { slug: 'jalt', name: 'Жълти', hex: 'yellow' },
   { slug: 'siv', name: 'Сиви', hex: '#808080' },
   { slug: 'bejov', name: 'Бежови', hex: '#f5f5dc' },
-  { slug: 'kafyav', name: 'Кафяви', hex: '#A52A2A' }
+  { slug: 'kafyav', name: 'Кафяви', hex: '#A52A2A' },
+  { slug: 'multi', name: 'Шарени', hex: '#f0f080' }
 ]
 
 class ColorFilter extends Component {

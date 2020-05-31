@@ -24,14 +24,9 @@ import HowToOrderComponent from './components/howtoorder.jsx'
 import CheckoutSuccess from './components/checkout/checkoutsuccess.jsx'
 import Profile from './components/profile/profile.jsx'
 import CategoryContainer from './components/category/category_container'
-import { useQuery } from '@apollo/react-hooks'
-import { screenSizeQuery } from './queries/local'
-import { screens } from './screen'
+import { useScreenSize } from './hooks'
 const App = () => {
-  const {
-    data: { screenSize }
-  } = useQuery(screenSizeQuery)
-  const isMobile = screenSize === screens.mobile
+  const { isMobile } = useScreenSize()
   return (
     <div>
       <Router>

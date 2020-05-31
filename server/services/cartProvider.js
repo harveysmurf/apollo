@@ -1,6 +1,7 @@
 const ObjectID = require('mongodb').ObjectID
 const R = require('ramda')
 const { productPipeline } = require('../../models/product')
+const { adaptProduct } = require('../services/productAdapter')
 const { getCartsCollection, getProductsCollection } = require('../db/mongodb')
 const cartsCollection = getCartsCollection()
 const productsCollection = getProductsCollection()
@@ -18,13 +19,12 @@ const adaptCartRecords = async cartProducts => {
       }
     ])
     .toArray()
-
   return dbProducts.map(product => {
     const quantity = cartProducts.find(cp => cp.model === product.model)
       .quantity
     return {
       quantity,
-      product
+      product: adaptProduct(product)
     }
   })
 }
@@ -39,7 +39,7 @@ const adaptedRecordsToCart = adaptedCartRecords => {
       if (!quantity) {
         return cart
       }
-      const price = quantity * product.price
+      const price = quantity * product.sellPrice
       cart.price += price
       cart.quantity += quantity
 
