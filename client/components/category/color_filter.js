@@ -38,11 +38,12 @@ class ColorFilter extends Component {
         check_color = 'black'
         break
     }
-    if (_.includes(this.props.selected, color.slug)) active = true
-
+    if (_.includes(this.props.selected, color.slug)) {
+      active = true
+    }
     return (
       <div
-        className="color-link"
+        className={`color-link ${active && 'active'}`}
         key={i}
         onClick={e => {
           e.preventDefault()

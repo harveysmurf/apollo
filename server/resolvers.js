@@ -112,7 +112,6 @@ module.exports = {
     getProduct: async (_parent, args, { req }) => {
       const model = args.model
       const product = await req.getProductService().getProduct(model)
-      console.log(product)
       product.referer = args.referer
       return product
     },

@@ -1,4 +1,8 @@
 .sidebar {
+  .sidebar-wrapper {
+    position: sticky;
+    top:0;
+  }
   margin-bottom: 20px;
   .collapsible {
     & > .title {
@@ -40,6 +44,8 @@
       margin-bottom: 10px;
     }
     svg {
+      height: 100%;
+      width: 90%;
       visibility: hidden;
     }
     .active {

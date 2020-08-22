@@ -5,8 +5,7 @@ import PriceFilter from './price_filter'
 import MaterialFilter from './material_filter'
 import { useScreenSize } from '../../hooks'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// TODO hide filters on mobile
-// TODO sidebar fixed on desktop
+
 const MobileSideBar = ({ category, filters }) => (
   <div className="col-sm-12 devider no-gutters sidebar">
     <Collapsible title="Филтри" opened={false}>
@@ -57,6 +56,7 @@ const Collapsible = ({ children, title, opened = false }) => {
 
 const DesktopSideBar = ({ category, filters }) => (
   <div className="col-md-3 sidebar">
+    <div className="sidebar-wrapper">
     {category && (
       <div>
         <div className="bottom-spacing-m">
@@ -77,6 +77,7 @@ const DesktopSideBar = ({ category, filters }) => (
       <MaterialFilter selectedMaterials={filters.materials} />
     </div>
     <div className="devider" />
+    </div>
   </div>
 )
 export default ({ filters, category }) => {

@@ -46,6 +46,7 @@ const productPipelines = [
         $ifNull: ['$color.available', { $ifNull: ['$available', true] }]
       },
       model: '$color.model',
+      disabled: '$color.disabled',
       dimensions: 1,
       categories: 1,
       description_short: {
@@ -191,7 +192,8 @@ module.exports = db => {
         ...productPipelines,
         {
           $match: {
-            ...find
+            ...find,
+            disabled: { $ne: true }
           }
         },
         {
@@ -207,15 +209,17 @@ module.exports = db => {
       .next()
 
     const lastitem = lastitemresult
+
     let res = await productsCollection
       .aggregate([
         ...productPipelines,
         {
           $match: {
+            disabled: { $ne: true },
             ...find,
             ...(cursor && {
               createdAt: { $lte: new Date(cursor.createdAt) },
-              model: { $lt: cursor.model }
+              model: { $ne: cursor.model }
             })
           }
         },
