@@ -27,9 +27,7 @@ const adaptCartToOrder = cart => {
     amount: cart.price
   }
 }
-const createOrder = async (req, data) => {
-  const cartId = req.cart
-  const cart = await getCustomerCart(cartId)
+const createOrder = async (cart, data, customer_id) => {
   const customerDetails = {
     fullname: `${data.name} ${data.lastname}`,
     email: data.email,
@@ -44,11 +42,20 @@ const createOrder = async (req, data) => {
       price: getDeliveryPrice(cart.price, data.delivery.method)
     },
     customer_details: customerDetails,
-    customer_id: req.user && req.user._id,
+    customer_id: customer_id,
     orderNo: lastOrderId + 1,
     createdAt: new Date().toISOString()
   })
-  return ordersCollection.findOne({ _id: insertedId })
+  const dbOrder = await ordersCollection.findOne({ _id: insertedId })
+  dbOrder.order_items = dbOrder.order_items.map((item) => {
+    const cartProduct = cart.products.find(p => p.product.model === item.model)
+    return {
+      ...item,
+      name: cartProduct.product.name,
+      image: cartProduct.product.main_image
+    }
+  })
+  return dbOrder
 }
 
 module.exports = {

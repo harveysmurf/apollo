@@ -1,5 +1,6 @@
 const ObjectID = require('mongodb').ObjectID
 module.exports = (cartProvider, db, currentCartId) => ({
+  getCustomerCart: cartProvider.getCustomerCart,
   createCartFromAdaptedRecords: cartProvider.adaptedRecordsToCart,
   getCart: (cartId = currentCartId) => {
     return cartProvider.getCart(cartId)
@@ -29,14 +30,15 @@ module.exports = (cartProvider, db, currentCartId) => ({
       }
     )
   },
-  addToCart: async ({ quantity, model }, cartId = null) => {
+  addToCart: async ({ quantity, model, name }, cartId = null) => {
     await db.collection('carts').updateOne(
       { _id: ObjectID(cartId) },
       {
         $push: {
           products: {
             quantity,
-            model
+            model,
+            name
           }
         }
       }

@@ -50,9 +50,7 @@ const setScreenSize = (client, screenSize) => {
   })
 }
 export function subscribeClientToScreenSizeChange(client) {
-  console.log('ad listener')
   mediaQueryDesktop().addListener(() => {
-    console.log('h3')
     setScreenSize(client, getScreenSize())
   })
 

@@ -49,7 +49,10 @@ module.exports = {
   mutations: {
     checkout: async (_parent, data, { req }) => {
       try {
-        const order = await createOrder(req, data)
+        const cartId = req.cart
+        const cart = await req.getCartService().getCustomerCart(cartId)
+        const userId = req.user && req.user._id
+        const order = await createOrder(cart, data, userId)
         const emailBody = getEmailBody(data, order)
         await req.getEmailService().sendEmail({
           recipient_name: order.customer_details.fullname,

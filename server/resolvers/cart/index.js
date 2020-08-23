@@ -53,7 +53,7 @@ module.exports = {
     addToCart: executeWithUserCart(async (_, { model, quantity }, { req }) => {
       const cookieCartId = req.cart
 
-      const { quantity: availableQuantity } = await req.db
+      const { quantity: availableQuantity, name } = await req.db
         .collection('products')
         .aggregate([
           ...productPipeline,
@@ -87,7 +87,7 @@ module.exports = {
         await req
           .getCartService()
           .addToCart(
-            { quantity: R.sum([currentQuantity, quantity]), model },
+            { quantity: R.sum([currentQuantity, quantity]), model, name},
             cookieCartId
           )
       }
