@@ -1,6 +1,6 @@
 import { Form, Field } from 'react-final-form'
 import React from 'react'
-import { Mutation } from 'react-apollo'
+import { Mutation } from '@apollo/client/react/components'
 import { withRouter } from 'react-router-dom'
 import { Register } from '../../mutations/remote'
 import * as R from 'ramda'

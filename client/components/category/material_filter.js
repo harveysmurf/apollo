@@ -1,5 +1,5 @@
 import React from 'react'
-import { Mutation } from 'react-apollo'
+import { Mutation } from '@apollo/client/react/components'
 import { UpdateMaterials } from '../../mutations/local'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './material_filter.scss'

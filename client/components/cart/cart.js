@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import { Query, Mutation } from 'react-apollo'
+import { Query, Mutation } from '@apollo/client/react/components'
 import classNames from 'classnames/bind'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { cartQuery } from '../../queries/remote'

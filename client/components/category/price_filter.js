@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import InputRange from 'react-input-range'
-import { Mutation } from 'react-apollo'
+import { Mutation } from '@apollo/client/react/components'
 import { UpdatePrice } from '../../mutations/local'
 
 class PriceFilter extends Component {

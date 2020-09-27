@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 import { featuresQuery } from '../../queries/local'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import { formatPrice } from '../../localization/price'
 
 const getSelectedVariation = (variations = [], selectedModel) => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import * as R from 'ramda'
-import { Query } from 'react-apollo'
+import { Query } from '@apollo/client/react/components'
 import { Form, Field } from 'react-final-form'
 import { userQuery } from '../../queries/remote'
 import { TextInput } from '../checkout/checkout'

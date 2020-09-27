@@ -7,7 +7,7 @@ import ProductThumb from '../product/product_thumb'
 import { filtersQuery } from '../../queries/local'
 import { categoryQuery } from '../../queries/remote'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-list.jsx'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 
 const CategoryContainer = ({
   match: {
@@ -72,7 +72,7 @@ const CategoryContainer = ({
                 setScrollPositionBeforeFetch(window.pageYOffset)
                 fetchMoreProducts(
                   filters,
-                  getCategory.productFeed.cursor,
+                  R.omit(['__typename'], getCategory.productFeed.cursor),
                   fetchMore
                 ).finally(() => {
                   setFetchMoreLoading(false)

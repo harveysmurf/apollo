@@ -1,5 +1,5 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { Query } from '@apollo/client/react/components'
 import { featuresQuery } from '../queries/local'
 import { Link } from 'react-router-dom'
 import { useScreenSize } from '../hooks'

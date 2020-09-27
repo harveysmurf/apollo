@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Query, Mutation } from 'react-apollo'
+import { Query, Mutation } from '@apollo/client/react/components'
 import { cartQuery } from '../../queries/remote'
 import { Form, Field } from 'react-final-form'
 import { CartProductsList } from '../cart/cart'

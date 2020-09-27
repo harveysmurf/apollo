@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import { getProductsFeedQuery } from '../../queries/remote'
 import ProductThumb from '../product/product_thumb'
 export default () => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import MagicDropdown from '../magic-dropdown/magic-dropdown'
 import { getCities, getOffices } from '../../../queries/remote'
 // Hook

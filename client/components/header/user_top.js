@@ -1,5 +1,6 @@
 import React from 'react'
-import { Query, Mutation, withApollo } from 'react-apollo'
+import { Query, Mutation } from '@apollo/client/react/components'
+import { withApollo } from '@apollo/client/react/hoc'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
 import { WithLoadingCheck } from '../shared/withQuery'
@@ -56,12 +57,15 @@ const UserTop = props => {
         </a>
       )}
       <Query query={cartQuery}>
-        {({ data: { cart } }) => (
-          <Link to="/checkout" className="top-cart user-link">
-            <FontAwesomeIcon icon="shopping-cart" />
-            Количка <b>{cart && !!cart.quantity && ` (${cart.quantity})`}</b>
-          </Link>
-        )}
+        {({ data }) => {
+          const cart = data && data.cart
+          return (
+            <Link to="/checkout" className="top-cart user-link">
+              <FontAwesomeIcon icon="shopping-cart" />
+              Количка <b>{cart && !!cart.quantity && ` (${cart.quantity})`}</b>
+            </Link>
+          )
+        }}
       </Query>
       {user && loginIsEnabled && (
         <Mutation

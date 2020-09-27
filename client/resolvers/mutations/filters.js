@@ -1,28 +1,33 @@
+const { filtersQuery } = require('../../queries/local')
+
 module.exports = {
   updateColors: (obj, { colors }, { cache }) => {
-    cache.writeData({
+    const { filters } = cache.readQuery({ query: filtersQuery })
+    cache.writeQuery({
+      query: filtersQuery,
       data: {
-        filters: {
-          colors
-        }
+        filters: { ...filters, colors }
       }
     })
     return null
   },
   updatePrice: (obj, { price }, { cache }) => {
-    cache.writeData({
+    const { filters } = cache.readQuery({ query: filtersQuery })
+    cache.writeQuery({
+      query: filtersQuery,
       data: {
-        filters: {
-          price
-        }
+        filters: { ...filters, price }
       }
     })
     return null
   },
   updateMaterials: (obj, { materials }, { cache }) => {
-    cache.writeData({
+    const { filters } = cache.readQuery({ query: filtersQuery })
+    cache.writeQuery({
+      query: filtersQuery,
       data: {
         filters: {
+          ...filters,
           materials
         }
       }

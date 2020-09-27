@@ -16,14 +16,6 @@ export const filtersQuery = gql`
   }
 `
 
-export const colorsQuery = gql`
-  query getColorsQuery {
-    filters @client {
-      colors
-    }
-  }
-`
-
 export const mainImageQuery = gql`
   query getMainImageQuery {
     pdp @client {

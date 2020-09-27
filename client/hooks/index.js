@@ -1,5 +1,5 @@
 import { screenSizeQuery } from '../queries/local'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import { screens } from '../screen'
 
 export function useScreenSize() {

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { userQuery, cartQuery } from '../../queries/remote'
-import { Query } from 'react-apollo'
+import { Query } from '@apollo/client/react/components'
 
 const MobileNav = () => {
   return (

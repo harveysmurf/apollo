@@ -3,7 +3,7 @@ import qs from 'query-string'
 import * as R from 'ramda'
 import Sidebar from '../category/sidebar'
 import ProductThumb from '../product/product_thumb'
-import { Query } from 'react-apollo'
+import { Query } from '@apollo/client/react/components'
 import { filtersQuery } from '../../queries/local'
 import { getProductsFeedQuery } from '../../queries/remote'
 // export default props => {
@@ -21,7 +21,7 @@ export default ({ location: { search } }) => {
           query={getProductsFeedQuery}
           variables={{ ...filters, ...(query && { search: query }) }}
         >
-          {({ data: { getProducts }, loading, fetchMore }) => {
+          {({ data: { getProducts } = {}, loading, fetchMore }) => {
             if (loading) {
               return <div>Loading</div>
             }

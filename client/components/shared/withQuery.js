@@ -1,5 +1,5 @@
 import React from 'react'
-import { graphql } from 'react-apollo'
+import { graphql } from '@apollo/client/react/hoc'
 
 export const WithLoadingCheck = (query, config = {}) => WrappedComponent =>
   graphql(query, config)(props => {

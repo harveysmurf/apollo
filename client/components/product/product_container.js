@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import qs from 'query-string'
 import { compose } from 'recompose'
-import { Mutation } from 'react-apollo'
+import { Mutation } from '@apollo/client/react/components'
 import { Link } from 'react-router-dom'
 import { formatPrice } from '../../localization/price'
 import ProductSlideshow from './products_slideshow'

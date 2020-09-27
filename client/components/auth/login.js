@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Query } from 'react-apollo'
+import { Query } from '@apollo/client/react/components'
 import styles from './login.scss'
 import { userQuery } from '../../queries/remote'
 
