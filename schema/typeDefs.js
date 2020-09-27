@@ -171,7 +171,7 @@ module.exports = gql`
   type CartProductType {
     product: ProductType
     quantity: Int
-    price: String
+    price: Float
   }
 
   type UserType {

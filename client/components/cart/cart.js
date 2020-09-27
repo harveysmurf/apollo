@@ -7,6 +7,7 @@ import { cartQuery } from '../../queries/remote'
 import { ModifyCart, RemoveItemFromCart } from '../../mutations/remote'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 import styles from './cart.scss'
+import { formatPrice } from '../../localization/price'
 const css = classNames.bind(styles)
 const quantityDropdowns = (available, quantity) => {
   const defaultMax = Math.max(5, quantity)
@@ -67,7 +68,7 @@ const CartRow = ({
               <div className={css(['cart-row__cart-item-description'])}>
                 <div className={css('cart-row__cart-line-item')}>
                   <Link to={`/${slug}/${model}`}>{name}</Link>
-                  <div className="hidden-sm">{sellPrice} лв.</div>
+                  <div className="hidden-sm">{formatPrice(sellPrice)}</div>
                   <div className={css(['cart-row__item-actions'])}>
                     <div
                       onClick={() =>
@@ -97,7 +98,7 @@ const CartRow = ({
                   БР.
                 </div>
                 <div>
-                  <b>{price}лв.</b>
+                  <b>{formatPrice(price)}</b>
                 </div>
               </div>
             </div>
@@ -130,7 +131,7 @@ export const CartSummary = ({ cart: { quantity, price }, hideSubmit }) => (
     <div className="row bottom-spacing-xl">
       <div className={css(['col-sm-12', 'cart-summary-price'])}>
         <div>Общо цена</div>
-        <div>{price} лв</div>
+        <div>{formatPrice(price)} лв</div>
       </div>
     </div>
     {!hideSubmit && (
@@ -160,7 +161,7 @@ export const CartMiniSummary = ({ cart: { price, quantity } }) => (
     <div className="col-sm-6">
       <div>ОБЩО ({quantity} продукта)</div>
       <div>
-        <b>{price}лв.</b>
+        <b>{formatPrice(price)}</b>
       </div>
     </div>
     <div className="col-sm-6">

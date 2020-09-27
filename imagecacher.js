@@ -1,3 +1,4 @@
+// TODO don't overwrite cached files or do it optionally
 const Jimp = require('jimp')
 const fs = require('fs')
 const path = require('path')
@@ -24,11 +25,12 @@ const processAndSaveImages = filePath => {
   Jimp.read(filePath)
     .then(lenna => {
       Object.keys(imageSizes).forEach(size => {
-        resizeAndSave(
-          getDimensions(size),
-          lenna,
-          getImageCachedSizePath(filePath, size)
-        )
+        const cachedImagePath = getImageCachedSizePath(filePath, size)
+        const fileExists = fs.existsSync(cachedImagePath)
+        if (!fileExists) {
+          console.log('resizing', cachedImagePath)
+          resizeAndSave(getDimensions(size), lenna, cachedImagePath)
+        }
       })
     })
     .catch(err => {

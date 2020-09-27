@@ -3,7 +3,7 @@
 import './scss/test.scss?raw'
 import React from 'react'
 
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import SearchComponent from './components/search/search'
 import HomeComponent from './components/home'
@@ -29,37 +29,35 @@ const App = () => {
   const { isMobile } = useScreenSize()
   return (
     <div>
-      <Router>
-        <div className="app-container">
-          {!isMobile && <Header />}
-          <div className="container main-container">
-            <Switch>
-              <Route exact path="/" component={HomeComponent} />
-              <Route path="/about" component={AboutComponent} />
-              <Route path="/checkoutsuccess" component={CheckoutSuccess} />
-              <Route path="/terms" component={TermsComponent} />
-              <Route path="/delivery" component={DeliveryComponent} />
-              <Route path="/reklamacii" component={ReklamaciiComponent} />
-              <Route path="/privacy" component={PrivacyComponent} />
-              <Route path="/howtoorder" component={HowToOrderComponent} />
-              <Route path="/login" component={LoginComponent} />
-              <Route path="/register" component={RegistrationComponent} />
-              <Route path="/cart" component={Cart} />
-              <Route path="/checkout" component={Checkout} />
-              <Route path="/search" component={SearchComponent} />
-              <Route path="/profile" component={Profile} />
-              <Route
-                path="/:seoSlug/:model([0-9]{4}[a-zA-Z]{2})"
-                component={ProductContainer}
-              />
-              <Route path="/:categorySlug" component={CategoryContainer} />
-            </Switch>
-            {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}
-          </div>
-          <Footer />
-          {isMobile && <MobileNav />}
+      <div className="app-container">
+        {!isMobile && <Header />}
+        <div className="container main-container">
+          <Switch>
+            <Route exact path="/" component={HomeComponent} />
+            <Route path="/about" component={AboutComponent} />
+            <Route path="/checkoutsuccess" component={CheckoutSuccess} />
+            <Route path="/terms" component={TermsComponent} />
+            <Route path="/delivery" component={DeliveryComponent} />
+            <Route path="/reklamacii" component={ReklamaciiComponent} />
+            <Route path="/privacy" component={PrivacyComponent} />
+            <Route path="/howtoorder" component={HowToOrderComponent} />
+            <Route path="/login" component={LoginComponent} />
+            <Route path="/register" component={RegistrationComponent} />
+            <Route path="/cart" component={Cart} />
+            <Route path="/checkout" component={Checkout} />
+            <Route path="/search" component={SearchComponent} />
+            <Route path="/profile" component={Profile} />
+            <Route
+              path="/:seoSlug/:model([0-9]{4}[a-zA-Z]{2})"
+              component={ProductContainer}
+            />
+            <Route path="/:categorySlug" component={CategoryContainer} />
+          </Switch>
+          {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}
         </div>
-      </Router>
+        <Footer />
+        {isMobile && <MobileNav />}
+      </div>
     </div>
   )
 }

@@ -47,7 +47,7 @@ const getEmailBody = (checkoutData, order) => {
 
 module.exports = {
   mutations: {
-    checkout: async (_parent, data, { req }) => {
+    checkout: async (_parent, data, { req, res }) => {
       try {
         const cartId = req.cart
         const cart = await req.getCartService().getCustomerCart(cartId)
@@ -60,10 +60,9 @@ module.exports = {
           subject: `Дамски Чанти - Поръчка ${order.orderNo}`,
           body: emailBody
         })
+        res.clearCookie('cart')
         return true
       } catch (error) {
-        console.log(error)
-        console.log('order error', error.response.data)
         return false
       }
     }

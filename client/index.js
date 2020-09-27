@@ -11,6 +11,8 @@ import { ApolloProvider } from 'react-apollo'
 import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks'
 import { withClientState } from 'apollo-link-state'
 import { ApolloLink } from 'apollo-link'
+
+import { BrowserRouter as Router } from 'react-router-dom'
 import mutationResolvers from './resolvers/mutations'
 import { subscribeClientToScreenSizeChange, getScreenSize } from './screen'
 
@@ -70,7 +72,9 @@ subscribeClientToScreenSizeChange(client)
 ReactDOM.render(
   <ApolloHooksProvider client={client}>
     <ApolloProvider client={client}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </ApolloProvider>
   </ApolloHooksProvider>,
   document.getElementById('root')

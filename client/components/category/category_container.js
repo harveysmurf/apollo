@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import * as R from 'ramda'
 import Sidebar from './sidebar'
 import _ from 'lodash'
@@ -15,6 +15,8 @@ const CategoryContainer = ({
   }
 }) => {
   const [fetchMoreLoading, setFetchMoreLoading] = useState(false)
+  const [scrollPositionBeforeFetch, setScrollPositionBeforeFetch] = useState()
+
   const {
     loading: filtersLoading,
     data: { filters }
@@ -29,6 +31,15 @@ const CategoryContainer = ({
       ...R.omit(['search'], filters)
     }
   })
+  useLayoutEffect(
+    () => {
+      if (!fetchMoreLoading && scrollPositionBeforeFetch) {
+        window.scrollTo(0, scrollPositionBeforeFetch)
+        setScrollPositionBeforeFetch(undefined)
+      }
+    },
+    [fetchMoreLoading, setScrollPositionBeforeFetch]
+  )
   if (loading) {
     return <div>Зареждане...</div>
   } else if (!data) {
@@ -58,11 +69,14 @@ const CategoryContainer = ({
               className="full-width-xs"
               onClick={() => {
                 setFetchMoreLoading(true)
+                setScrollPositionBeforeFetch(window.pageYOffset)
                 fetchMoreProducts(
                   filters,
                   getCategory.productFeed.cursor,
                   fetchMore
-                ).finally(() => setFetchMoreLoading(false))
+                ).finally(() => {
+                  setFetchMoreLoading(false)
+                })
               }}
             >
               {fetchMoreLoading ? '...' : 'Зареди още'}
