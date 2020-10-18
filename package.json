@@ -11,9 +11,10 @@
     "start": "concurrently \"npm run server-dev\" \"npm run webpack\"",
     "webpack:dev": "webpack --watch",
     "webpack:dev-ssr": "webpack --config server/ssr.webpack.js --watch",
-    "build": "NODE_ENV=production webpack",
     "build-ssr": "NODE_ENV=production webpack --config server/ssr.webpack.js",
+    "build-production": "NODE_ENV=production webpack",
     "ssr-production": "NODE_ENV=production node server/index.js",
+    "build": "concurrently npm:build-production npm:build-ssr",
     "ssr": "node server/index.js",
     "start:dev": "concurrently \"npm:webpack:dev\" \"npm:webpack:dev-ssr\" \"npm:server-dev\""
   },
