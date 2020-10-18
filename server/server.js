@@ -67,7 +67,8 @@ app.use(async (req, res, next) => {
 })
 app.use(authController.router)
 
-app.get('/favicon.ico', (req, res) => res.status(204))
+app.get('/favicon.ico', (req, res) => res.status(204).send())
+
 app.get('/fetchCities', async function(req, res) {
   const offices = await req.getEcontService().getOffices()
   const allCities = (await req.getEcontService().getCities()).map(city => {
