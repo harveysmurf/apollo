@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import { Query, Mutation } from '@apollo/client/react/components'
+import { Mutation } from '@apollo/client/react/components'
 import classNames from 'classnames/bind'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { cartQuery } from '../../queries/remote'
@@ -8,6 +8,7 @@ import { ModifyCart, RemoveItemFromCart } from '../../mutations/remote'
 import { getImageCachedSizePath } from '../../../utils/image_utils'
 import styles from './cart.scss'
 import { formatPrice } from '../../localization/price'
+import { useQuery } from '@apollo/client'
 const css = classNames.bind(styles)
 const quantityDropdowns = (available, quantity) => {
   const defaultMax = Math.max(5, quantity)
@@ -27,7 +28,6 @@ const CartRow = ({
     name,
     quantity: productQuantity,
     color,
-    price: productPrice,
     sellPrice,
     slug
   },
@@ -95,7 +95,7 @@ const CartRow = ({
                   >
                     {quantityDropdowns(productQuantity, quantity)}
                   </select>
-                  БР.
+                  <span> БР.</span>
                 </div>
                 <div>
                   <b>{formatPrice(price)}</b>
@@ -175,39 +175,23 @@ export const CartMiniSummary = ({ cart: { price, quantity } }) => (
   </div>
 )
 
-export default () => (
-  <Query query={cartQuery}>
-    {({ data: { cart, loading } }) => (
-      <Fragment>
-        {[!cart, loading, cart && cart.products.length === 0].some(Boolean) ? (
-          <EmptyBasket />
-        ) : (
-          <div className={css(['cart', 'row'])}>
-            <div className="col-sm-12 col-md-8">
-              <h3 className={css(['basket-header', 'col-sm-12'])}>Кошница</h3>
-              <CartMiniSummary cart={cart} />
-              <CartProductsList products={cart.products} />
-              <div className="col-sm-offset-6 col-sm-6 hidden-sm no-gutters">
-                <Link
-                  to="/checkout"
-                  className={css([
-                    'cart-button',
-                    'submit-button',
-                    'button',
-                    'text-center'
-                  ])}
-                >
-                  Поръчка
-                </Link>
-              </div>
-            </div>
-            <div className="col-sm-12 col-md-4">
-              <CartSummary cart={cart} />
-            </div>
-            <div className="col-sm-12 hidden-lg hidden-md">
-              <div className="devider" />
-            </div>
-            <div className="col-sm-12 hidden-lg hidden-md no-gutters">
+export default () => {
+  const { loading, data } = useQuery(cartQuery, { ssr: false })
+  if (loading | !data) {
+    return null
+  }
+  const cart = (data && data.cart) || []
+  return (
+    <Fragment>
+      {[!cart, loading, cart && cart.products.length === 0].some(Boolean) ? (
+        <EmptyBasket />
+      ) : (
+        <div className={css(['cart', 'row'])}>
+          <div className="col-sm-12 col-md-8">
+            <h3 className={css(['basket-header', 'col-sm-12'])}>Кошница</h3>
+            <CartMiniSummary cart={cart} />
+            <CartProductsList products={cart.products} />
+            <div className="col-sm-offset-6 col-sm-6 hidden-sm no-gutters">
               <Link
                 to="/checkout"
                 className={css([
@@ -221,8 +205,27 @@ export default () => (
               </Link>
             </div>
           </div>
-        )}
-      </Fragment>
-    )}
-  </Query>
-)
+          <div className="col-sm-12 col-md-4">
+            <CartSummary cart={cart} />
+          </div>
+          <div className="col-sm-12 hidden-lg hidden-md">
+            <div className="devider" />
+          </div>
+          <div className="col-sm-12 hidden-lg hidden-md no-gutters">
+            <Link
+              to="/checkout"
+              className={css([
+                'cart-button',
+                'submit-button',
+                'button',
+                'text-center'
+              ])}
+            >
+              Поръчка
+            </Link>
+          </div>
+        </div>
+      )}
+    </Fragment>
+  )
+}

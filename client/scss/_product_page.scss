@@ -4,6 +4,7 @@ div.product {
     flex: unset;
   }
   h1 {
+    text-transform: uppercase;
     @include respond-to(small-mobile) {
       font-size: 1.3rem;
     }

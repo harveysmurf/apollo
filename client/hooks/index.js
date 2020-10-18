@@ -3,9 +3,10 @@ import { useQuery } from '@apollo/client'
 import { screens } from '../screen'
 
 export function useScreenSize() {
-  const {
-    data: { screenSize }
-  } = useQuery(screenSizeQuery)
+  const { data: { screenSize } = {} } = useQuery(screenSizeQuery, {})
+  if (!screenSize) {
+    return screens.desktop
+  }
 
   // in this case useEffect will execute only once because
   // it does not have any dependencies.

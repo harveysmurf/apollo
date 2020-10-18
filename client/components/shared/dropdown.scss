@@ -1,0 +1,11 @@
+.dropdown {
+  position: relative;
+  .dropdown-content {
+    display: none;
+  }
+  &:hover > [data-role='dropdown'] {
+    display: block;
+    position: absolute;
+    z-index: 100;
+  }
+}

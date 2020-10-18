@@ -10,7 +10,7 @@ export default class BagType extends Component {
           {this.props.category.subcategories.map((t, i) => {
             return (
               <div key={i}>
-                <Link to={t.slug}>{t.name}</Link>
+                <Link to={`/${t.slug}`}>{t.name}</Link>
               </div>
             )
           })}

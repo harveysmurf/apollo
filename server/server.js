@@ -1,5 +1,6 @@
 const express = require('express')
-const path = require('path')
+const React = require('react')
+const ReactDOMServer = require('react-dom/server')
 const session = require('express-session')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
@@ -11,6 +12,11 @@ const withServices = require('./middlewares/services')
 const authController = require('./controllers/authController')
 const config = require('../.config.json')
 const typeDefs = require('../schema/typeDefs')
+const { renderApplication, Html } = require('../dist/server_bundle')
+const { getDataFromTree } = require('@apollo/client/react/ssr')
+const { makeExecutableSchema } = require('apollo-server-express')
+const { Helmet } = require('react-helmet')
+const device = require('device')
 
 const app = express()
 app.use(async (req, _res, next) => {
@@ -61,6 +67,7 @@ app.use(async (req, res, next) => {
 })
 app.use(authController.router)
 
+app.get('/favicon.ico', (req, res) => res.status(204))
 app.get('/fetchCities', async function(req, res) {
   const offices = await req.getEcontService().getOffices()
   const allCities = (await req.getEcontService().getCities()).map(city => {
@@ -82,9 +89,9 @@ app.get('/logout', async function(req, res) {
   res.json({ message: 'You have successfully logged out' })
 })
 
+const schema = makeExecutableSchema({ typeDefs, resolvers })
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
   context: ({ req, res }) => {
     return {
       req,
@@ -94,8 +101,34 @@ const server = new ApolloServer({
 })
 server.applyMiddleware({ app })
 
+// app.use('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../client', 'index.html'))
+// })
+
 app.use('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client', 'index.html'))
+  const isPhone = device(req.header('user-agent')).type !== 'desktop'
+  const { Application, client } = renderApplication(
+    req.url,
+    schema,
+    {
+      req,
+      res
+    },
+    isPhone
+  )
+  getDataFromTree(Application).then(() => {
+    const content = ReactDOMServer.renderToString(Application)
+    const helmet = Helmet.renderStatic()
+    const html = React.createElement(Html, {
+      content,
+      state: client.extract(),
+      helmet
+    })
+    res.status(200)
+    res.send(`<!doctype html>\n${ReactDOMServer.renderToStaticMarkup(html)}`)
+    res.end()
+  })
+  // rendering code (see below)
 })
 
 app.listen(4000, () => {

@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 
 export const ModifyCart = gql`
   mutation modifyCart($model: String, $quantity: Int) {

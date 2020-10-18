@@ -1,0 +1,77 @@
+@import '../../scss/mixins';
+
+.main-nav {
+  padding-top: 15px;
+  background-color: white;
+  @include respond-to(tablet) {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  .mega-menu-content {
+    padding-left: 5px;
+    padding-right: 25px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    & > div {
+      b {
+        display: block;
+        margin-bottom: 7px;
+      }
+      margin-left: 15px;
+    }
+    .links {
+      display: flex;
+      flex-direction: column;
+      :global a:hover {
+        text-decoration: unset;
+      }
+      & > a {
+        white-space: nowrap;
+        color: black;
+        &:hover {
+          background-color: #229ac8;
+        }
+        padding-bottom: 7px;
+        padding-right: 25px;
+      }
+    }
+  }
+  .nav-link {
+    margin-right: 16px;
+    padding: 5px;
+    color: black;
+    font-size: 0.8rem;
+    font-weight: bold;
+    @include respond-to(small) {
+      font-size: 1rem;
+    }
+    @include respond-to(tablet) {
+      font-size: 1.2rem;
+    }
+  }
+  .logo {
+    display: none;
+    @include respond-to(mobile) {
+      display: block;
+    }
+  }
+  .logo img {
+    @include respond-to(mobile) {
+      height: 70px;
+      width: 100px;
+    }
+    @include respond-to(tablet) {
+      height: 140px;
+      width: 200px;
+    }
+  }
+}

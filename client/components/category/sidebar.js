@@ -57,26 +57,26 @@ const Collapsible = ({ children, title, opened = false }) => {
 const DesktopSideBar = ({ category, filters }) => (
   <div className="col-md-3 sidebar">
     <div className="sidebar-wrapper">
-    {category && (
-      <div>
-        <div className="bottom-spacing-m">
-          <BagType category={category} />
+      {category && (
+        <div>
+          <div className="bottom-spacing-m">
+            <BagType category={category} />
+          </div>
+          <div className="devider bottom-spacing-m" />
         </div>
-        <div className="devider bottom-spacing-m" />
+      )}
+      <div className="bottom-spacing-m">
+        <ColorFilter selected={filters.colors} />
       </div>
-    )}
-    <div className="bottom-spacing-m">
-      <ColorFilter selected={filters.colors} />
-    </div>
-    <div className="devider bottom-spacing-m" />
-    <div className="bottom-spacing-m">
-      <PriceFilter price={filters.price} />
-    </div>
-    <div className="devider bottom-spacing-m" />
-    <div className="bottom-spacing-m">
-      <MaterialFilter selectedMaterials={filters.materials} />
-    </div>
-    <div className="devider" />
+      <div className="devider bottom-spacing-m" />
+      <div className="bottom-spacing-m">
+        <PriceFilter price={filters.price} />
+      </div>
+      <div className="devider bottom-spacing-m" />
+      <div className="bottom-spacing-m">
+        <MaterialFilter selectedMaterials={filters.materials} />
+      </div>
+      <div className="devider" />
     </div>
   </div>
 )

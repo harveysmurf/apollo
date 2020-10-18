@@ -1,2 +1,10 @@
 node_modules
 npm-debug.log
+dist/index_bundle.js
+dist/styles.css
+dist/fonts
+.DS_Store
+dist/images/products/*/cache
+.vscode
+node_modules
+.config.json

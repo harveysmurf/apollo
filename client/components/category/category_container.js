@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import * as R from 'ramda'
 import Sidebar from './sidebar'
-import _ from 'lodash'
 import ProductThumb from '../product/product_thumb'
 import { filtersQuery } from '../../queries/local'
 import { categoryQuery } from '../../queries/remote'
@@ -17,13 +17,11 @@ const CategoryContainer = ({
   const [fetchMoreLoading, setFetchMoreLoading] = useState(false)
   const [scrollPositionBeforeFetch, setScrollPositionBeforeFetch] = useState()
 
-  const {
-    loading: filtersLoading,
-    data: { filters }
-  } = useQuery(filtersQuery)
-  if (filtersLoading) {
+  const { loading: filtersLoading, data: filtersData } = useQuery(filtersQuery)
+  if (filtersLoading || !filtersData) {
     return null
   }
+  const filters = (filtersData && filtersData.filters) || {}
 
   const { loading, data, fetchMore } = useQuery(categoryQuery, {
     variables: {
@@ -46,14 +44,28 @@ const CategoryContainer = ({
     return <h1>Page not found</h1>
   } else {
     const getCategory = data.getCategory
+    const description = getCategory && getCategory.description
     return (
       <div className="category row">
+        <Helmet>
+          <title>{getCategory.meta_title}</title>
+          <meta name="description" content={getCategory.meta_description} />
+        </Helmet>
         <div className="col-sm-12 bottom-spacing-m">
           <Breadcrumbs breadcrumbs={getCategory.breadcrumbs} />
         </div>
         <Sidebar category={getCategory} filters={filters} />
         <div className="col-sm-12 col-md-9 no-gutters-xs">
-          <h3 className="col-sm-12 bottom-spacing-m">{getCategory.name}</h3>
+          <div className="row">
+            <div className="col-sm-12 bottom-spacing-m">
+              <h3 className="bottom-spacing-m">{getCategory.name}</h3>
+              {description && (
+                <p
+                  dangerouslySetInnerHTML={{ __html: getCategory.description }}
+                />
+              )}
+            </div>
+          </div>
           <div className="row">
             {getCategory.productFeed.products.map((p, index) => (
               <div
@@ -101,11 +113,11 @@ const fetchMoreProducts = (filters, cursor, fetchMore) => {
       const newProductFeed = fetchMoreResult.getCategory.productFeed
 
       const newGetCategoryData = Object.assign({}, previousResult.getCategory, {
-        productFeed: Object.assign({}, previousResult.getCategory.productFeed, {
-          products: _.unionWith(
+        productFeed: Object.assign({}, previousProductFeed, {
+          products: R.unionWith(
+            R.equals,
             previousProductFeed.products,
-            newProductFeed.products,
-            _.isEqual
+            newProductFeed.products
           ),
           cursor: newProductFeed.cursor,
           hasMore: newProductFeed.hasMore

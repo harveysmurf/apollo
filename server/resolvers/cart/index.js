@@ -87,7 +87,7 @@ module.exports = {
         await req
           .getCartService()
           .addToCart(
-            { quantity: R.sum([currentQuantity, quantity]), model, name},
+            { quantity: R.sum([currentQuantity, quantity]), model, name },
             cookieCartId
           )
       }

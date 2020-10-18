@@ -1,11 +1,12 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styles from './presentation.scss'
 
 export default () => {
   return (
     <div className="row">
       <div className="col-sm-12 col-md-4 bottom-spacing-m">
-        <a href="/damski-chanti" className={styles['crap-container']}>
+        <Link to="/damski-chanti" className={styles['crap-container']}>
           <img
             className="img-responsive"
             src="images/bags-home-2.jpg"
@@ -16,10 +17,10 @@ export default () => {
             <p>Ежедневни, официални, вечерни, раници.</p>
           </div>
           <div className={styles['blur']} />
-        </a>
+        </Link>
       </div>
       <div className="col-sm-12 col-md-4 bottom-spacing-m">
-        <a href="/kojeni-damski-chanti" className={styles['crap-container']}>
+        <Link to="/kojeni-damski-chanti" className={styles['crap-container']}>
           <img
             className="img-responsive"
             src="images/bags-home-3.jpg"
@@ -30,10 +31,10 @@ export default () => {
             <p>Дамски чанти от естествена кожа произведени в Италия.</p>
           </div>
           <div className={styles['blur']} />
-        </a>
+        </Link>
       </div>
       <div className="col-sm-12 col-md-4 bottom-spacing-m">
-        <a href="namalenia" className={styles['crap-container']}>
+        <Link to="namalenia" className={styles['crap-container']}>
           <img
             className="img-responsive"
             src="images/bags-home-1.jpg"
@@ -44,7 +45,7 @@ export default () => {
             <p>Отстъпки до 50% !</p>
           </div>
           <div className={styles['blur']} />
-        </a>
+        </Link>
       </div>
     </div>
   )

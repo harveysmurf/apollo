@@ -1,5 +1,3 @@
-// import './test.scss'
-
 import './scss/test.scss?raw'
 import React from 'react'
 
@@ -53,7 +51,6 @@ const App = () => {
             />
             <Route path="/:categorySlug" component={CategoryContainer} />
           </Switch>
-          {/* <Route path="/damski-chanti" component={CategoryComponent}/> */}
         </div>
         <Footer />
         {isMobile && <MobileNav />}

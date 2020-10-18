@@ -1,21 +1,22 @@
 const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-const isProdEnv = process.env.NODE_ENV === 'production'
-
 module.exports = {
-  mode: isProdEnv ? 'production' : 'development',
-  entry: './client/index.js',
+  target: 'node',
+  externals: [nodeExternals()],
+  entry: './server/ssrComponents.js',
   output: {
     path: path.resolve('dist'),
-    filename: 'index_bundle.js'
+    filename: 'server_bundle.js',
+    libraryTarget: 'commonjs2'
   },
   module: {
     rules: [
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
         use: [
-          'file-loader',
+          'file-loader?emitFile=false',
           {
             loader: 'image-webpack-loader',
             options: {
@@ -89,7 +90,7 @@ module.exports = {
         test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: 'file-loader?emitFile=false',
             options: {
               name: '[name].[ext]',
               outputPath: 'fonts/',
@@ -100,6 +101,6 @@ module.exports = {
       }
     ]
   },
-  devtool: isProdEnv ? 'source-map' : 'eval-source-map',
+  devtool: 'source-map',
   plugins: [new MiniCssExtractPlugin({ filename: 'styles.css' })]
 }

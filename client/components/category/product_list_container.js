@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Sidebar from './sidebar'
 import ProductThumb from '../product/product_thumb'
 import { graphql } from '@apollo/client/react/hoc'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 
 import { lastViewed, similarProducts } from '../../../data/fixtures'
 const ar = [...lastViewed, ...similarProducts]

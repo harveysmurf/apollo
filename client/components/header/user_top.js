@@ -56,7 +56,7 @@ const UserTop = props => {
           Любими
         </a>
       )}
-      <Query query={cartQuery}>
+      <Query query={cartQuery} ssr={false}>
         {({ data }) => {
           const cart = data && data.cart
           return (
@@ -77,7 +77,7 @@ const UserTop = props => {
           }}
           mutation={Logout}
         >
-          {(logout, { data }) => (
+          {(logout, { _data }) => (
             <a
               onClick={e => {
                 e.preventDefault()

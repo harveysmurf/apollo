@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Query, Mutation } from '@apollo/client/react/components'
+import { Mutation } from '@apollo/client/react/components'
 import { cartQuery } from '../../queries/remote'
 import { Form, Field } from 'react-final-form'
 import { CartProductsList } from '../cart/cart'
@@ -14,6 +14,7 @@ import {
   CityDropdown,
   OfficeDropDown
 } from './checkout-dropdown/checkout-dropdown'
+import { useQuery } from '@apollo/client'
 
 const requiredFieldError = 'Задължително поле.'
 const REGEX_EMAIL = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
@@ -363,33 +364,36 @@ const CheckoutForm = ({ cart, checkout }) => (
   />
 )
 
-export default () => (
-  <Query query={cartQuery}>
-    {({ data: { cart, loading } }) => (
-      <div className="confined-container">
-        {(!cart || (cart && cart.products.length === 0)) && !loading ? (
-          <EmptyBasket />
-        ) : (
-          <Fragment>
-            <h3 className="col-sm-12">Доставка</h3>
-            <Mutation mutation={Checkout}>
-              {(checkout, { data: mutationData }) => (
-                <React.Fragment>
-                  {mutationData && mutationData.checkout ? (
-                    <Redirect to="/checkoutsuccess" />
-                  ) : (
-                    <CheckoutForm
-                      cart={cart}
-                      checkout={checkout}
-                      mutationData={mutationData}
-                    />
-                  )}
-                </React.Fragment>
-              )}
-            </Mutation>
-          </Fragment>
-        )}
-      </div>
-    )}
-  </Query>
-)
+export default () => {
+  const { loading, data } = useQuery(cartQuery, { ssr: false })
+  if (loading | !data) {
+    return null
+  }
+  const cart = (data && data.cart) || []
+  return (
+    <div className="confined-container">
+      {(!cart || (cart && cart.products.length === 0)) && !loading ? (
+        <EmptyBasket />
+      ) : (
+        <Fragment>
+          <h3 className="col-sm-12">Доставка</h3>
+          <Mutation mutation={Checkout}>
+            {(checkout, { data: mutationData }) => (
+              <React.Fragment>
+                {mutationData && mutationData.checkout ? (
+                  <Redirect to="/checkoutsuccess" />
+                ) : (
+                  <CheckoutForm
+                    cart={cart}
+                    checkout={checkout}
+                    mutationData={mutationData}
+                  />
+                )}
+              </React.Fragment>
+            )}
+          </Mutation>
+        </Fragment>
+      )}
+    </div>
+  )
+}

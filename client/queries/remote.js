@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 
 export const categoryQuery = gql`
   query getCategory(
@@ -11,6 +11,9 @@ export const categoryQuery = gql`
     getCategory(slug: $slug) {
       id
       name
+      meta_title
+      meta_description
+      description
       slug
       subcategories {
         name
@@ -142,6 +145,8 @@ export const getProductQuery = gql`
       price
       available
       description_short
+      meta_title
+      meta_description
       model
       slug
       discount

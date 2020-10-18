@@ -1,50 +1,3 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-
-const ColorVariationSchema = new Schema(
-  {
-    price: Number,
-    name: String,
-    color: String,
-    description_short: String,
-    description: String,
-    meta_title: String,
-    meta_description: String,
-    slug: String,
-    group: String,
-    model: String,
-    quantity: Number,
-    idx: Number,
-    images: [String],
-    similar: [String]
-  },
-  { timestamps: true }
-)
-
-const productSchema = new Schema(
-  {
-    price: Number,
-    name: String,
-    available: Boolean,
-    model: String,
-    categories: [String],
-    description_short: String,
-    description: String,
-    meta_title: String,
-    meta_description: String,
-    slug: String,
-    dimensions: Schema.Types.Mixed,
-    colors: [ColorVariationSchema],
-    material: String,
-    origin: String,
-    weight: Number,
-    discount: { type: Number, min: 10, max: 80 },
-    tags: [String],
-    types: [String]
-  },
-  { timestamps: true }
-)
-
 const ProductPipeline = [
   {
     $addFields: {
@@ -93,7 +46,13 @@ const ProductPipeline = [
       meta_title: {
         $ifNull: [
           '$color.meta_title',
-          { $concat: ['$meta_title', ' ', '$color.color'] }
+          {
+            $concat: [
+              '$meta_title',
+              ' mihes ',
+              { $concat: ['$color.color', ' | ', '$color.model'] }
+            ]
+          }
         ]
       },
       meta_description: {
@@ -143,21 +102,6 @@ const ProductPipeline = [
   }
 ]
 
-const ProductModel = mongoose.model('products', productSchema)
-
-const getProductBy = key => async value => {
-  const result = await ProductModel.aggregate([
-    ...ProductPipeline,
-    {
-      $match: {
-        [key]: value
-      }
-    }
-  ])
-  return result[0] || null
-}
 module.exports = {
-  ProductModel,
-  productPipeline: ProductPipeline,
-  getProductBy
+  productPipeline: ProductPipeline
 }

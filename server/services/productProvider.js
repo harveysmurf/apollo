@@ -56,13 +56,13 @@ const productPipelines = [
       meta_title: {
         $ifNull: [
           '$color.meta_title',
-          { $concat: ['$meta_title', ' ', '$color.color'] }
+          { $concat: ['$meta_title', ' ', {$concat: ['$color.color', ' | ', '$color.model']}] }
         ]
       },
       meta_description: {
         $ifNull: [
           '$color.meta_description',
-          { $concat: ['$meta_description', ' ', '$color.color'] }
+          { $concat: ['$meta_description', ' ', {$concat: ['$color.color', ' | ', '$color.model']}] }
         ]
       },
       slug: {

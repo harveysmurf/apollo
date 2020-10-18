@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-list.jsx'
 import Characteristics from './characteristics'
 import { materials } from '../category/material_filter'
+import { Helmet } from 'react-helmet'
 
 const ProductVariationThumb = ({
   name,
@@ -127,13 +128,14 @@ class ProductContainer extends Component {
           material,
           style,
           name,
+          meta_title,
+          meta_description,
           images,
           available,
           description_short,
           description,
           variations,
           model,
-          color,
           price,
           sellPrice,
           discount
@@ -142,6 +144,10 @@ class ProductContainer extends Component {
     } = this.props
     return (
       <div className="product row">
+        <Helmet>
+          <title>{meta_title}</title>
+          <meta name="description" content={meta_description} />
+        </Helmet>
         {breadcrumbs && breadcrumbs.length > 0 && (
           <div className="col-sm-12 bottom-spacing-m">
             <Breadcrumbs breadcrumbs={breadcrumbs} />

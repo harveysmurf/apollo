@@ -5,10 +5,11 @@ import ProductThumb from '../product/product_thumb'
 export default () => {
   const { loading, data } = useQuery(getProductsFeedQuery, {
     variables: {
-      limit: 4
+      limit: 4,
+      colors: []
     }
   })
-  if (loading) {
+  if (loading || !(data && data.getProducts && data.getProducts.products)) {
     return null
   }
   return (

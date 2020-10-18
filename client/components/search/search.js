@@ -6,11 +6,6 @@ import ProductThumb from '../product/product_thumb'
 import { Query } from '@apollo/client/react/components'
 import { filtersQuery } from '../../queries/local'
 import { getProductsFeedQuery } from '../../queries/remote'
-// export default props => {
-//   const searchQuery = qs.parse(props.location.search)
-//   console.log(searchQuery)
-//   return <h1>mihes</h1>
-// }
 
 export default ({ location: { search } }) => {
   const query = qs.parse(search).q

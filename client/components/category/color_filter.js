@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Mutation } from '@apollo/client/react/components'
-import _ from 'lodash'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { UpdateColors } from '../../mutations/local'
+import * as R from 'ramda'
 
 const colors = [
   { slug: 'sin', name: 'Сини', hex: '#0000ff' },
@@ -38,7 +38,7 @@ class ColorFilter extends Component {
         check_color = 'black'
         break
     }
-    if (_.includes(this.props.selected, color.slug)) {
+    if (R.includes(color.slug, this.props.selected)) {
       active = true
     }
     return (

@@ -3,8 +3,10 @@ import React from 'react'
 import { cartQuery } from '../../queries/remote'
 
 export default () => {
-  const { data } = useQuery(cartQuery, { fetchPolicy: 'network-only' })
-  console.log(data)
+  useQuery(cartQuery, {
+    fetchPolicy: 'network-only',
+    ssr: false
+  })
   return (
     <div className="row">
       <div className="col-sm-12 bottom-spacing-xl">

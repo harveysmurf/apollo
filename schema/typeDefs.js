@@ -1,4 +1,4 @@
-const gql = require('graphql-tag')
+const { gql } = require('@apollo/client')
 module.exports = gql`
   type OfficeType {
     id: Int
