@@ -102,5 +102,14 @@ module.exports = {
     ]
   },
   devtool: 'source-map',
-  plugins: [new MiniCssExtractPlugin({ filename: 'styles.css' })]
+  plugins: [
+    new MiniCssExtractPlugin({ filename: 'styles.css' }),
+    new OptimizeCssAssetsPlugin({
+      cssProcessor: require('cssnano'),
+      cssProcessorPluginOptions: {
+        preset: ['default', { discardComments: { removeAll: true } }],
+      },
+      canPrint: true
+    })
+  ]
 }
