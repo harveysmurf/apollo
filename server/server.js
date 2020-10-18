@@ -88,6 +88,9 @@ app.get('/logout', async function(req, res) {
   })
   res.json({ message: 'You have successfully logged out' })
 })
+app.get('/healthcheck', (_req, res) => {
+  return res.status(200).json({ health: true })
+})
 
 const schema = makeExecutableSchema({ typeDefs, resolvers })
 const server = new ApolloServer({

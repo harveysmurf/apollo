@@ -149,6 +149,13 @@ div.product {
   margin-bottom: 10px;
   position: relative;
   padding-bottom: 10px;
+  & > div.out-of-stock {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    color: red;
+    font-weight: bold;
+  }
   & > div.ribbon {
     width: 85px;
     height: 93px;

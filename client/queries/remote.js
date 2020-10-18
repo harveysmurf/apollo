@@ -41,7 +41,7 @@ export const categoryQuery = gql`
           sellPrice
           name
           price
-          available
+          quantity
           main_image
           description
           slug
@@ -61,6 +61,7 @@ export const categoryQuery = gql`
             description_short
             slug
             discount
+            quantity
           }
         }
       }
@@ -138,12 +139,12 @@ export const getProductQuery = gql`
       dimensions
       material
       style
+      quantity
       breadcrumbs {
         name
         href
       }
       price
-      available
       description_short
       meta_title
       meta_description

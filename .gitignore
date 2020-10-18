@@ -4,6 +4,7 @@ dist/server_bundle.js
 dist/server_bundle.js.map
 dist/styles.css
 dist/fonts
+dist/styles.css.map
 .DS_Store
 dist/images/products/*/cache
 .vscode

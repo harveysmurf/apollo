@@ -43,9 +43,9 @@ export default () => (
 
     <h5>ЦEНИ НА ДОСТАВКИ:</h5>
 
-    <p>-до офис на Еконт– цена 4,50 лева</p>
+    <p>-до офис на Еконт– цена 5,50 лева</p>
 
-    <p className="bottom-spacing-m">-до ваш адрес – цена 6,00 лева</p>
+    <p className="bottom-spacing-m">-до ваш адрес – цена 7,50 лева</p>
 
     <h3>Проверка на пратка</h3>
     <p className="bottom-spacing-xl">

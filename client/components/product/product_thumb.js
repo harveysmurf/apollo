@@ -20,7 +20,7 @@ const ProductVariation = ({ variation, isSelected, selectVariation }) => {
 }
 
 const ProductThumb = ({ categoryId, product }) => {
-  const { variations, model } = product
+  const { variations, model, quantity } = product
   const referer = categoryId ? `?referer=${categoryId}` : ''
   const [selected, setSelected] = useState(
     getSelectedVariation(variations, model)
@@ -33,6 +33,7 @@ const ProductThumb = ({ categoryId, product }) => {
           <div className="ribbon-rectangle">{`${selected.discount}%`}</div>
         </div>
       )}
+      {selected.quantity < 1 && <div className="out-of-stock">Изчерпана</div>}
       <div className="text-center">
         <Link to={`/${selected.slug}/${selected.model}${referer}`}>
           <img src={getImageCachedSizePath(selected.images[0], 'm')} />

@@ -123,6 +123,7 @@ class ProductContainer extends Component {
       getFeatures: { features },
       data: {
         getProduct: {
+          quantity,
           breadcrumbs,
           dimensions,
           material,
@@ -131,7 +132,6 @@ class ProductContainer extends Component {
           meta_title,
           meta_description,
           images,
-          available,
           description_short,
           description,
           variations,
@@ -142,6 +142,7 @@ class ProductContainer extends Component {
         }
       }
     } = this.props
+    const available = quantity > 0 
     return (
       <div className="product row">
         <Helmet>
