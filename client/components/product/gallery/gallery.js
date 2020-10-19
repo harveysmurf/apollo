@@ -1,9 +1,5 @@
 import React from 'react'
 import { getImageCachedSizePath } from '../../../../utils/image_utils'
-import { updateSelectedImage } from '../../../mutations/local'
-import { mainImageQuery } from '../../../queries/local'
-import { WithLoadingCheck, withMutation } from '../../shared/withQuery'
-import { compose } from 'recompose'
 import styles from './gallery.scss'
 import classNames from 'classnames/bind'
 const css = classNames.bind(styles)
@@ -51,17 +47,15 @@ class Gallery extends React.Component {
   render() {
     const {
       images,
-      gallery: {
-        pdp: { mainImage }
-      },
-      mutate
+      selected,
+      setMainImage
     } = this.props
     return (
       <div>
         <div className="text-center">
           <img
             className={styles['main-image']}
-            src={getImageCachedSizePath(images[mainImage], 'l')}
+            src={getImageCachedSizePath(images[selected], 'l')}
           />
         </div>
         <div className="row">
@@ -85,10 +79,10 @@ class Gallery extends React.Component {
               {images.map((image, key) => {
                 return (
                   <div
-                    onClick={() => mutate({ variables: { index: key } })}
-                    key={key}
+                    onClick={() => setMainImage(key)}
+                    key={`${image}/${key}`}
                     className={css({
-                      selected: key == mainImage
+                      selected: key == selected
                     })}
                   >
                     <img src={getImageCachedSizePath(image, 's')} />
@@ -113,7 +107,4 @@ class Gallery extends React.Component {
     )
   }
 }
-export default compose(
-  WithLoadingCheck(mainImageQuery, { name: 'gallery' }),
-  withMutation(updateSelectedImage)
-)(Gallery)
+export default Gallery
