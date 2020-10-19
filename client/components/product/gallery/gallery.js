@@ -45,11 +45,7 @@ class Gallery extends React.Component {
     this.container.current.scrollLeft -= 100
   }
   render() {
-    const {
-      images,
-      selected,
-      setMainImage
-    } = this.props
+    const { images, selected, setMainImage } = this.props
     return (
       <div>
         <div className="text-center">

@@ -6,9 +6,6 @@ import { Link } from 'react-router-dom'
 import { formatPrice } from '../../localization/price'
 import ProductSlideshow from './products_slideshow'
 import ProductGallery from './gallery/gallery'
-import { WithLoadingCheck } from '../shared/withQuery'
-import { withMutation } from '../shared/withQuery'
-import { resetState } from '../../mutations/local'
 import { AddToCart } from '../../mutations/remote'
 import { getProductQuery, cartQuery } from '../../queries/remote'
 import { featuresQuery } from '../../queries/local'
@@ -19,7 +16,7 @@ import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-list.jsx'
 import Characteristics from './characteristics'
 import { materials } from '../category/material_filter'
 import { Helmet } from 'react-helmet'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 
 const ProductVariationThumb = ({
   name,
@@ -79,9 +76,6 @@ function NotifyMe(available) {
 const ProductContainer = props => {
   const [flashOpened, setFlashOpened] = useState(false)
   const [mainImage, setMainImage] = useState(0)
-  const { data: getFeatures, loading: featuresLoading } = useQuery(
-    featuresQuery
-  )
   const onProductAdded = () => {
     if (!flashOpened) {
       setFlashOpened(true)
@@ -90,6 +84,23 @@ const ProductContainer = props => {
       }, 5000)
     }
   }
+  const { data: getFeatures, loading: featuresLoading } = useQuery(
+    featuresQuery
+  )
+  const [addToCart, { loading: addToCartLoading }] = useMutation(AddToCart, {
+    onCompleted: onProductAdded,
+    update: (cache, { data }) => {
+      if (data && data.addToCart) {
+        cache.writeQuery({
+          query: cartQuery,
+          data: {
+            cart: data.addToCart
+          }
+        })
+      }
+    }
+  })
+
   useEffect(() => {
     document.body.scrollTop = 0 // For Safari
     document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
@@ -100,7 +111,7 @@ const ProductContainer = props => {
       params: { model: urlModel }
     }
   } = props
-  const { data, loading} = useQuery(getProductQuery, {
+  const { data, loading } = useQuery(getProductQuery, {
     variables: {
       model: urlModel,
       referer
@@ -200,34 +211,22 @@ const ProductContainer = props => {
           </div>
           <div className="row product-buttons bottom-spacing-xl">
             {available && (
-              <Mutation
-                onCompleted={onProductAdded}
-                mutation={AddToCart}
-                update={(cache, { data }) => {
-                  if (data && data.addToCart) {
-                    cache.writeQuery({
-                      query: cartQuery,
-                      data: {
-                        cart: data.addToCart
-                      }
-                    })
-                  }
+              <button
+                disabled={addToCartLoading}
+                onClick={() => {
+                  addToCart({
+                    variables: { model, quantity: 1 }
+                  })
                 }}
+                className="tertiary add-to-cart"
               >
-                {addToCart => (
-                  <button
-                    onClick={() => {
-                      addToCart({
-                        variables: { model, quantity: 1 }
-                      })
-                    }}
-                    className="tertiary add-to-cart"
-                  >
-                    <FontAwesomeIcon icon="cart-plus" />
-                    Добави в количката
-                  </button>
+                {addToCartLoading ? (
+                  <FontAwesomeIcon icon="spinner" spin />
+                ) : (
+                  <FontAwesomeIcon icon="cart-plus" />
                 )}
-              </Mutation>
+                <span>Добави в количката</span>
+              </button>
             )}
             {null && (
               <button className="">
