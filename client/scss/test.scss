@@ -28,8 +28,12 @@ ul.circle {
     min-height: 100vh;
 }
 .main-container {
+    margin-bottom: 100px;
     background-color:white;
     flex-grow: 1;
+    @include respond-to(small) {
+        margin-bottom: 0;
+    }
 }
 
 .confined-container {

@@ -29,7 +29,6 @@ export default ({
       {renderDropDownItem(value)}
     </div>
   ))
-
   return (
     <>
       <button disabled={disabled} type="button" onClick={toggleOpen}>

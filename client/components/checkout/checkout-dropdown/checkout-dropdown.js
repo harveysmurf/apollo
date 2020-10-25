@@ -33,7 +33,6 @@ export const CityDropdown = ({
 }) => {
   // const debouncedSearch = useDebounce(search, 200)
   const [open, setOpen] = useState(false)
-
   const { loading, data, refetch } = useQuery(getCities, {
     variables: {
       ...(withOffices && { withOffices })
