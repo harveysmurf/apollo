@@ -14,6 +14,7 @@ class Search extends Component {
       <div className="search">
         <div className="input-control-addon">
           <input
+            aria-label="търсене"
             type="text"
             value={this.state.input}
             onChange={({ target: { value } }) =>
@@ -21,7 +22,11 @@ class Search extends Component {
             }
             placeholder="Търси"
           />
-          <button onClick={this.handleClick} className="button">
+          <button
+            aria-label="търси"
+            onClick={this.handleClick}
+            className="button"
+          >
             <FontAwesomeIcon icon="search" />
           </button>
         </div>

@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './breadcrumbs.scss'
 const BreadCrumb = ({ breadcrumb: { name, href } }) => (
-  <li className="capitalize">
+  <li
+    className="capitalize"
+    aria-label={href === '/' ? 'home breadcrumb' : undefined}
+  >
     <Link to={href}>{name}</Link>
   </li>
 )

@@ -36,7 +36,10 @@ const ProductThumb = ({ categoryId, product }) => {
       {selected.quantity < 1 && <div className="out-of-stock">Изчерпана</div>}
       <div className="text-center">
         <Link to={`/${selected.slug}/${selected.model}${referer}`}>
-          <img src={getImageCachedSizePath(selected.images[0], 'm')} />
+          <img
+            alt={`${selected.name}-m`}
+            src={getImageCachedSizePath(selected.images[0], 'm')}
+          />
         </Link>
       </div>
       {THUMB_CAROUSEL_ENABLED && (

@@ -48,7 +48,12 @@ const productPipelines = [
       model: '$color.model',
       disabled: '$color.disabled',
       dimensions: 1,
-      categories: 1,
+      categories: {
+        $concatArrays: [
+          { $ifNull: ['$categories', []] },
+          { $ifNull: ['$color.categories', []] }
+        ]
+      },
       description_short: {
         $ifNull: ['$color.description_short', '$description_short']
       },
@@ -56,13 +61,25 @@ const productPipelines = [
       meta_title: {
         $ifNull: [
           '$color.meta_title',
-          { $concat: ['$meta_title', ' ', {$concat: ['$color.color', ' | ', '$color.model']}] }
+          {
+            $concat: [
+              '$meta_title',
+              ' ',
+              { $concat: ['$color.color', ' | ', '$color.model'] }
+            ]
+          }
         ]
       },
       meta_description: {
         $ifNull: [
           '$color.meta_description',
-          { $concat: ['$meta_description', ' ', {$concat: ['$color.color', ' | ', '$color.model']}] }
+          {
+            $concat: [
+              '$meta_description',
+              ' ',
+              { $concat: ['$color.color', ' | ', '$color.model'] }
+            ]
+          }
         ]
       },
       slug: {

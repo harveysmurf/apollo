@@ -5,13 +5,19 @@ export default class Social extends Component {
   render() {
     return (
       <div className="social">
-        <a href="https://www.facebook.com/DamskiChantiCom">
+        <a
+          aria-label="facebook"
+          href="https://www.facebook.com/DamskiChantiCom"
+        >
           <FontAwesomeIcon icon={['fab', 'facebook']} />
         </a>
-        <a href="www.instagram.com">
+        <a aria-label="instagram" href="www.instagram.com">
           <FontAwesomeIcon icon={['fab', 'instagram']} />
         </a>
-        <a href="https://www.youtube.com/channel/UCSR0CNfEt_LMwYSxv1Ecrxw">
+        <a
+          aria-label="youtube"
+          href="https://www.youtube.com/channel/UCSR0CNfEt_LMwYSxv1Ecrxw"
+        >
           <FontAwesomeIcon icon={['fab', 'youtube']} />
         </a>
       </div>

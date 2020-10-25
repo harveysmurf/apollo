@@ -24,7 +24,7 @@ const Html = ({ content, state, helmet }) => {
 
   return (
     <html {...htmlAttrs}>
-      <head>
+      <head lang="bg">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta charSet="utf-8" />
         {helmet.title.toComponent()}

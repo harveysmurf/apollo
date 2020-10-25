@@ -57,6 +57,7 @@ module.exports = gql`
   type CategoryType {
     id: String
     name: String
+    title: String
     description: String
     meta_title: String
     meta_description: String

@@ -64,14 +64,4 @@
       display: block;
     }
   }
-  .logo img {
-    @include respond-to(mobile) {
-      height: 70px;
-      width: 100px;
-    }
-    @include respond-to(tablet) {
-      height: 140px;
-      width: 200px;
-    }
-  }
 }

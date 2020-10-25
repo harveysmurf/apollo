@@ -58,7 +58,7 @@ const CategoryContainer = ({
         <div className="col-sm-12 col-md-9 no-gutters-xs">
           <div className="row">
             <div className="col-sm-12 bottom-spacing-m">
-              <h3 className="bottom-spacing-m">{getCategory.name}</h3>
+              <h3 className="bottom-spacing-m">{getCategory.title}</h3>
               {description && (
                 <p
                   dangerouslySetInnerHTML={{ __html: getCategory.description }}

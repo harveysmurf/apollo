@@ -28,10 +28,16 @@ export default class MainNav extends Component {
               <div>
                 <b>Цветове</b>
                 <div className={styles['links']}>
-                  <Link to="/damski-chanti">ЖЪлт</Link>
-                  <Link to="/damski-chanti">Черен</Link>
-                  <Link to="/damski-chanti">раници</Link>
-                  <Link to="/damski-chanti">drugi</Link>
+                  <Link to="/бели-дамски-чанти">Бели</Link>
+                  <Link to="/бежови-дамски-чанти">Бежови</Link>
+                  <Link to="/жълти-дамски-чанти">Жълти</Link>
+                  <Link to="/зелени-дамски-чанти">Зелени</Link>
+                  <Link to="/кафяви-дамски-чанти">Кафяви</Link>
+                  <Link to="/сиви-дамски-чанти">Сиви</Link>
+                  <Link to="/сини-дамски-чанти">Сини</Link>
+                  <Link to="/червени-дамски-чанти">Червени</Link>
+                  <Link to="/черни-дамски-чанти">Черни</Link>
+                  <Link to="/шарени-дамски-чанти">Шарени</Link>
                 </div>
               </div>
             </div>
@@ -40,8 +46,8 @@ export default class MainNav extends Component {
             Естествена Кожа
           </Link>
           <div className={`${styles['logo']} text-center`}>
-            <Link className="nav-link" to="/">
-              <img src="/images/log.png" />
+            <Link aria-label="main logo" className="nav-link" to="/">
+              <img alt="main logo" src="/images/logo_nav.gif" />
             </Link>
           </div>
           <Link className={styles['nav-link']} to="/damski-ranici">

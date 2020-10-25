@@ -11,6 +11,7 @@ export const categoryQuery = gql`
     getCategory(slug: $slug) {
       id
       name
+      title
       meta_title
       meta_description
       description

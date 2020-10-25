@@ -26,8 +26,12 @@ const UserTop = props => {
         }
         dropdown_data={
           <div>
-            <div>0987 23 34 32</div>
-            <div>2323 34 32 23</div>
+            <div>
+              <a href="tel:0887 52 38 74">0887 52 38 74</a>
+            </div>
+            <div>
+              <a href="tel:0897 78 90 54">0897 78 90 54</a>
+            </div>
           </div>
         }
       />
