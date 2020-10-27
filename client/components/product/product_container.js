@@ -1,7 +1,6 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import qs from 'query-string'
 import { compose } from 'recompose'
-import { Mutation } from '@apollo/client/react/components'
 import { Link } from 'react-router-dom'
 import { formatPrice } from '../../localization/price'
 import ProductSlideshow from './products_slideshow'
@@ -255,7 +254,7 @@ const ProductContainer = props => {
             <a href="https://www.facebook.com/DamskiChantiCom">
               <FontAwesomeIcon size="lg" icon={['fab', 'facebook']} />
             </a>
-            <a href="www.instagram.com">
+            <a href="https://www.instagram.com/damskichanti_com/">
               <FontAwesomeIcon size="lg" icon={['fab', 'instagram']} />
             </a>
             <a href="https://www.youtube.com/channel/UCSR0CNfEt_LMwYSxv1Ecrxw">

@@ -52,11 +52,13 @@ export default ({
                   placeholder={placeholder}
                 />
               </div>
-              <div>{renderDropDownList}</div>
+              <div className={styles['mobile-dropdown']}>
+                {renderDropDownList}
+              </div>
             </Modal>
           )
         : open && (
-            <div className={styles['dropdown']}>
+            <div className={styles['desktop-dropdown']}>
               <Simple placeholder={placeholder} onChange={onSearchChange} />
               <div>{renderDropDownList}</div>
             </div>

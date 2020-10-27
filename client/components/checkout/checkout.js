@@ -15,6 +15,7 @@ import {
   OfficeDropDown
 } from './checkout-dropdown/checkout-dropdown'
 import { useQuery } from '@apollo/client'
+import { useScreenSize } from '../../hooks'
 
 const requiredFieldError = 'Задължително поле.'
 const REGEX_EMAIL = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
@@ -139,36 +140,52 @@ export const TextInput = ({
   )
 }
 
-const CheckoutForm = ({ cart, checkout }) => (
-  <Form
-    initialValues={{
-      delivery: deliveryMethods.toOffice
-    }}
-    onSubmit={values => {
-      const data = R.map(
-        R.assoc('delivery', {
-          cityId: values.city.id,
-          cityName: values.city.name,
-          address: values.address,
-          method: values.delivery,
-          ...(values.office && {
-            officeId: values.office.id,
-            address: values.office.presentation
-          })
-        }),
-        R.omit(['terms', 'ageConfirmation', 'office', 'city', 'address'])
-      )(values)
-      checkout({
-        variables: data
-      })
-    }}
-    render={({ handleSubmit, form }) => {
-      const deliveryMethod = form.getState().values.delivery
-      const city = form.getState().values.city
-      const deliveryPrice = getDeliveryPrice(cart.price, deliveryMethod)
-      const toOffice = deliveryMethod === deliveryMethods.toOffice
-      return (
-        <div className="row">
+const CheckoutForm = ({ cart, checkout }) => {
+  const { isMobile } = useScreenSize()
+  return (
+    <Form
+      initialValues={{
+        delivery: deliveryMethods.toOffice
+      }}
+      onSubmit={values => {
+        const data = R.map(
+          R.assoc('delivery', {
+            cityId: values.city.id,
+            cityName: values.city.name,
+            address: values.address,
+            method: values.delivery,
+            ...(values.office && {
+              officeId: values.office.id,
+              address: values.office.presentation
+            })
+          }),
+          R.omit(['terms', 'ageConfirmation', 'office', 'city', 'address'])
+        )(values)
+        checkout({
+          variables: data
+        })
+      }}
+      render={({ handleSubmit, form }) => {
+        const deliveryMethod = form.getState().values.delivery
+        const city = form.getState().values.city
+        const deliveryPrice = getDeliveryPrice(cart.price, deliveryMethod)
+        const toOffice = deliveryMethod === deliveryMethods.toOffice
+        const submitButton = (
+          <button
+            onClick={e => {
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              })
+              handleSubmit(e)
+            }}
+            className="full-width col-sm-12 button"
+            type="button"
+          >
+            Поръчай
+          </button>
+        )
+        const FormSection = (
           <div className="col-sm-12 col-md-6 col-lg-7">
             <form onSubmit={handleSubmit}>
               <div className={`row ${styles['delivery-section']}`}>
@@ -318,6 +335,8 @@ const CheckoutForm = ({ cart, checkout }) => (
               />
             </form>
           </div>
+        )
+        const CartSection = (
           <div className="col-sm-12 col-md-6 col-lg-5">
             <CartProductsList products={cart.products} />
             <div className="row bottom-spacing-m">
@@ -344,25 +363,20 @@ const CheckoutForm = ({ cart, checkout }) => (
                 {formatPrice(cart.price + deliveryPrice)}
               </div>
             </div>
-            <button
-              onClick={e => {
-                window.scrollTo({
-                  top: 0,
-                  behavior: 'smooth'
-                })
-                handleSubmit(e)
-              }}
-              className="full-width col-sm-12 button"
-              type="button"
-            >
-              Поръчай
-            </button>
+            {!isMobile && submitButton}
           </div>
-        </div>
-      )
-    }}
-  />
-)
+        )
+        return (
+          <div className="row">
+            {isMobile ? CartSection : FormSection}
+            {isMobile ? FormSection : CartSection}
+            {isMobile && submitButton}
+          </div>
+        )
+      }}
+    />
+  )
+}
 
 export default () => {
   const { loading, data } = useQuery(cartQuery, { ssr: false })

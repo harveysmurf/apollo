@@ -14,7 +14,11 @@ const quantityDropdowns = (available, quantity) => {
   const defaultMax = Math.max(5, quantity)
   const itemsToRender = []
   for (var i = 1; i <= Math.min(available, defaultMax); i++) {
-    itemsToRender.push(<option value={i}>{i}</option>)
+    itemsToRender.push(
+      <option key={i} value={i}>
+        {i}
+      </option>
+    )
   }
   return itemsToRender
 }
@@ -35,6 +39,7 @@ const CartRow = ({
   price
 }) => (
   <Mutation
+    key={model}
     mutation={ModifyCart}
     update={(cache, { data }) => {
       if (data && data.modifyCart) {
@@ -153,7 +158,13 @@ export const CartSummary = ({ cart: { quantity, price }, hideSubmit }) => (
 )
 
 export const CartProductsList = ({ products: cartProducts }) => {
-  return <div>{cartProducts.map(CartRow)}</div>
+  return (
+    <div>
+      {cartProducts.map(product => (
+        <CartRow key={product.product.model} {...product} />
+      ))}
+    </div>
+  )
 }
 
 export const CartMiniSummary = ({ cart: { price, quantity } }) => (

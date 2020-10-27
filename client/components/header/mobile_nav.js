@@ -38,11 +38,11 @@ const MobileNav = () => {
           </div>
         </Link>
       )}
-      <Link to="/" className="mobile-nav-link">
+      <Link to="/about" className="mobile-nav-link">
         <div>
-          <FontAwesomeIcon icon="heart" />
+          <FontAwesomeIcon icon="info" />
         </div>
-        Любими
+        За нас
       </Link>
       <Link to="/checkout" className="mobile-nav-link">
         <div>

@@ -8,6 +8,8 @@ import { filtersQuery } from '../../queries/local'
 import { categoryQuery } from '../../queries/remote'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-list.jsx'
 import { useQuery } from '@apollo/client'
+import { useScreenSize } from '../../hooks'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const CategoryContainer = ({
   match: {
@@ -16,6 +18,7 @@ const CategoryContainer = ({
 }) => {
   const [fetchMoreLoading, setFetchMoreLoading] = useState(false)
   const [scrollPositionBeforeFetch, setScrollPositionBeforeFetch] = useState()
+  const { isMobile } = useScreenSize()
 
   const { loading: filtersLoading, data: filtersData } = useQuery(filtersQuery)
   if (filtersLoading || !filtersData) {
@@ -39,7 +42,11 @@ const CategoryContainer = ({
     [fetchMoreLoading, setScrollPositionBeforeFetch]
   )
   if (loading) {
-    return <div>Зареждане...</div>
+    return (
+      <div className="fa-5x text-center">
+        <FontAwesomeIcon icon="spinner" spin />
+      </div>
+    )
   } else if (!data) {
     return <h1>Page not found</h1>
   } else {
@@ -59,7 +66,7 @@ const CategoryContainer = ({
           <div className="row">
             <div className="col-sm-12 bottom-spacing-m">
               <h3 className="bottom-spacing-m">{getCategory.title}</h3>
-              {description && (
+              {description && !isMobile && (
                 <p
                   dangerouslySetInnerHTML={{ __html: getCategory.description }}
                 />
@@ -91,7 +98,7 @@ const CategoryContainer = ({
                 })
               }}
             >
-              {fetchMoreLoading ? '...' : 'Зареди още'}
+              {fetchMoreLoading ? '...Зареждане' : 'Покажи още'}
             </button>
           ) : (
             ''

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 export default class About extends Component {
   render() {
@@ -85,6 +86,13 @@ export default class About extends Component {
               </li>
             </ul>
             <br />
+          </p>
+          <h5 className="bottom-spacing-m">Полезно</h5>
+        </div>
+        <div className="row">
+          <p>
+            * <Link to="/terms">Условия за ползване</Link>
+            <br />* <Link to="/privacy">Лични данни</Link>
           </p>
         </div>
       </div>
