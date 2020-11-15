@@ -17,6 +17,7 @@ const { getDataFromTree } = require('@apollo/client/react/ssr')
 const { makeExecutableSchema } = require('apollo-server-express')
 const { Helmet } = require('react-helmet')
 const device = require('device')
+const path = require('path')
 
 const app = express()
 app.use(async (req, _res, next) => {
@@ -37,8 +38,8 @@ var corsOptions = {
 }
 app.use(cors(corsOptions))
 
-app.use(express.static('public'))
-app.use(express.static('dist'))
+app.use(express.static(path.join(__dirname, '../') + '/dist'))
+
 app.use(
   session({
     secret: 'cats',
