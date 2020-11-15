@@ -31,7 +31,12 @@ export default ({
   ))
   return (
     <>
-      <button disabled={disabled} type="button" onClick={toggleOpen}>
+      <button
+        disabled={disabled}
+        type="button"
+        onClick={toggleOpen}
+        className="button primary"
+      >
         {label}
         <FontAwesomeIcon icon="caret-down" />
       </button>

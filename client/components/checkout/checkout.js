@@ -179,7 +179,7 @@ const CheckoutForm = ({ cart, checkout }) => {
               })
               handleSubmit(e)
             }}
-            className="full-width col-sm-12 button"
+            className="full-width col-sm-12 button primary"
             type="button"
           >
             Поръчай
@@ -189,7 +189,7 @@ const CheckoutForm = ({ cart, checkout }) => {
           <div className="col-sm-12 col-md-6 col-lg-7">
             <form onSubmit={handleSubmit}>
               <div className={`row ${styles['delivery-section']}`}>
-                <div className="col-sm-12 col-md-6 bottom-spacing-s">
+                <div className="col-sm-12 col-md-6 bottom-spacing-m">
                   <label>
                     <Field
                       name="delivery"

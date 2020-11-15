@@ -1,8 +1,5 @@
 @import '../../scss/mixins';
 div.login {
-  fieldset {
-    border-radius: 15px;
-  }
   margin: 0 auto;
     @include respond-to(desktop) {
       max-width: 400px;
