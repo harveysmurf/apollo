@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
-import styles from './modal.scss'
+import styles from './dropdown-modal.scss'
 
 export default ({ onCloseInitiated, children, className }) => {
   const handleKeyDown = event => {
@@ -20,7 +20,7 @@ export default ({ onCloseInitiated, children, className }) => {
     [handleKeyDown]
   )
 
-  const classes = [className, styles['modal']].filter(Boolean)
-  const content = <div className={[...classes]}>{children}</div>
+  const classes = [styles['modal'], className].filter(Boolean)
+  const content = <div className={classes}>{children}</div>
   return ReactDOM.createPortal(content, document.getElementById('modal-root'))
 }

@@ -113,3 +113,31 @@ export const Logout = gql`
     logout
   }
 `
+
+export const Login = gql`
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      user {
+        name
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`
+
+export const ResetPassword = gql`
+  mutation resetPassword($email: String!) {
+    resetPassword(email: $email)
+  }
+`
+export const UpdatePassword = gql`
+  mutation updatePassword($token: String!, $password: String!) {
+    updatePassword(token: $token, password: $password) {
+      success
+      error
+    }
+  }
+`

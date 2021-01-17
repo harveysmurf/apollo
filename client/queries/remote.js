@@ -236,3 +236,40 @@ export const getProductsFeedQuery = gql`
     }
   }
 `
+
+export const getFeaturedProductsQuery = gql`
+  query getProducts($models: [String]) {
+    getProducts(models: $models) {
+      products {
+        model
+        images
+        name
+        price
+        sellPrice
+        available
+        main_image
+        description
+        slug
+        discount
+        sellPrice
+        variations {
+          sellPrice
+          name
+          images
+          model
+          description_short
+          slug
+          discount
+          price
+        }
+        colors {
+          group
+          color
+          images
+          quantity
+          discount
+        }
+      }
+    }
+  }
+`

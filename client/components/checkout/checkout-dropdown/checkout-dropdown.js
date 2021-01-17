@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery } from '@apollo/client'
+import { NetworkStatus, useQuery } from '@apollo/client'
 import MagicDropdown from '../magic-dropdown/magic-dropdown'
 import { getCities } from '../../../queries/remote'
 // Hook
@@ -31,9 +31,8 @@ export const CityDropdown = ({
   withOffices,
   meta: { error, touched, active }
 }) => {
-  // const debouncedSearch = useDebounce(search, 200)
   const [open, setOpen] = useState(false)
-  const { loading, data, refetch } = useQuery(getCities, {
+  const { loading, data, refetch, networkStatus } = useQuery(getCities, {
     variables: {
       ...(withOffices && { withOffices })
     }
@@ -59,7 +58,7 @@ export const CityDropdown = ({
           }
         }}
         renderDropDownItem={city => city.presentation}
-        onSearchChange={throttle(value => {
+        onSearchChange={value => {
           if (!value) {
             refetch()
           } else {
@@ -67,7 +66,7 @@ export const CityDropdown = ({
               search: value
             })
           }
-        }, 1000)}
+        }}
       />
       {showValidation && error && (
         <div>

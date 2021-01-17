@@ -61,9 +61,15 @@ const createCart = async cartDbRecords => {
   return adaptedRecordsToCart(adaptedCartRecords)
 }
 const getCustomerCart = async cartId => {
-  const { products } = await cartsCollection.findOne({
-    _id: ObjectID(cartId)
-  })
+  const cart = await getDbCart(cartId)
+  if(!cart) {
+    await cartsCollection.insertOne({
+      _id: ObjectID(cartId),
+      products: []
+    })
+  }
+
+  const products = cart ? cart.products : []
   return createCart(products)
 }
 

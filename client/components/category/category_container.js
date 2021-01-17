@@ -11,6 +11,18 @@ import { useQuery } from '@apollo/client'
 import { useScreenSize } from '../../hooks'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+// TODO
+// The updateQuery callback for fetchMore is deprecated, and will be removed
+// in the next major version of Apollo Client.
+
+// Please convert updateQuery functions to field policies with appropriate
+// read and merge functions, or use/adapt a helper function (such as
+// concatPagination, offsetLimitPagination, or relayStylePagination) from
+// @apollo/client/utilities.
+
+// The field policy system handles pagination more effectively than a
+// hand-written updateQuery function, and you only need to define the policy
+// once, rather than every time you call fetchMore.
 const CategoryContainer = ({
   match: {
     params: { categorySlug: slug }

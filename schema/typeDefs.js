@@ -221,6 +221,7 @@ module.exports = gql`
       price: PriceInput
       search: String
       limit: Int
+      models: [String]
     ): ProductFeed
     getRouteType(slug: String!): String
     loggedInUser: UserType
@@ -239,6 +240,18 @@ module.exports = gql`
   input UserInputType {
     firstname: String
   }
+  type InputFieldError {
+    field: String
+    message: String
+  }
+  type LoginResponseType {
+    user: UserType
+    errors: [InputFieldError]
+  }
+  type UpdatePasswordResponseType {
+    success: Boolean
+    error: String
+  }
 
   type Mutation {
     register(
@@ -248,6 +261,7 @@ module.exports = gql`
       consent: Boolean!
       password: String!
     ): UserType
+    login(email: String, password: String): LoginResponseType
     addUser(firstname: String!, age: Int!, companyId: String): UserType
     addAddress(adress: AddressInput): AddressType
     modifyCart(model: String, quantity: Int): CartType
@@ -263,6 +277,8 @@ module.exports = gql`
       telephone: String
     ): Boolean
     logout: Boolean
+    resetPassword(email: String!): Boolean
+    updatePassword(token: String!, password: String!): UpdatePasswordResponseType
   }
 
   input DeliveryInput {

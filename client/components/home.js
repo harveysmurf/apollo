@@ -2,6 +2,7 @@ import React from 'react'
 import Latest from './home/latest'
 import { Helmet } from 'react-helmet'
 import Presentation from './home/presentation'
+import Featured from './home/featured.jsx'
 export default () => (
   <div className="confined-container">
     <Helmet>
@@ -15,5 +16,6 @@ export default () => (
     </Helmet>
     <Presentation />
     <Latest />
+    <Featured />
   </div>
 )

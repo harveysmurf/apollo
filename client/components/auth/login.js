@@ -1,101 +1,107 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
-import { Query } from '@apollo/client/react/components'
 import styles from './login.scss'
-import { userQuery } from '../../queries/remote'
+import { Field, Form } from 'react-final-form'
+import { TextInput } from '../form'
+import { isRequired, REGEX_EMAIL, validateField } from '../../utils/validation'
+import { Link } from 'react-router-dom'
+import { FORM_ERROR } from 'final-form'
+import { useMutation } from '@apollo/client'
+import { Login } from '../../mutations/remote'
 
-class Login extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      email: '',
-      password: '',
-      error: false
+const validationRules = {
+  email: [
+    {
+      test: isRequired,
+      error: 'Моля въведете имейл'
+    },
+    {
+      test: x => REGEX_EMAIL.test(x),
+      error: 'Моля, въведете валиден имейл.'
     }
-
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.login = this.login.bind(this)
-  }
-
-  login() {
-    axios
-      .post(
-        'http://localhost:3000/login',
-        {
-          email: this.state.email,
-          password: this.state.password
-        },
-        {
-          withCredentials: true
-        }
-      )
-      .then(res => {
-        window.location = '/'
-      })
-      .catch(err => {
-        this.setState({ error: true })
-      })
-  }
-
-  handleInputChange(event) {
-    const target = event.target
-    const value = target.value
-    const name = target.name
-
-    this.setState({
-      [name]: value
-    })
-  }
-
-  render() {
-    let error = this.state.error
-    return (
-      <div className={`${styles['login']} bottom-spacing-xl`}>
-        {error && <span>Грешно потребителско име или парола</span>}
-        <fieldset>
-          <div className="row horizontal-align-center bottom-spacing-m">
-            <div className="col-sm-3 col-md-3 text-right">
-              <label>Имейл</label>
-            </div>
-            <div className="col-sm col-md">
-              <input
-                type="text"
-                placeholder="example@abv.net"
-                name="email"
-                value={this.state.email}
-                onChange={this.handleInputChange}
-              />
-            </div>
-          </div>
-          <div className="row horizontal-align-center bottom-spacing-m">
-            <div className="col-sm-3 col-md-3 text-right">
-              <label>Парола</label>
-            </div>
-            <div className="col-sm col-md">
-              <input
-                type="text"
-                placeholder="Парола"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleInputChange}
-              />
-            </div>
-          </div>
-          <div className="row horizontal-align-center">
-            <div className="col-sm-12">
-              <input
-                className="button-primary"
-                type="submit"
-                value="Login"
-                onClick={this.login}
-              />
-            </div>
-          </div>
-        </fieldset>
-      </div>
-    )
-  }
+  ],
+  password: [
+    {
+      test: isRequired,
+      error: 'Моля въведете парола'
+    }
+  ]
 }
-export default () => (
-  <Query query={userQuery}>{props => <Login {...props} />}</Query>
-)
+
+const LoginComponent = () => {
+  const [login, { loading }] = useMutation(Login)
+  return (
+    <Form
+      onSubmit={values =>
+        login({
+          variables: {
+            email: values.email,
+            password: values.password
+          }
+        })
+          .then(({ data: { login: { user, errors } } }) => {
+            if (user) {
+              window.location = '/'
+            } else if (errors) {
+              const transformedErrors = errors.reduce(
+                (finalFormErrors, { field, message }) => {
+                  const fieldName = field === 'general' ? FORM_ERROR : field
+                  finalFormErrors[fieldName] = message
+                  return finalFormErrors
+                },
+                {}
+              )
+              console.log(transformedErrors)
+              return transformedErrors
+            }
+          })
+          .catch(() => ({ FORM_ERROR: 'Грешка, моля опитайте отново' }))
+      }
+      render={({ handleSubmit, submitError }) => (
+        <div className={`${styles['login']} bottom-spacing-xl`}>
+          <h1 className="bottom-spacing-xl">Вход</h1>
+          {submitError && <span className="input-error">{submitError}</span>}
+          <fieldset>
+            <div className="row horizontal-align-center bottom-spacing-m">
+              <div className="col-sm col-md">
+                <Link to="/forgotten-password">Забравена парола</Link>
+              </div>
+            </div>
+            <div className="row horizontal-align-center bottom-spacing-m">
+              <div className="col-sm col-md">
+                <Field
+                  validate={validateField(validationRules.email)}
+                  component={TextInput}
+                  name="email"
+                  placeholder="имейл"
+                />
+              </div>
+            </div>
+            <div className="row horizontal-align-center bottom-spacing-m">
+              <div className="col-sm col-md">
+                <Field
+                  validate={validateField(validationRules.password)}
+                  component={TextInput}
+                  type="password"
+                  name="password"
+                  placeholder="парола"
+                />
+              </div>
+            </div>
+            <div className="row horizontal-align-center">
+              <button
+                onClick={handleSubmit}
+                className="button primary col-sm-12"
+                disabled={loading}
+              >
+                Вписване
+              </button>
+            </div>
+          </fieldset>
+        </div>
+      )}
+    />
+  )
+}
+
+export default LoginComponent

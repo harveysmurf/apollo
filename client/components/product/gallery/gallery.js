@@ -2,6 +2,7 @@ import React from 'react'
 import { getImageCachedSizePath } from '../../../../utils/image_utils'
 import styles from './gallery.scss'
 import classNames from 'classnames/bind'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const css = classNames.bind(styles)
 
 class Gallery extends React.Component {
@@ -63,7 +64,7 @@ class Gallery extends React.Component {
                 hidden: !this.state.isScrollableLeft
               })}
             >
-              <i className={css(['fa', 'fa-caret-left'])} />
+              <FontAwesomeIcon icon={['fas','caret-left']}/>
             </div>
           </div>
           <div className="col-sm-10">
@@ -95,7 +96,7 @@ class Gallery extends React.Component {
                 hidden: !this.state.isScrollableRight
               })}
             >
-              <i className={css(['fa', 'fa-caret-right'])} />
+              <FontAwesomeIcon icon={['fas','caret-right']}/>
             </div>
           </div>
         </div>

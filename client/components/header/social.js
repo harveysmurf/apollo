@@ -11,7 +11,7 @@ export default class Social extends Component {
         >
           <FontAwesomeIcon icon={['fab', 'facebook']} />
         </a>
-        <a aria-label="instagram" href="http://www.instagram.com">
+        <a aria-label="instagram" href="https://www.instagram.com/damskichanti_com">
           <FontAwesomeIcon icon={['fab', 'instagram']} />
         </a>
         <a

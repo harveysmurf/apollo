@@ -20,7 +20,7 @@ const ProductVariation = ({ variation, isSelected, selectVariation }) => {
 }
 
 const ProductThumb = ({ categoryId, product }) => {
-  const { variations, model, quantity } = product
+  const { variations, model } = product
   const referer = categoryId ? `?referer=${categoryId}` : ''
   const [selected, setSelected] = useState(
     getSelectedVariation(variations, model)

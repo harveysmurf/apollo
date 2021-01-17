@@ -10,7 +10,7 @@ const connect = () => {
       {
         useNewUrlParser: true,
         connectTimeoutMS: 3000,
-        wtimeout: 1,
+        wtimeout: 10000,
         socketTimeoutMS: 3000
       },
       (error, db) => {

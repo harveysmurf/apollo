@@ -2,6 +2,7 @@ const express = require('express')
 const router = new express.Router()
 const AUTH_COOKIE = 'auth'
 
+
 router.post('/login', async (req, res) => {
   const {
     body: { email, password },
@@ -22,6 +23,7 @@ router.post('/login', async (req, res) => {
     res.status(400).json({ message: 'unauthorized' })
   }
 })
+
 
 router.get('/logout', async (req, res) => {
   const cookieCartId = await req.getCartService().createNewCart()

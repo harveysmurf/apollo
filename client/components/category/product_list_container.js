@@ -100,8 +100,10 @@ export default graphql(query, {
       loadMoreProducts: filters => {
         return props.data.fetchMore({
           variables: {
+            slug: props.slug,
             cursor: props.data.getCategory.productFeed.cursor,
-            colors: filters.colors
+            colors: filters.colors,
+            materials: props.filters.materials
           },
           updateQuery(previousResult, { fetchMoreResult }) {
             const previousProductFeed = previousResult.getCategory.productFeed

@@ -1,6 +1,5 @@
-const { filtersQuery } = require('../../queries/local')
-
-module.exports = {
+import { filtersQuery } from '../../queries/local'
+const filterMutations = {
   updateColors: (obj, { colors }, { cache }) => {
     const { filters } = cache.readQuery({ query: filtersQuery })
     cache.writeQuery({
@@ -35,3 +34,4 @@ module.exports = {
     return null
   }
 }
+export default filterMutations

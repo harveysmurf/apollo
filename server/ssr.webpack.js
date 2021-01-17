@@ -7,6 +7,9 @@ module.exports = {
   target: 'node',
   externals: [nodeExternals()],
   entry: './server/ssrComponents.js',
+  resolve: {
+    extensions: ['.mjs', '.js', '.jsx']
+  },
   output: {
     path: path.resolve('dist'),
     filename: 'server_bundle.js',
@@ -78,10 +81,12 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
+            presets: ['@babel/preset-env', '@babel/preset-react', ],
             plugins: [
               '@babel/plugin-proposal-object-rest-spread',
-              '@babel/plugin-proposal-class-properties'
+              '@babel/plugin-proposal-class-properties',
+              '@babel/plugin-transform-async-to-generator',
+              '@babel/transform-runtime'
             ]
           }
         },
@@ -108,7 +113,7 @@ module.exports = {
     new OptimizeCssAssetsPlugin({
       cssProcessor: require('cssnano'),
       cssProcessorPluginOptions: {
-        preset: ['default', { discardComments: { removeAll: true } }],
+        preset: ['default', { discardComments: { removeAll: true } }]
       },
       canPrint: true
     })

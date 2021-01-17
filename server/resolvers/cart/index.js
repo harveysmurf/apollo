@@ -9,14 +9,12 @@ const withUserCart = callback => (root, args, context, info) => {
   const { req, res } = context
   const user = req.user
   const currentCart = req.cart
-  if (user) {
-    if (currentCart !== user.cart) {
-      req.cart = user.cart
-      res.cookie('cart', user.cart, {
-        maxAge: 86400 * 30 * 1000,
-        httpOnly: true
-      })
-    }
+  if (user && currentCart !== user.cart) {
+    req.cart = user.cart
+    res.cookie('cart', user.cart, {
+      maxAge: 86400 * 30 * 1000,
+      httpOnly: true
+    })
   }
   return callback(root, args, context, info)
 }

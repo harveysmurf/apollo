@@ -7,7 +7,7 @@ export const defaultState = {
     NEWSLETTER_SUBSCRIBE: false,
     PDP_NOTIFY_AVAILABLE: false,
     LOGIN_ENABLED: false,
-    THUMB_CAROUSEL_ENABLED: false
+    THUMB_CAROUSEL_ENABLED: false,
   },
   filters: {
     search: '',

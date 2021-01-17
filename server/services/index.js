@@ -4,11 +4,13 @@ const getAuthenticationService = require('./authenticationService')
 const getEmailService = require('./emailService')
 const getProductService = require('./productService')
 const getEcontService = require('./econtService')
+const getProfileService = require('./profileService')
 module.exports = {
   cartProvider,
   getCartService,
   getAuthenticationService,
   getEmailService,
   getProductService,
-  getEcontService
+  getEcontService,
+  getProfileService
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './magic-dropdown.scss'
-import Modal from '../../modal/modal'
+import DropdownModal from '../../dropdown-modal/dropdown-modal'
 import { useScreenSize } from '../../../hooks'
 
 export default ({
@@ -13,7 +13,8 @@ export default ({
   open,
   setOpen,
   onSearchChange,
-  disabled
+  disabled,
+  loading
 }) => {
   const toggleOpen = () => setOpen(!open)
   const { isMobile } = useScreenSize()
@@ -42,7 +43,7 @@ export default ({
       </button>
       {isMobile
         ? open && (
-            <Modal onClose={() => setOpen(false)}>
+            <DropdownModal onClose={() => setOpen(false)}>
               <div className={styles['modal-autocomplete-input']}>
                 <div
                   onClick={() => setOpen(false)}
@@ -60,12 +61,14 @@ export default ({
               <div className={styles['mobile-dropdown']}>
                 {renderDropDownList}
               </div>
-            </Modal>
+            </DropdownModal>
           )
         : open && (
             <div className={styles['desktop-dropdown']}>
               <Simple placeholder={placeholder} onChange={onSearchChange} />
-              <div>{renderDropDownList}</div>
+              <div className={loading ? styles['loading'] : ''}>
+                {renderDropDownList}
+              </div>
             </div>
           )}
     </>

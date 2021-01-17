@@ -124,9 +124,17 @@ const productPipelines = [
   }
 ]
 
-const createFilterObject = ({ colors, materials, category, price, search }) => {
+const createFilterObject = ({
+  colors,
+  materials,
+  category,
+  price,
+  search,
+  models
+}) => {
   return {
     ...(colors && colors.length > 0 && { color_group: { $in: colors } }),
+    ...(models && models.length > 0 && { model: { $in: models } }),
     ...(category && {
       categories: category
     }),
@@ -194,7 +202,8 @@ module.exports = db => {
     price,
     category,
     search,
-    limit = 15
+    limit = 15,
+    models
   }) => {
     let hasMore = true
     const find = createFilterObject({
@@ -202,7 +211,8 @@ module.exports = db => {
       materials,
       category,
       price,
-      search
+      search,
+      models
     })
     const lastitemresult = await productsCollection
       .aggregate([

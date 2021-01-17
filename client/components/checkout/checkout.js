@@ -179,7 +179,7 @@ const CheckoutForm = ({ cart, checkout }) => {
               })
               handleSubmit(e)
             }}
-            className="full-width col-sm-12 button primary"
+            className="full-width col-sm-12 primary"
             type="button"
           >
             Поръчай

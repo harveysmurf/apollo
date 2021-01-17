@@ -18,6 +18,14 @@ const { queries: econtQueries } = require('./resolvers/econt')
 const { executeWithAuthentication } = require('./resolvers/middlewares')
 const { mutations: orderMutations } = require('./resolvers/order')
 const { AUTH_COOKIE } = require('./controllers/authController')
+const { fullUrl } = require('./url')
+const fs = require('fs')
+const mustache = require('mustache')
+
+function FieldError(field, message) {
+  this.field = field
+  this.message = message
+}
 const productsCollection = getProductsCollection()
 const categoriesCollection = getCategoriesCollection()
 module.exports = {
@@ -137,6 +145,62 @@ module.exports = {
         .delete(`http://localhost:3000/users/${id}`)
         .then(res => res.data)
     },
+    login: async (_parent, { password, email }, { req, res }) => {
+      function FieldError(field, message) {
+        this.message = message
+        this.field = field
+      }
+      const DAY = 24 * 60 * 60 * 1000
+      return req
+        .getAuthenticationService()
+        .login(email, password)
+        .then(
+          data => {
+            if (data === null) {
+              throw new FieldError(
+                'general',
+                'грешно потребителско име или парола'
+              )
+            }
+            return data
+          }
+        )
+        .then(async ({ token, user }) => {
+          if (!user.cart) {
+            await req.getProfileService().updateAccount(
+              { cart: req.cart },
+              {
+                email: user.email
+              }
+            )
+            user.cart = req.cart
+          } 
+          res.cookie('cart', user.cart, {
+            maxAge: 86400 * 30 * 1000,
+            httpOnly: true
+          })
+          return { token, user }
+        })
+        .then(({ token, user }) => {
+          res.cookie(AUTH_COOKIE, token, {
+            maxAge: DAY,
+            httpOnly: true
+          })
+          return { user }
+        })
+        .catch(reason => {
+          if (reason instanceof FieldError) {
+            return {
+              errors: [reason]
+            }
+          }
+          return {
+            errors: [
+              { field: 'general', message: 'грешка, моля опитайте отново' }
+            ]
+          }
+        })
+    },
     register: async (parent, args, { req, res }) => {
       try {
         const DAY = 24 * 60 * 60 * 1000
@@ -166,6 +230,76 @@ module.exports = {
         return true
       } catch (error) {
         return false
+      }
+    },
+    resetPassword: async (_parent, { email }, { req }) => {
+      if (!email) {
+        return false
+      }
+      const user = await req.db.collection('users').findOne({ email })
+      if (!user) {
+        return true
+      }
+
+      const resetPassToken = req
+        .getAuthenticationService()
+        .createResetPassToken(email)
+
+      const emailTemlate = fs.readFileSync(
+        './email_templates/reset_password.mustache',
+        {
+          encoding: 'UTF-8'
+        }
+      )
+      await req.getEmailService().sendEmail({
+        recipient_name: user.name || '',
+        recipient_email: email,
+        subject: 'Забравена Парола',
+        body: mustache.render(emailTemlate, {
+          resetPassUrl: [fullUrl(req), 'reset-password', resetPassToken].join(
+            '/'
+          )
+        })
+      })
+      return true
+    },
+    updatePassword: async (_parent, { token, password }, { req }) => {
+      const authenticationService = req.getAuthenticationService()
+      const profileService = req.getProfileService()
+      let resetPassEmail = null
+      try {
+        resetPassEmail = await authenticationService.verify(token)
+          .resetPassEmail
+      } catch (error) {
+        return {
+          success: false,
+          error: 'Невалиден код'
+        }
+      }
+
+      try {
+        const hashedPassword = await authenticationService.hashPassword(
+          password
+        )
+        const result = await profileService.updateAccount(
+          {
+            password: hashedPassword
+          },
+          { email: resetPassEmail }
+        )
+
+        if (!result) {
+          throw new Error("Couldn't write to db")
+        }
+
+        return {
+          success: true
+        }
+      } catch (error) {
+        return {
+          success: false,
+          error: 'Грешка, моля опитайте отново'
+        }
       }
     },
     ...cartMutations,

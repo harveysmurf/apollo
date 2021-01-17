@@ -198,6 +198,9 @@ div.product {
   }
   div.product-details {
     padding: 0 20px;
+    & a {
+      height: 60px;
+    }
   }
   & > img {
     width: 100%;

@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom'
 
 import SearchComponent from './components/search/search'
 import HomeComponent from './components/home'
-import AboutComponent from './components/about'
+import AboutComponent from './components/about/about'
 import LoginComponent from './components/auth/login'
 import RegistrationComponent from './components/auth/signup'
 import Header from './components/header'
@@ -23,8 +23,16 @@ import CheckoutSuccess from './components/checkout/checkoutsuccess.jsx'
 import Profile from './components/profile/profile.jsx'
 import CategoryContainer from './components/category/category_container'
 import { useScreenSize } from './hooks'
+import ResetPasswordPage from './components/auth/reset-password'
+import ForgottenPasswordPage from './components/auth/forgotten-password'
+import { useQuery } from '@apollo/client'
+import { featuresQuery } from './queries/local'
 const App = () => {
   const { isMobile } = useScreenSize()
+  const {
+    data
+  } = useQuery(featuresQuery)
+  const LOGIN_ENABLED = data && data.features.LOGIN_ENABLED
   return (
     <div>
       <div className="app-container">
@@ -39,12 +47,24 @@ const App = () => {
             <Route path="/reklamacii" component={ReklamaciiComponent} />
             <Route path="/privacy" component={PrivacyComponent} />
             <Route path="/howtoorder" component={HowToOrderComponent} />
-            <Route path="/login" component={LoginComponent} />
-            <Route path="/register" component={RegistrationComponent} />
             <Route path="/cart" component={Cart} />
             <Route path="/checkout" component={Checkout} />
             <Route path="/search" component={SearchComponent} />
-            <Route path="/profile" component={Profile} />
+            {LOGIN_ENABLED && (
+              <>
+                <Route path="/register" component={RegistrationComponent} />
+                <Route path="/profile" component={Profile} />
+                <Route path="/login" component={LoginComponent} />
+                <Route
+                  path="/forgotten-password"
+                  component={ForgottenPasswordPage}
+                />
+                <Route
+                  path="/reset-password/:resetPassToken"
+                  component={ResetPasswordPage}
+                />
+              </>
+            )}
             <Route
               path="/:seoSlug/:model([0-9]{4}[a-zA-Z]{2})"
               component={ProductContainer}

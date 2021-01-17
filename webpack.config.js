@@ -6,6 +6,9 @@ const isProdEnv = process.env.NODE_ENV === 'production'
 
 module.exports = {
   mode: isProdEnv ? 'production' : 'development',
+  resolve: {
+    extensions: ['.mjs', '.js', '.jsx']
+  },
   entry: './client/index.js',
   output: {
     path: path.resolve('dist'),
@@ -80,7 +83,8 @@ module.exports = {
             presets: ['@babel/preset-env', '@babel/preset-react'],
             plugins: [
               '@babel/plugin-proposal-object-rest-spread',
-              '@babel/plugin-proposal-class-properties'
+              '@babel/plugin-proposal-class-properties',
+              '@babel/transform-runtime'
             ]
           }
         },
@@ -107,7 +111,7 @@ module.exports = {
     new OptimizeCssAssetsPlugin({
       cssProcessor: require('cssnano'),
       cssProcessorPluginOptions: {
-        preset: ['default', { discardComments: { removeAll: true } }],
+        preset: ['default', { discardComments: { removeAll: true } }]
       },
       canPrint: true
     })

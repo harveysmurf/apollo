@@ -30,10 +30,12 @@ module.exports = (req, _res, next) => {
   const getProductService = R.once(() =>
     services.getProductService(getProductProvider())
   )
+  const getProfileService = R.once(() => services.getProfileService(req.db))
   req.getCartService = getCartService
   req.getAuthenticationService = getAuthenticationService
   req.getEmailService = getEmailService
   req.getProductService = getProductService
   req.getEcontService = getEcontService
+  req.getProfileService = getProfileService
   next()
 }

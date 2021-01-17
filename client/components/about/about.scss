@@ -1,0 +1,20 @@
+.info-column {
+  display: flex;
+  align-items: stretch;
+  & > .circle {
+    padding: 60px;
+    background-color: lightblue;
+    border-radius: 50%;
+  }
+  & > .square {
+    background-color: #ffbaba;
+    padding: 20px;
+    ul {
+      list-style: disc;
+      padding-left: 30px;
+    }
+  }
+  h5 {
+    text-align: center;
+  }
+}

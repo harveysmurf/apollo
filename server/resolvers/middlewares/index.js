@@ -8,15 +8,13 @@ const executeWithAuthentication = callback => async (
 ) => {
   const token = context.req.cookies[AUTH_COOKIE]
   const { req } = context
-  if (req.user) {
-    return callback(root, args, context, info)
-  }
   try {
     const tokenPayload = req.getAuthenticationService().verify(token)
     const user = await req.db.collection('users').findOne({
       email: tokenPayload.email
     })
     req.user = user
+    req.cart = user.cart
   } catch (error) {
     console.log(error.message)
   }
